@@ -2,14 +2,6 @@ import os
 import time
 import glob
 import datetime
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from webdriver_manager.chrome import ChromeDriverManager
-
 def executar_automacao_bbce(data_inicio_str, data_fim_str, logger_func=print):
     """
     Executa a automação no portal eHub BBCE para extrair negócios no período especificado.
@@ -17,6 +9,20 @@ def executar_automacao_bbce(data_inicio_str, data_fim_str, logger_func=print):
     data_inicio_str: data no formato DD/MM/AAAA (ex: "13/06/2026")
     data_fim_str: data no formato DD/MM/AAAA (ex: "16/06/2026")
     """
+    try:
+        from selenium import webdriver
+        from selenium.webdriver.chrome.service import Service
+        from selenium.webdriver.common.by import By
+        from selenium.webdriver.common.keys import Keys
+        from selenium.webdriver.support.ui import WebDriverWait
+        from selenium.webdriver.support import expected_conditions as EC
+        from webdriver_manager.chrome import ChromeDriverManager
+    except ImportError:
+        logger_func("[ERROR] As dependências do Selenium/Chrome WebDriver não estão instaladas neste ambiente.")
+        logger_func("A automação assistida da BBCE necessita ser executada no ambiente local com depuração ativa.")
+        raise RuntimeError("Selenium e webdriver_manager são necessários para automação assistida. No servidor em nuvem (Render), utilize apenas a importação de arquivos manual.")
+
+    inicio_automacao = time.time()
     logger_func(f"Iniciando automação BBCE. Período: {data_inicio_str} até {data_fim_str}")
     
     # Configura pasta temporária de downloads dentro do projeto
