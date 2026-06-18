@@ -38,6 +38,25 @@ PATH_METADADOS = os.path.join(PLANILHAS_DIR, 'metadata.json')
 # Garante que o diretorio de planilhas exista
 os.makedirs(PLANILHAS_DIR, exist_ok=True)
 
+# Se o diretório de planilhas (Volume no Render) estiver vazio ou faltarem arquivos essenciais, restaura o backup inicial
+BACKUP_DIR = os.path.join(BASE_DIR, 'planilhas_originais_backup')
+if os.path.exists(BACKUP_DIR):
+    arquivos_essenciais = [
+        'f_balanco_energetico.xlsx',
+        'f_pld.xlsx',
+        'f_rodadas_ampere.xlsx',
+        'f_todos_os_negocios_bbce.xlsx',
+        'metadata.json'
+    ]
+    import shutil
+    for arq in arquivos_essenciais:
+        caminho_destino = os.path.join(PLANILHAS_DIR, arq)
+        if not os.path.exists(caminho_destino):
+            caminho_origem = os.path.join(BACKUP_DIR, arq)
+            if os.path.exists(caminho_origem):
+                print(f"Restaurando arquivo padrão de backup: {arq} para {caminho_destino}")
+                shutil.copy2(caminho_origem, caminho_destino)
+
 # ----------------- AUXILIARES DE ATUALIZAÇÃO DE CACHE E METADADOS -----------------
 
 def format_date_str(timestamp):
