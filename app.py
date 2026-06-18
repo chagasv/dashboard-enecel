@@ -4,6 +4,10 @@ import json
 from flask import Flask, jsonify, request, render_template
 import pandas as pd
 import datetime
+import traceback
+
+# Rastreamento do último erro em produção para fins de diagnóstico
+LAST_ERROR = None
 
 # Importa as rotinas de ETL criadas no etl.py
 from etl import atualizar_balanco_energetico, atualizar_pld, extrair_ampere_pdf, atualizar_negocios_bbce, ler_excel_com_copia
@@ -432,6 +436,9 @@ def update_balanco():
             'total_registros': total_linhas
         })
     except Exception as e:
+        global LAST_ERROR
+        LAST_ERROR = traceback.format_exc()
+        print(f"[DEBUG ERROR] Ocorreu uma exceção no balanço:\n{LAST_ERROR}")
         return jsonify({'success': False, 'message': str(e)}), 500
 
 
@@ -447,6 +454,9 @@ def update_pld_ccee():
             'total_registros': total_linhas
         })
     except Exception as e:
+        global LAST_ERROR
+        LAST_ERROR = traceback.format_exc()
+        print(f"[DEBUG ERROR] Ocorreu uma exceção no PLD:\n{LAST_ERROR}")
         return jsonify({'success': False, 'message': str(e)}), 500
 
 
@@ -481,6 +491,9 @@ def update_ampere_pdf():
             'total_registros': total_linhas
         })
     except Exception as e:
+        global LAST_ERROR
+        LAST_ERROR = traceback.format_exc()
+        print(f"[DEBUG ERROR] Ocorreu uma exceção na Ampere:\n{LAST_ERROR}")
         return jsonify({'success': False, 'message': str(e)}), 500
 
 # ----------------- ROTAS API BBCE -----------------
@@ -544,6 +557,9 @@ def update_bbce_upload():
             'total_registros': total_linhas
         })
     except Exception as e:
+        global LAST_ERROR
+        LAST_ERROR = traceback.format_exc()
+        print(f"[DEBUG ERROR] Ocorreu uma exceção no upload BBCE:\n{LAST_ERROR}")
         return jsonify({'success': False, 'message': str(e)}), 500
 
 
@@ -705,6 +721,13 @@ def get_data_view(base):
         return jsonify(data)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+@app.route('/api/debug/error', methods=['GET'])
+def get_debug_error():
+    global LAST_ERROR
+    if LAST_ERROR:
+        return f"<pre style='font-family: monospace; padding: 20px; background: #1e1e1e; color: #f8f8f2; border-radius: 8px; overflow: auto;'>{LAST_ERROR}</pre>"
+    return "Nenhum erro registrado desde a inicialização."
 
 if __name__ == '__main__':
     # Roda o servidor local na porta 5000
