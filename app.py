@@ -4,10 +4,28 @@ import json
 from flask import Flask, jsonify, request, render_template
 import pandas as pd
 import datetime
-import traceback
 
-# Rastreamento do último erro em produção para fins de diagnóstico
-LAST_ERROR = None
+# Diretório base do projeto
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Caminho para arquivo físico de rastreamento de erros entre múltiplos workers do Gunicorn
+PATH_DEBUG_LOG = os.path.join(BASE_DIR, 'last_error.txt')
+
+def salvar_erro_debug(tb):
+    try:
+        with open(PATH_DEBUG_LOG, 'w', encoding='utf-8') as fl:
+            fl.write(tb)
+    except:
+        pass
+
+def ler_erro_debug():
+    if os.path.exists(PATH_DEBUG_LOG):
+        try:
+            with open(PATH_DEBUG_LOG, 'r', encoding='utf-8') as fl:
+                return fl.read()
+        except:
+            pass
+    return "Nenhum erro registrado desde a inicialização."
 
 # Importa as rotinas de ETL criadas no etl.py
 from etl import atualizar_balanco_energetico, atualizar_pld, extrair_ampere_pdf, atualizar_negocios_bbce, ler_excel_com_copia
@@ -17,7 +35,6 @@ from github_storage import github_read_file, github_write_file, github_file_exis
 app = Flask(__name__, static_folder='static', template_folder='templates')
 
 # Caminhos dos arquivos de planilhas
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PLANILHAS_DIR = os.path.join(BASE_DIR, 'planilhas_para_atualizar')
 
 PATH_BALANCO = os.path.join(PLANILHAS_DIR, 'f_balanco_energetico.xlsx')
@@ -436,9 +453,9 @@ def update_balanco():
             'total_registros': total_linhas
         })
     except Exception as e:
-        global LAST_ERROR
-        LAST_ERROR = traceback.format_exc()
-        print(f"[DEBUG ERROR] Ocorreu uma exceção no balanço:\n{LAST_ERROR}")
+        tb = traceback.format_exc()
+        salvar_erro_debug(tb)
+        print(f"[DEBUG ERROR] Ocorreu uma exceção no balanço:\n{tb}")
         return jsonify({'success': False, 'message': str(e)}), 500
 
 
@@ -454,9 +471,9 @@ def update_pld_ccee():
             'total_registros': total_linhas
         })
     except Exception as e:
-        global LAST_ERROR
-        LAST_ERROR = traceback.format_exc()
-        print(f"[DEBUG ERROR] Ocorreu uma exceção no PLD:\n{LAST_ERROR}")
+        tb = traceback.format_exc()
+        with open('last_error.txt', 'w') as f: f.write(tb)
+        print(f"[DEBUG ERROR] Ocorreu uma exceção no PLD:\n{tb}")
         return jsonify({'success': False, 'message': str(e)}), 500
 
 
@@ -491,9 +508,9 @@ def update_ampere_pdf():
             'total_registros': total_linhas
         })
     except Exception as e:
-        global LAST_ERROR
-        LAST_ERROR = traceback.format_exc()
-        print(f"[DEBUG ERROR] Ocorreu uma exceção na Ampere:\n{LAST_ERROR}")
+        tb = traceback.format_exc()
+        salvar_erro_debug(tb)
+        print(f"[DEBUG ERROR] Ocorreu uma exceção na Ampere:\n{tb}")
         return jsonify({'success': False, 'message': str(e)}), 500
 
 # ----------------- ROTAS API BBCE -----------------
@@ -557,9 +574,9 @@ def update_bbce_upload():
             'total_registros': total_linhas
         })
     except Exception as e:
-        global LAST_ERROR
-        LAST_ERROR = traceback.format_exc()
-        print(f"[DEBUG ERROR] Ocorreu uma exceção no upload BBCE:\n{LAST_ERROR}")
+        tb = traceback.format_exc()
+        salvar_erro_debug(tb)
+        print(f"[DEBUG ERROR] Ocorreu uma exceção no upload BBCE:\n{tb}")
         return jsonify({'success': False, 'message': str(e)}), 500
 
 
@@ -724,10 +741,8 @@ def get_data_view(base):
 
 @app.route('/api/debug/error', methods=['GET'])
 def get_debug_error():
-    global LAST_ERROR
-    if LAST_ERROR:
-        return f"<pre style='font-family: monospace; padding: 20px; background: #1e1e1e; color: #f8f8f2; border-radius: 8px; overflow: auto;'>{LAST_ERROR}</pre>"
-    return "Nenhum erro registrado desde a inicialização."
+    tb = ler_erro_debug()
+    return f"<pre style='font-family: monospace; padding: 20px; background: #1e1e1e; color: #f8f8f2; border-radius: 8px; overflow: auto;'>{tb}</pre>"
 
 if __name__ == '__main__':
     # Roda o servidor local na porta 5000
