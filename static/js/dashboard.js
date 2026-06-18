@@ -1060,6 +1060,14 @@ async function runETL(type) {
     
     try {
         const response = await fetch(url, { method: 'POST' });
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            // Limpa as tags HTML do erro para exibir texto puro
+            const preview = errorText.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').substring(0, 150).trim();
+            throw new Error(`Código ${response.status}: ${preview || response.statusText}`);
+        }
+        
         const res = await response.json();
         
         if (res.success) {
@@ -1078,7 +1086,7 @@ async function runETL(type) {
         }
     } catch (error) {
         appendLog(`[ERRO] Falha de comunicação com o servidor: ${error.message}`, 'error');
-        showToast('Erro de Rede', 'Não foi possível conectar ao servidor.', 'error');
+        showToast('Erro de Rede', 'Não foi possível completar a operação no servidor.', 'error');
     } finally {
         btn.disabled = false;
         btn.innerHTML = originalText;
