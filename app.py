@@ -744,6 +744,49 @@ def get_debug_error():
     tb = ler_erro_debug()
     return f"<pre style='font-family: monospace; padding: 20px; background: #1e1e1e; color: #f8f8f2; border-radius: 8px; overflow: auto;'>{tb}</pre>"
 
+@app.route('/api/debug/github', methods=['GET'])
+def get_debug_github():
+    if not usar_github():
+        return jsonify({
+            'github_ativo': False,
+            'status': 'Modo local (GITHUB_TOKEN não configurado).'
+        })
+        
+    try:
+        from github_storage import GITHUB_REPO, GITHUB_BRANCH, GITHUB_TOKEN
+        token_mascarado = f"{GITHUB_TOKEN[:6]}...{GITHUB_TOKEN[-4:]}" if GITHUB_TOKEN else "Nenhum"
+        
+        import requests
+        url = f"https://api.github.com/repos/{GITHUB_REPO}"
+        headers = {
+            "Authorization": f"token {GITHUB_TOKEN}",
+            "Accept": "application/vnd.github.v3+json"
+        }
+        res = requests.get(url, headers=headers, timeout=10)
+        
+        rep_status = res.status_code
+        rep_msg = res.json().get("message", "OK") if rep_status != 200 else "Acesso ao Repositório Confirmado"
+        
+        # Testar existência do metadata.json no GitHub
+        url_file = f"https://api.github.com/repos/{GITHUB_REPO}/contents/planilhas_para_atualizar/metadata.json"
+        res_file = requests.head(url_file, headers=headers, timeout=10)
+        file_status = res_file.status_code
+        
+        return jsonify({
+            'github_ativo': True,
+            'repositorio': GITHUB_REPO,
+            'branch': GITHUB_BRANCH,
+            'token_configurado': token_mascarado,
+            'conexao_repositorio': f"Status {rep_status} ({rep_msg})",
+            'metadata_existente_no_github': f"Status {file_status} (200 = Sim, 404 = Não)"
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e),
+            'traceback': traceback.format_exc()
+        }), 500
+
 if __name__ == '__main__':
     # Roda o servidor local na porta 5000
     app.run(host='0.0.0.0', port=5000, debug=True)
