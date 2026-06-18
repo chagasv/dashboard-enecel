@@ -472,7 +472,7 @@ def update_pld_ccee():
         })
     except Exception as e:
         tb = traceback.format_exc()
-        with open('last_error.txt', 'w') as f: f.write(tb)
+        salvar_erro_debug(tb)
         print(f"[DEBUG ERROR] Ocorreu uma exceção no PLD:\n{tb}")
         return jsonify({'success': False, 'message': str(e)}), 500
 
