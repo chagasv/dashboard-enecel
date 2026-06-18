@@ -4,7 +4,10 @@ import datetime
 import requests
 import pandas as pd
 import pdfplumber
-from curl_cffi import requests as cffi_requests
+try:
+    from curl_cffi import requests as cffi_requests
+except ImportError:
+    cffi_requests = None
 from github_storage import github_read_file, github_write_file, github_file_exists
 
 # Mapeamentos para a planilha Ampere
@@ -133,9 +136,20 @@ def atualizar_pld(planilha_base_path, ccee_url=None):
     df_base = pd.read_excel(io.BytesIO(conteudo_excel), sheet_name="pld")
     print(f"Base local carregada. Total de linhas: {len(df_base)}")
     
-    # Baixa os novos dados da CCEE usando curl_cffi para evitar bloqueio WAF/Cloudflare
+    # Baixa os novos dados da CCEE usando requests ou curl_cffi
     print(f"Baixando dados do PLD da CCEE: {ccee_url}")
-    response = cffi_requests.get(ccee_url, impersonate="chrome", timeout=60)
+    
+    from github_storage import usar_github
+    
+    if usar_github() or cffi_requests is None:
+        print("[ETL] Usando requests padrão (modo nuvem/resiliente) para baixar dados da CCEE...")
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+        }
+        response = requests.get(ccee_url, headers=headers, timeout=60)
+    else:
+        print("[ETL] Usando curl_cffi (modo local) para baixar dados da CCEE...")
+        response = cffi_requests.get(ccee_url, impersonate="chrome", timeout=60)
     
     if response.status_code != 200:
         raise Exception(f"Erro ao baixar arquivo de PLD da CCEE. Status Code: {response.status_code}")
