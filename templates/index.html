@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enecel - Dashboard Energético & ETL</title>
+    
+    <!-- Fontes do Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Ícones FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Estilo Customizado Premium -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        
+        <!-- Sidebar Lateral -->
+        <aside class="sidebar">
+            <div class="logo-area">
+                <i class="fa-solid fa-bolt logo-icon"></i>
+                <span class="logo-text">ENECEL</span>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <button class="nav-btn active" data-tab="resumo">
+                    <i class="fa-solid fa-chart-pie"></i> Visão Geral
+                </button>
+                <button class="nav-btn" data-tab="balanco">
+                    <i class="fa-solid fa-industry"></i> Balanço ONS
+                </button>
+                <button class="nav-btn" data-tab="pld">
+                    <i class="fa-solid fa-circle-dollar-to-slot"></i> PLD Diário
+                </button>
+                <button class="nav-btn" data-tab="ampere">
+                    <i class="fa-solid fa-magnifying-glass-chart"></i> Projeções Ampere
+                </button>
+                <button class="nav-btn" data-tab="bbce">
+                    <i class="fa-solid fa-arrow-trend-up"></i> Histórico BBCE
+                </button>
+                <button class="nav-btn" data-tab="auditoria">
+                    <i class="fa-solid fa-table"></i> Conferir Dados
+                </button>
+                <button class="nav-btn update-nav-btn" data-tab="etl">
+                    <i class="fa-solid fa-rotate"></i> Painel de ETL
+                </button>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <span class="version-text">v1.0.0</span>
+                <span class="status-indicator online"></span>
+            </div>
+        </aside>
+        
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
+            
+            <!-- Barra de Topo -->
+            <header class="top-bar">
+                <div class="page-title-area">
+                    <h1 id="page-title">Visão Geral</h1>
+                    <p id="page-subtitle">Status das bases de dados e resumos operacionais.</p>
+                </div>
+                
+                <div class="top-bar-actions">
+                    <button class="btn btn-primary btn-quick-etl" onclick="switchTab('etl')">
+                        <i class="fa-solid fa-rotate"></i> Atualizar Dados
+                    </button>
+                </div>
+            </header>
+            
+            <!-- Grid de Conteúdo Dinâmico por Tabs -->
+            <div class="content-body">
+                
+                <!-- TAB: RESUMO / VISÃO GERAL -->
+                <div class="tab-pane active" id="tab-resumo">
+                    <div class="cards-grid">
+                        
+                        <!-- Card Balanço -->
+                        <div class="glass-card info-card">
+                            <div class="card-header">
+                                <div class="card-icon-wrapper bg-cyan">
+                                    <i class="fa-solid fa-industry"></i>
+                                </div>
+                                <span class="card-badge badge-cyan">ONS</span>
+                            </div>
+                            <h3>Balanço Energético</h3>
+                            <div class="card-metric">
+                                <span class="metric-label">Último Dado:</span>
+                                <span class="metric-value" id="status-balanco-data">-</span>
+                            </div>
+                            <div class="card-footer">
+                                <div><i class="fa-regular fa-folder"></i> <span id="status-balanco-tamanho">-</span></div>
+                                <div><i class="fa-solid fa-database"></i> <span id="status-balanco-linhas">-</span> lin</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Card PLD -->
+                        <div class="glass-card info-card">
+                            <div class="card-header">
+                                <div class="card-icon-wrapper bg-orange">
+                                    <i class="fa-solid fa-circle-dollar-to-slot"></i>
+                                </div>
+                                <span class="card-badge badge-orange">CCEE</span>
+                            </div>
+                            <h3>PLD Horário</h3>
+                            <div class="card-metric">
+                                <span class="metric-label">Último Dado:</span>
+                                <span class="metric-value" id="status-pld-data">-</span>
+                            </div>
+                            <div class="card-footer">
+                                <div><i class="fa-regular fa-folder"></i> <span id="status-pld-tamanho">-</span></div>
+                                <div><i class="fa-solid fa-database"></i> <span id="status-pld-linhas">-</span> lin</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Card Ampere -->
+                        <div class="glass-card info-card">
+                            <div class="card-header">
+                                <div class="card-icon-wrapper bg-purple">
+                                    <i class="fa-solid fa-magnifying-glass-chart"></i>
+                                </div>
+                                <span class="card-badge badge-purple">Ampere</span>
+                            </div>
+                            <h3>Projeções Ampere</h3>
+                            <div class="card-metric">
+                                <span class="metric-label">Última Rodada:</span>
+                                <span class="metric-value" id="status-ampere-data">-</span>
+                            </div>
+                            <div class="card-footer">
+                                <div><i class="fa-regular fa-folder"></i> <span id="status-ampere-tamanho">-</span></div>
+                                <div><i class="fa-solid fa-database"></i> <span id="status-ampere-linhas">-</span> lin</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Card BBCE -->
+                        <div class="glass-card info-card">
+                            <div class="card-header">
+                                <div class="card-icon-wrapper bg-green">
+                                    <i class="fa-solid fa-arrow-trend-up"></i>
+                                </div>
+                                <span class="card-badge badge-green">BBCE</span>
+                            </div>
+                            <h3>Negócios BBCE</h3>
+                            <div class="card-metric">
+                                <span class="metric-label">Último Dado:</span>
+                                <span class="metric-value" id="status-bbce-data">-</span>
+                            </div>
+                            <div class="card-footer">
+                                <div><i class="fa-regular fa-folder"></i> <span id="status-bbce-tamanho">-</span></div>
+                                <div><i class="fa-solid fa-database"></i> <span id="status-bbce-linhas">-</span> lin</div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    <div class="glass-card welcome-card">
+                        <div class="welcome-text">
+                            <h2>Olá! Bem-vindo ao Dashboard Enecel</h2>
+                            <p>Esta aplicação centraliza a sua rotina de atualização diária de planilhas de energia e fornece análises gráficas integradas. Use o painel lateral para explorar os dados ou clique no botão abaixo para atualizar as bases com os dados mais recentes.</p>
+                            <button class="btn btn-secondary" onclick="switchTab('etl')">Acessar Painel de Atualizações</button>
+                        </div>
+                        <div class="welcome-decor">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- TAB: BALANÇO ONS -->
+                <div class="tab-pane" id="tab-balanco">
+                    <!-- Sub-abas do Balanço -->
+                    <div class="subtab-bar">
+                        <button class="subtab-btn active" id="subtab-balanco-simples" onclick="switchBalancoModo('simples')">
+                            <i class="fa-solid fa-chart-line"></i> Análise Diária Única
+                        </button>
+                        <button class="subtab-btn" id="subtab-balanco-comparacao" onclick="switchBalancoModo('comparacao')">
+                            <i class="fa-solid fa-code-compare"></i> Comparar Dias ou Subsistemas
+                        </button>
+                    </div>
+
+                    <!-- Painel Simples: Análise Diária Única -->
+                    <div id="balanco-painel-simples">
+                        <div class="controls-card glass-card">
+                            <div class="control-group">
+                                <label for="balanco-sub-select">Subsistema:</label>
+                                <select id="balanco-sub-select" onchange="renderBalancoChart()">
+                                    <option value="SE">Sudeste / Centro-Oeste</option>
+                                    <option value="S">Sul</option>
+                                    <option value="NE">Nordeste</option>
+                                    <option value="N">Norte</option>
+                                    <option value="SIN">Sistema Interligado Nacional (SIN)</option>
+                                </select>
+                            </div>
+                            <div class="control-group">
+                                <label for="balanco-data-input">Data:</label>
+                                <input type="date" id="balanco-data-input" onchange="renderBalancoChart()">
+                            </div>
+                        </div>
+
+                        <!-- Cards de Resumo de Médias Diárias -->
+                        <div class="cards-grid balanco-cards-grid" style="margin-bottom: 24px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px;">
+                            
+                            <!-- Card Geração Total -->
+                            <div class="glass-card compact-metric-card border-purple">
+                                <span class="metric-label">Geração Total Média</span>
+                                <div class="metric-large-val" id="avg-geracao-total">-</div>
+                                <div class="metric-minmax">
+                                    <div><i class="fa-solid fa-caret-up" style="color: var(--color-green); margin-right: 2px;"></i> Máx: <span class="val" id="max-geracao-total">-</span> <span class="time" id="max-time-geracao-total">(-h)</span></div>
+                                    <div><i class="fa-solid fa-caret-down" style="color: #f43f5e; margin-right: 2px;"></i> Mín: <span class="val" id="min-geracao-total">-</span> <span class="time" id="min-time-geracao-total">(-h)</span></div>
+                                </div>
+                                <span class="metric-unit">MWm</span>
+                            </div>
+                            
+                            <!-- Card Carga Total -->
+                            <div class="glass-card compact-metric-card border-red">
+                                <span class="metric-label">Carga Média</span>
+                                <div class="metric-large-val" id="avg-carga">-</div>
+                                <div class="metric-minmax">
+                                    <div><i class="fa-solid fa-caret-up" style="color: var(--color-green); margin-right: 2px;"></i> Máx: <span class="val" id="max-carga">-</span> <span class="time" id="max-time-carga">(-h)</span></div>
+                                    <div><i class="fa-solid fa-caret-down" style="color: #f43f5e; margin-right: 2px;"></i> Mín: <span class="val" id="min-carga">-</span> <span class="time" id="min-time-carga">(-h)</span></div>
+                                </div>
+                                <span class="metric-unit">MWm</span>
+                            </div>
+                            
+                            <!-- Card Geração Hidráulica -->
+                            <div class="glass-card compact-metric-card border-cyan">
+                                <span class="metric-label">Média Hidráulica</span>
+                                <div class="metric-large-val" id="avg-ger-hidraulica">-</div>
+                                <div class="metric-minmax">
+                                    <div><i class="fa-solid fa-caret-up" style="color: var(--color-green); margin-right: 2px;"></i> Máx: <span class="val" id="max-ger-hidraulica">-</span> <span class="time" id="max-time-ger-hidraulica">(-h)</span></div>
+                                    <div><i class="fa-solid fa-caret-down" style="color: #f43f5e; margin-right: 2px;"></i> Mín: <span class="val" id="min-ger-hidraulica">-</span> <span class="time" id="min-time-ger-hidraulica">(-h)</span></div>
+                                </div>
+                                <span class="metric-unit">MWm</span>
+                            </div>
+                            
+                            <!-- Card Geração Térmica -->
+                            <div class="glass-card compact-metric-card border-orange">
+                                <span class="metric-label">Média Térmica</span>
+                                <div class="metric-large-val" id="avg-ger-termica">-</div>
+                                <div class="metric-minmax">
+                                    <div><i class="fa-solid fa-caret-up" style="color: var(--color-green); margin-right: 2px;"></i> Máx: <span class="val" id="max-ger-termica">-</span> <span class="time" id="max-time-ger-termica">(-h)</span></div>
+                                    <div><i class="fa-solid fa-caret-down" style="color: #f43f5e; margin-right: 2px;"></i> Mín: <span class="val" id="min-ger-termica">-</span> <span class="time" id="min-time-ger-termica">(-h)</span></div>
+                                </div>
+                                <span class="metric-unit">MWm</span>
+                            </div>
+                            
+                            <!-- Card Geração Eólica -->
+                            <div class="glass-card compact-metric-card border-green">
+                                <span class="metric-label">Média Eólica</span>
+                                <div class="metric-large-val" id="avg-ger-eolica">-</div>
+                                <div class="metric-minmax">
+                                    <div><i class="fa-solid fa-caret-up" style="color: var(--color-green); margin-right: 2px;"></i> Máx: <span class="val" id="max-ger-eolica">-</span> <span class="time" id="max-time-ger-eolica">(-h)</span></div>
+                                    <div><i class="fa-solid fa-caret-down" style="color: #f43f5e; margin-right: 2px;"></i> Mín: <span class="val" id="min-ger-eolica">-</span> <span class="time" id="min-time-ger-eolica">(-h)</span></div>
+                                </div>
+                                <span class="metric-unit">MWm</span>
+                            </div>
+                            
+                            <!-- Card Geração Solar -->
+                            <div class="glass-card compact-metric-card border-yellow">
+                                <span class="metric-label">Média Solar</span>
+                                <div class="metric-large-val" id="avg-ger-solar">-</div>
+                                <div class="metric-minmax">
+                                    <div><i class="fa-solid fa-caret-up" style="color: var(--color-green); margin-right: 2px;"></i> Máx: <span class="val" id="max-ger-solar">-</span> <span class="time" id="max-time-ger-solar">(-h)</span></div>
+                                    <div><i class="fa-solid fa-caret-down" style="color: #f43f5e; margin-right: 2px;"></i> Mín: <span class="val" id="min-ger-solar">-</span> <span class="time" id="min-time-ger-solar">(-h)</span></div>
+                                </div>
+                                <span class="metric-unit">MWm</span>
+                            </div>
+                            
+                            <!-- Card Intercâmbio -->
+                            <div class="glass-card compact-metric-card border-blue">
+                                <span class="metric-label">Intercâmbio Médio</span>
+                                <div class="metric-large-val" id="avg-intercambio">-</div>
+                                <div class="metric-minmax">
+                                    <div><i class="fa-solid fa-caret-up" style="color: var(--color-green); margin-right: 2px;"></i> Máx: <span class="val" id="max-intercambio">-</span> <span class="time" id="max-time-intercambio">(-h)</span></div>
+                                    <div><i class="fa-solid fa-caret-down" style="color: #f43f5e; margin-right: 2px;"></i> Mín: <span class="val" id="min-intercambio">-</span> <span class="time" id="min-time-intercambio">(-h)</span></div>
+                                </div>
+                                <span class="metric-unit">MWm</span>
+                            </div>
+                            
+                            <!-- Card PLD Médio -->
+                            <div class="glass-card compact-metric-card border-orange" id="card-pld-medio-container">
+                                <span class="metric-label">PLD Médio</span>
+                                <div class="metric-large-val" id="avg-pld-diario">-</div>
+                                <div style="height: 18px;"></div>
+                                <span class="metric-unit">R$/MWh</span>
+                            </div>
+                            
+                        </div>
+                        
+                        <div class="chart-container-large glass-card">
+                            <div class="chart-title-wrapper">
+                                <h3>Histórico de Geração por Fonte vs Carga</h3>
+                                <span class="unit-indicator">Unidade: MWm (Valores Horários)</span>
+                            </div>
+                            <div class="chart-wrapper">
+                                <canvas id="chart-balanco"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Faixa de PLD Horário Simples -->
+                        <div class="pld-strip-container glass-card" id="pld-strip-simples" style="display: none;">
+                            <div class="pld-strip-title">Preço de Liquidação das Diferenças (PLD Horário - R$/MWh)</div>
+                            <div class="pld-strip-scroll">
+                                <div class="pld-strip-grid" id="pld-strip-grid-simples"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Painel Comparativo: Comparar Dias ou Subsistemas -->
+                    <div id="balanco-painel-comparacao" style="display: none;">
+                        <!-- Controles Duplos A/B -->
+                        <div class="controls-card-double glass-card">
+                            <!-- Cenário A -->
+                            <div class="scenario-control-group">
+                                <div class="scenario-title cenario-a">
+                                    <i class="fa-solid fa-circle-dot"></i> Cenário A
+                                </div>
+                                <div class="scenario-fields">
+                                    <div class="control-group" style="margin-bottom: 0;">
+                                        <label for="comp-a-sub-select">Subsistema A:</label>
+                                        <select id="comp-a-sub-select" onchange="renderBalancoComparison()">
+                                            <option value="SE">Sudeste / Centro-Oeste</option>
+                                            <option value="S">Sul</option>
+                                            <option value="NE">Nordeste</option>
+                                            <option value="N">Norte</option>
+                                            <option value="SIN">Sistema Interligado Nacional (SIN)</option>
+                                        </select>
+                                    </div>
+                                    <div class="control-group" style="margin-bottom: 0;">
+                                        <label for="comp-a-data-input">Data A:</label>
+                                        <input type="date" id="comp-a-data-input" onchange="renderBalancoComparison()">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Cenário B -->
+                            <div class="scenario-control-group">
+                                <div class="scenario-title cenario-b">
+                                    <i class="fa-solid fa-circle-dot"></i> Cenário B
+                                </div>
+                                <div class="scenario-fields">
+                                    <div class="control-group" style="margin-bottom: 0;">
+                                        <label for="comp-b-sub-select">Subsistema B:</label>
+                                        <select id="comp-b-sub-select" onchange="renderBalancoComparison()">
+                                            <option value="SE">Sudeste / Centro-Oeste</option>
+                                            <option value="S">Sul</option>
+                                            <option value="NE">Nordeste</option>
+                                            <option value="N">Norte</option>
+                                            <option value="SIN">Sistema Interligado Nacional (SIN)</option>
+                                        </select>
+                                    </div>
+                                    <div class="control-group" style="margin-bottom: 0;">
+                                        <label for="comp-b-data-input">Data B:</label>
+                                        <input type="date" id="comp-b-data-input" onchange="renderBalancoComparison()">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Painel de Deltas (Diferenças: B vs A) -->
+                        <div class="glass-card delta-panel-card">
+                            <div class="delta-title">
+                                <i class="fa-solid fa-calculator"></i> Comparativo de Variação (Cenário B vs Cenário A)
+                            </div>
+                            <div class="delta-grid">
+                                <!-- Delta Carga Média -->
+                                <div class="delta-item" id="delta-item-carga">
+                                    <span class="delta-label">Diferença em Carga Média</span>
+                                    <div class="delta-values">
+                                        <span class="delta-val-abs" id="delta-val-abs-carga">- MWm</span>
+                                        <span class="delta-val-pct" id="delta-val-pct-carga">-</span>
+                                    </div>
+                                </div>
+                                <!-- Delta Geração Média -->
+                                <div class="delta-item" id="delta-item-geracao">
+                                    <span class="delta-label">Diferença em Geração Total Média</span>
+                                    <div class="delta-values">
+                                        <span class="delta-val-abs" id="delta-val-abs-geracao">- MWm</span>
+                                        <span class="delta-val-pct" id="delta-val-pct-geracao">-</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Layout Duas Colunas Lado a Lado -->
+                        <div class="split-layout-grid">
+                            <!-- Coluna Cenário A -->
+                            <div class="comp-column">
+                                <div class="comp-column-title">
+                                    <span>Cenário A</span>
+                                    <span class="subtitle-tag" id="title-tag-a">-</span>
+                                </div>
+                                
+                                <div class="balanco-comp-grid">
+                                    <!-- Geração Total -->
+                                    <div class="glass-card compact-metric-card border-purple" style="padding: 10px;">
+                                        <span class="metric-label" style="font-size: 11px;">Geração Total Média</span>
+                                        <div class="metric-large-val" id="comp-a-avg-geracao-total" style="font-size: 20px;">-</div>
+                                        <div class="metric-minmax" style="font-size: 9px; margin-top: 4px;">
+                                            <div>Máx: <span class="val" id="comp-a-max-geracao-total">-</span> <span class="time" id="comp-a-max-time-geracao-total">(-h)</span></div>
+                                            <div>Mín: <span class="val" id="comp-a-min-geracao-total">-</span> <span class="time" id="comp-a-min-time-geracao-total">(-h)</span></div>
+                                        </div>
+                                        <span class="metric-unit" style="font-size: 9px;">MWm</span>
+                                    </div>
+                                    <!-- Carga Média -->
+                                    <div class="glass-card compact-metric-card border-red" style="padding: 10px;">
+                                        <span class="metric-label" style="font-size: 11px;">Carga Média</span>
+                                        <div class="metric-large-val" id="comp-a-avg-carga" style="font-size: 20px;">-</div>
+                                        <div class="metric-minmax" style="font-size: 9px; margin-top: 4px;">
+                                            <div>Máx: <span class="val" id="comp-a-max-carga">-</span> <span class="time" id="comp-a-max-time-carga">(-h)</span></div>
+                                            <div>Mín: <span class="val" id="comp-a-min-carga">-</span> <span class="time" id="comp-a-min-time-carga">(-h)</span></div>
+                                        </div>
+                                        <span class="metric-unit" style="font-size: 9px;">MWm</span>
+                                    </div>
+                                    <!-- Hidráulica -->
+                                    <div class="glass-card compact-metric-card border-cyan" style="padding: 10px;">
+                                        <span class="metric-label" style="font-size: 11px;">Média Hidráulica</span>
+                                        <div class="metric-large-val" id="comp-a-avg-ger-hidraulica" style="font-size: 20px;">-</div>
+                                        <div class="metric-minmax" style="font-size: 9px; margin-top: 4px;">
+                                            <div>Máx: <span class="val" id="comp-a-max-ger-hidraulica">-</span> <span class="time" id="comp-a-max-time-ger-hidraulica">(-h)</span></div>
+                                            <div>Mín: <span class="val" id="comp-a-min-ger-hidraulica">-</span> <span class="time" id="comp-a-min-time-ger-hidraulica">(-h)</span></div>
+                                        </div>
+                                        <span class="metric-unit" style="font-size: 9px;">MWm</span>
+                                    </div>
+                                    <!-- Térmica -->
+                                    <div class="glass-card compact-metric-card border-orange" style="padding: 10px;">
+                                        <span class="metric-label" style="font-size: 11px;">Média Térmica</span>
+                                        <div class="metric-large-val" id="comp-a-avg-ger-termica" style="font-size: 20px;">-</div>
+                                        <div class="metric-minmax" style="font-size: 9px; margin-top: 4px;">
+                                            <div>Máx: <span class="val" id="comp-a-max-ger-termica">-</span> <span class="time" id="comp-a-max-time-ger-termica">(-h)</span></div>
+                                            <div>Mín: <span class="val" id="comp-a-min-ger-termica">-</span> <span class="time" id="comp-a-min-time-ger-termica">(-h)</span></div>
+                                        </div>
+                                        <span class="metric-unit" style="font-size: 9px;">MWm</span>
+                                    </div>
+                                    <!-- Eólica -->
+                                    <div class="glass-card compact-metric-card border-green" style="padding: 10px;">
+                                        <span class="metric-label" style="font-size: 11px;">Média Eólica</span>
+                                        <div class="metric-large-val" id="comp-a-avg-ger-eolica" style="font-size: 20px;">-</div>
+                                        <div class="metric-minmax" style="font-size: 9px; margin-top: 4px;">
+                                            <div>Máx: <span class="val" id="comp-a-max-ger-eolica">-</span> <span class="time" id="comp-a-max-time-ger-eolica">(-h)</span></div>
+                                            <div>Mín: <span class="val" id="comp-a-min-ger-eolica">-</span> <span class="time" id="comp-a-min-time-ger-eolica">(-h)</span></div>
+                                        </div>
+                                        <span class="metric-unit" style="font-size: 9px;">MWm</span>
+                                    </div>
+                                    <!-- Solar -->
+                                    <div class="glass-card compact-metric-card border-yellow" style="padding: 10px;">
+                                        <span class="metric-label" style="font-size: 11px;">Média Solar</span>
+                                        <div class="metric-large-val" id="comp-a-avg-ger-solar" style="font-size: 20px;">-</div>
+                                        <div class="metric-minmax" style="font-size: 9px; margin-top: 4px;">
+                                            <div>Máx: <span class="val" id="comp-a-max-ger-solar">-</span> <span class="time" id="comp-a-max-time-ger-solar">(-h)</span></div>
+                                            <div>Mín: <span class="val" id="comp-a-min-ger-solar">-</span> <span class="time" id="comp-a-min-time-ger-solar">(-h)</span></div>
+                                        </div>
+                                        <span class="metric-unit" style="font-size: 9px;">MWm</span>
+                                    </div>
+                                    <!-- Intercâmbio -->
+                                    <div class="glass-card compact-metric-card border-blue" style="padding: 10px;">
+                                        <span class="metric-label" style="font-size: 11px;">Intercâmbio Médio</span>
+                                        <div class="metric-large-val" id="comp-a-avg-intercambio" style="font-size: 20px;">-</div>
+                                        <div class="metric-minmax" style="font-size: 9px; margin-top: 4px;">
+                                            <div>Máx: <span class="val" id="comp-a-max-intercambio">-</span> <span class="time" id="comp-a-max-time-intercambio">(-h)</span></div>
+                                            <div>Mín: <span class="val" id="comp-a-min-intercambio">-</span> <span class="time" id="comp-a-min-time-intercambio">(-h)</span></div>
+                                        </div>
+                                        <span class="metric-unit" style="font-size: 9px;">MWm</span>
+                                    </div>
+                                    
+                                    <!-- PLD Médio Cenário A -->
+                                    <div class="glass-card compact-metric-card border-orange" id="comp-a-card-pld-medio-container" style="padding: 10px;">
+                                        <span class="metric-label" style="font-size: 11px;">PLD Médio</span>
+                                        <div class="metric-large-val" id="comp-a-avg-pld-diario" style="font-size: 20px;">-</div>
+                                        <div style="height: 14px;"></div>
+                                        <span class="metric-unit" style="font-size: 9px;">R$/MWh</span>
+                                    </div>
+                                </div>
+
+                                <div class="chart-container-large chart-container-comparison glass-card">
+                                    <div class="chart-wrapper" style="height: 100%;">
+                                        <canvas id="chart-balanco-comp-a"></canvas>
+                                    </div>
+                                </div>
+                                
+                                <!-- Faixa de PLD Horário Cenário A -->
+                                <div class="pld-strip-container glass-card" id="pld-strip-comp-a" style="display: none; margin-top: 10px; padding: 12px;">
+                                    <div class="pld-strip-title" style="font-size: 11px; margin-bottom: 8px;">PLD Horário - R$/MWh (Cenário A)</div>
+                                    <div class="pld-strip-scroll">
+                                        <div class="pld-strip-grid" id="pld-strip-grid-comp-a"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Coluna Cenário B -->
+                            <div class="comp-column">
+                                <div class="comp-column-title">
+                                    <span>Cenário B</span>
+                                    <span class="subtitle-tag" id="title-tag-b">-</span>
+                                </div>
+                                
+                                <div class="balanco-comp-grid">
+                                    <!-- Geração Total -->
+                                    <div class="glass-card compact-metric-card border-purple" style="padding: 10px;">
+                                        <span class="metric-label" style="font-size: 11px;">Geração Total Média</span>
+                                        <div class="metric-large-val" id="comp-b-avg-geracao-total" style="font-size: 20px;">-</div>
+                                        <div class="metric-minmax" style="font-size: 9px; margin-top: 4px;">
+                                            <div>Máx: <span class="val" id="comp-b-max-geracao-total">-</span> <span class="time" id="comp-b-max-time-geracao-total">(-h)</span></div>
+                                            <div>Mín: <span class="val" id="comp-b-min-geracao-total">-</span> <span class="time" id="comp-b-min-time-geracao-total">(-h)</span></div>
+                                        </div>
+                                        <span class="metric-unit" style="font-size: 9px;">MWm</span>
+                                    </div>
+                                    <!-- Carga Média -->
+                                    <div class="glass-card compact-metric-card border-red" style="padding: 10px;">
+                                        <span class="metric-label" style="font-size: 11px;">Carga Média</span>
+                                        <div class="metric-large-val" id="comp-b-avg-carga" style="font-size: 20px;">-</div>
+                                        <div class="metric-minmax" style="font-size: 9px; margin-top: 4px;">
+                                            <div>Máx: <span class="val" id="comp-b-max-carga">-</span> <span class="time" id="comp-b-max-time-carga">(-h)</span></div>
+                                            <div>Mín: <span class="val" id="comp-b-min-carga">-</span> <span class="time" id="comp-b-min-time-carga">(-h)</span></div>
+                                        </div>
+                                        <span class="metric-unit" style="font-size: 9px;">MWm</span>
+                                    </div>
+                                    <!-- Hidráulica -->
+                                    <div class="glass-card compact-metric-card border-cyan" style="padding: 10px;">
+                                        <span class="metric-label" style="font-size: 11px;">Média Hidráulica</span>
+                                        <div class="metric-large-val" id="comp-b-avg-ger-hidraulica" style="font-size: 20px;">-</div>
+                                        <div class="metric-minmax" style="font-size: 9px; margin-top: 4px;">
+                                            <div>Máx: <span class="val" id="comp-b-max-ger-hidraulica">-</span> <span class="time" id="comp-b-max-time-ger-hidraulica">(-h)</span></div>
+                                            <div>Mín: <span class="val" id="comp-b-min-ger-hidraulica">-</span> <span class="time" id="comp-b-min-time-ger-hidraulica">(-h)</span></div>
+                                        </div>
+                                        <span class="metric-unit" style="font-size: 9px;">MWm</span>
+                                    </div>
+                                    <!-- Térmica -->
+                                    <div class="glass-card compact-metric-card border-orange" style="padding: 10px;">
+                                        <span class="metric-label" style="font-size: 11px;">Média Térmica</span>
+                                        <div class="metric-large-val" id="comp-b-avg-ger-termica" style="font-size: 20px;">-</div>
+                                        <div class="metric-minmax" style="font-size: 9px; margin-top: 4px;">
+                                            <div>Máx: <span class="val" id="comp-b-max-ger-termica">-</span> <span class="time" id="comp-b-max-time-ger-termica">(-h)</span></div>
+                                            <div>Mín: <span class="val" id="comp-b-min-ger-termica">-</span> <span class="time" id="comp-b-min-time-ger-termica">(-h)</span></div>
+                                        </div>
+                                        <span class="metric-unit" style="font-size: 9px;">MWm</span>
+                                    </div>
+                                    <!-- Eólica -->
+                                    <div class="glass-card compact-metric-card border-green" style="padding: 10px;">
+                                        <span class="metric-label" style="font-size: 11px;">Média Eólica</span>
+                                        <div class="metric-large-val" id="comp-b-avg-ger-eolica" style="font-size: 20px;">-</div>
+                                        <div class="metric-minmax" style="font-size: 9px; margin-top: 4px;">
+                                            <div>Máx: <span class="val" id="comp-b-max-ger-eolica">-</span> <span class="time" id="comp-b-max-time-ger-eolica">(-h)</span></div>
+                                            <div>Mín: <span class="val" id="comp-b-min-ger-eolica">-</span> <span class="time" id="comp-b-min-time-ger-eolica">(-h)</span></div>
+                                        </div>
+                                        <span class="metric-unit" style="font-size: 9px;">MWm</span>
+                                    </div>
+                                    <!-- Solar -->
+                                    <div class="glass-card compact-metric-card border-yellow" style="padding: 10px;">
+                                        <span class="metric-label" style="font-size: 11px;">Média Solar</span>
+                                        <div class="metric-large-val" id="comp-b-avg-ger-solar" style="font-size: 20px;">-</div>
+                                        <div class="metric-minmax" style="font-size: 9px; margin-top: 4px;">
+                                            <div>Máx: <span class="val" id="comp-b-max-ger-solar">-</span> <span class="time" id="comp-b-max-time-ger-solar">(-h)</span></div>
+                                            <div>Mín: <span class="val" id="comp-b-min-ger-solar">-</span> <span class="time" id="comp-b-min-time-ger-solar">(-h)</span></div>
+                                        </div>
+                                        <span class="metric-unit" style="font-size: 9px;">MWm</span>
+                                    </div>
+                                    <!-- Intercâmbio -->
+                                    <div class="glass-card compact-metric-card border-blue" style="padding: 10px;">
+                                        <span class="metric-label" style="font-size: 11px;">Intercâmbio Médio</span>
+                                        <div class="metric-large-val" id="comp-b-avg-intercambio" style="font-size: 20px;">-</div>
+                                        <div class="metric-minmax" style="font-size: 9px; margin-top: 4px;">
+                                            <div>Máx: <span class="val" id="comp-b-max-intercambio">-</span> <span class="time" id="comp-b-max-time-intercambio">(-h)</span></div>
+                                            <div>Mín: <span class="val" id="comp-b-min-intercambio">-</span> <span class="time" id="comp-b-min-time-intercambio">(-h)</span></div>
+                                        </div>
+                                        <span class="metric-unit" style="font-size: 9px;">MWm</span>
+                                    </div>
+                                    
+                                    <!-- PLD Médio Cenário B -->
+                                    <div class="glass-card compact-metric-card border-orange" id="comp-b-card-pld-medio-container" style="padding: 10px;">
+                                        <span class="metric-label" style="font-size: 11px;">PLD Médio</span>
+                                        <div class="metric-large-val" id="comp-b-avg-pld-diario" style="font-size: 20px;">-</div>
+                                        <div style="height: 14px;"></div>
+                                        <span class="metric-unit" style="font-size: 9px;">R$/MWh</span>
+                                    </div>
+                                </div>
+
+                                <div class="chart-container-large chart-container-comparison glass-card">
+                                    <div class="chart-wrapper" style="height: 100%;">
+                                        <canvas id="chart-balanco-comp-b"></canvas>
+                                    </div>
+                                </div>
+                                
+                                <!-- Faixa de PLD Horário Cenário B -->
+                                <div class="pld-strip-container glass-card" id="pld-strip-comp-b" style="display: none; margin-top: 10px; padding: 12px;">
+                                    <div class="pld-strip-title" style="font-size: 11px; margin-bottom: 8px;">PLD Horário - R$/MWh (Cenário B)</div>
+                                    <div class="pld-strip-scroll">
+                                        <div class="pld-strip-grid" id="pld-strip-grid-comp-b"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- TAB: PLD DIÁRIO -->
+                <div class="tab-pane" id="tab-pld">
+                    <div class="controls-card glass-card">
+                        <div class="control-group">
+                            <label for="pld-periodo-select">Período de Exibição:</label>
+                            <select id="pld-periodo-select" onchange="loadPldData()">
+                                <option value="7">Últimos 7 dias</option>
+                                <option value="15">Últimos 15 dias</option>
+                                <option value="30">Últimos 30 dias</option>
+                                <option value="60" selected>Últimos 60 dias</option>
+                                <option value="90">Últimos 90 dias</option>
+                                <option value="180">Últimos 180 dias</option>
+                                <option value="365">Último ano</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="chart-container-large glass-card">
+                        <div class="chart-title-wrapper">
+                            <h3>Preço de Liquidação das Diferenças (PLD Médio Diário)</h3>
+                            <span class="unit-indicator">Unidade: R$/MWh (Média Diária dos Últimos 60 Dias)</span>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="chart-pld"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- TAB: AMPERE PROJEÇÕES -->
+                <div class="tab-pane" id="tab-ampere">
+                    
+                    <!-- Sub-abas do Ampere -->
+                    <div class="subtab-bar">
+                        <button class="subtab-btn active" id="subtab-ampere-forward" onclick="switchAmpereModo('forward')">
+                            <i class="fa-solid fa-chart-line"></i> Curva Forward Comparativa
+                        </button>
+                        <button class="subtab-btn" id="subtab-ampere-evolucao" onclick="switchAmpereModo('evolucao')">
+                            <i class="fa-solid fa-timeline"></i> Evolução de Produto por Rodada
+                        </button>
+                    </div>
+
+                    <!-- Painel 1: Curva Forward Comparativa -->
+                    <div id="ampere-painel-forward">
+                        <div class="controls-card glass-card">
+                            <div class="control-group">
+                                <label for="ampere-fw-indicador">Indicador:</label>
+                                <select id="ampere-fw-indicador" onchange="renderAmpereForward()">
+                                    <option value="ENA-MWmed">ENA (MWmed)</option>
+                                    <option value="ENA-%">ENA (% MLT)</option>
+                                    <option value="PLD-R$/MWh">PLD (R$/MWh)</option>
+                                </select>
+                            </div>
+                            <div class="control-group">
+                                <label for="ampere-fw-subsistema">Subsistema:</label>
+                                <select id="ampere-fw-subsistema" onchange="renderAmpereForward()">
+                                    <option value="Sudeste/Centro-Oeste">Sudeste / Centro-Oeste</option>
+                                    <option value="Sul">Sul</option>
+                                    <option value="Nordeste">Nordeste</option>
+                                    <option value="Norte">Norte</option>
+                                    <option value="SIN">SIN</option>
+                                </select>
+                            </div>
+                            <div class="control-group scroll-control-group">
+                                <div class="control-group-header">
+                                    <label>Selecionar Rodadas:</label>
+                                    <div class="control-group-actions">
+                                        <button type="button" class="btn-link" onclick="toggleAllFwRodadas(true)">Todas</button>
+                                        <span>|</span>
+                                        <button type="button" class="btn-link" onclick="toggleAllFwRodadas(false)">Nenhuma</button>
+                                    </div>
+                                </div>
+                                <div class="checkbox-group-scroll" id="ampere-fw-rodadas-container">
+                                    <!-- Inserido dinamicamente pelo JS -->
+                                </div>
+                            </div>
+                            <div class="control-group toggle-control-group">
+                                <label>Visualização:</label>
+                                <div class="segmented-control">
+                                    <button class="segment-btn active" id="segment-fw-chart" onclick="setAmpereFwView('chart')">
+                                        <i class="fa-solid fa-chart-area"></i> Gráfico
+                                    </button>
+                                    <button class="segment-btn" id="segment-fw-table" onclick="setAmpereFwView('table')">
+                                        <i class="fa-solid fa-table-list"></i> Tabela
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Gráfico da Curva Forward -->
+                        <div class="chart-container-large glass-card" id="ampere-fw-chart-container">
+                            <div class="chart-title-wrapper">
+                                <h3>Curva Forward de Projeções</h3>
+                                <span class="unit-indicator" id="ampere-fw-chart-legend">Unidade: MWmed</span>
+                            </div>
+                            <div class="chart-wrapper">
+                                <canvas id="chart-ampere-forward"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Tabela da Curva Forward -->
+                        <div class="table-container glass-card" id="ampere-fw-table-container" style="display: none;">
+                            <div class="table-wrapper">
+                                <table class="data-table" id="ampere-fw-table">
+                                    <!-- Inserido dinamicamente pelo JS -->
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Painel 2: Evolução de Produto por Rodada -->
+                    <div id="ampere-painel-evolucao" style="display: none;">
+                        <div class="controls-card glass-card">
+                            <div class="control-group">
+                                <label for="ampere-ev-indicador">Indicador:</label>
+                                <select id="ampere-ev-indicador" onchange="renderAmpereEvolucao()">
+                                    <option value="ENA-MWmed">ENA (MWmed)</option>
+                                    <option value="ENA-%">ENA (% MLT)</option>
+                                    <option value="PLD-R$/MWh">PLD (R$/MWh)</option>
+                                </select>
+                            </div>
+                            <div class="control-group">
+                                <label for="ampere-ev-subsistema">Subsistema:</label>
+                                <select id="ampere-ev-subsistema" onchange="renderAmpereEvolucao()">
+                                    <option value="Sudeste/Centro-Oeste">Sudeste / Centro-Oeste</option>
+                                    <option value="Sul">Sul</option>
+                                    <option value="Nordeste">Nordeste</option>
+                                    <option value="Norte">Norte</option>
+                                    <option value="SIN">SIN</option>
+                                </select>
+                            </div>
+                            <div class="control-group">
+                                <label for="ampere-ev-produto">Mês de Referência (Produto):</label>
+                                <select id="ampere-ev-produto" onchange="renderAmpereEvolucao()">
+                                    <!-- Inserido dinamicamente pelo JS -->
+                                </select>
+                            </div>
+                            <div class="control-group toggle-control-group">
+                                <label>Visualização:</label>
+                                <div class="segmented-control">
+                                    <button class="segment-btn active" id="segment-ev-chart" onclick="setAmpereEvView('chart')">
+                                        <i class="fa-solid fa-chart-line"></i> Gráfico
+                                    </button>
+                                    <button class="segment-btn" id="segment-ev-table" onclick="setAmpereEvView('table')">
+                                        <i class="fa-solid fa-table-list"></i> Tabela
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Gráfico de Evolução -->
+                        <div class="chart-container-large glass-card" id="ampere-ev-chart-container">
+                            <div class="chart-title-wrapper">
+                                <h3>Evolução da Projeção por Rodada</h3>
+                                <span class="unit-indicator" id="ampere-ev-chart-legend">Unidade: MWmed</span>
+                            </div>
+                            <div class="chart-wrapper">
+                                <canvas id="chart-ampere-evolution"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Tabela de Evolução -->
+                        <div class="table-container glass-card" id="ampere-ev-table-container" style="display: none;">
+                            <div class="table-wrapper">
+                                <table class="data-table" id="ampere-ev-table">
+                                     <!-- Inserido dinamicamente pelo JS -->
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                
+                <!-- TAB: HISTÓRICO BBCE -->
+                <div class="tab-pane" id="tab-bbce">
+                    <div class="controls-card glass-card">
+                        <!-- Busca de Produto por Nome (Autocomplete) -->
+                        <div class="control-group" style="flex: 2; min-width: 280px; position: relative;">
+                            <label for="bbce-produto-search">Produto:</label>
+                            <div class="search-input-wrapper">
+                                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                                <input type="text" id="bbce-produto-search" placeholder="Comece a digitar o nome do produto..." autocomplete="off">
+                            </div>
+                            <div id="bbce-autocomplete-list" class="autocomplete-dropdown"></div>
+                        </div>
+                        <div class="control-group">
+                            <label for="bbce-contrato-select">Tipo de Contrato:</label>
+                            <select id="bbce-contrato-select" onchange="renderBbceChart()">
+                                <option value="Todos">Todos os Tipos</option>
+                                <option value="Negócio/Balcão">Negócio/Balcão</option>
+                                <option value="Registro/Boleta">Registro/Boleta</option>
+                            </select>
+                        </div>
+                        <!-- Período de Análise com Inputs e Range Slider Duplo -->
+                        <div class="control-group bbce-periodo-container" style="flex: 3; min-width: 300px; display: flex; flex-direction: column; justify-content: space-between;">
+                            <label style="font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px;"><i class="fa-regular fa-calendar-days" style="color: #3b82f6; margin-right: 6px;"></i> Período de Análise</label>
+                            
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                                <input type="date" id="bbce-data-inicio" style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border); border-radius: 4px; padding: 4px 8px; color: var(--text-primary); font-family: 'Inter', sans-serif; font-size: 12px; outline: none; width: 130px;">
+                                <span style="color: var(--text-muted); font-size: 11px;">até</span>
+                                <input type="date" id="bbce-data-fim" style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border); border-radius: 4px; padding: 4px 8px; color: var(--text-primary); font-family: 'Inter', sans-serif; font-size: 12px; outline: none; width: 130px;">
+                            </div>
+                            
+                            <div class="range-slider-wrapper">
+                                <div class="range-slider-track"></div>
+                                <div class="range-slider-highlight" id="bbce-range-highlight"></div>
+                                <input type="range" id="bbce-range-min" class="range-slider-input" min="0" max="100" value="0">
+                                <input type="range" id="bbce-range-max" class="range-slider-input" min="0" max="100" value="100">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Container de Chips de Produtos Selecionados -->
+                    <div class="bbce-chips-container glass-card" id="bbce-selected-chips" style="margin-bottom: 24px; padding: 12px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
+                        <span style="font-size: 11px; color: var(--text-secondary); margin-right: 8px;"><i class="fa-solid fa-tags"></i> Selecionados:</span>
+                        <!-- Inserido dinamicamente via JS -->
+                    </div>
+
+                    <!-- Métricas Rápidas da Seleção -->
+                    <div class="cards-grid bbce-cards-grid" style="margin-bottom: 24px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+                        <div class="glass-card compact-metric-card border-green">
+                            <span class="metric-label">Preço Médio Ponderado</span>
+                            <div class="metric-large-val" id="bbce-metric-preco-medio">-</div>
+                            <div class="metric-minmax" style="margin-top: 4px; display: flex; flex-direction: column; gap: 2px;">
+                                <div><i class="fa-solid fa-caret-up" style="color: var(--color-green); margin-right: 2px;"></i> Máx: <span class="val" id="bbce-preco-max">-</span> <span class="time" id="bbce-time-preco-max">(--/--)</span></div>
+                                <div><i class="fa-solid fa-caret-down" style="color: #f43f5e; margin-right: 2px;"></i> Mín: <span class="val" id="bbce-preco-min">-</span> <span class="time" id="bbce-time-preco-min">(--/--)</span></div>
+                            </div>
+                            <span class="metric-unit">R$/MWh</span>
+                        </div>
+                        <div class="glass-card compact-metric-card border-cyan">
+                            <span class="metric-label">Volume Total Negociado</span>
+                            <div class="metric-large-val" id="bbce-metric-volume">-</div>
+                            <span class="metric-unit">MWm</span>
+                        </div>
+                        <div class="glass-card compact-metric-card border-purple">
+                            <span class="metric-label">Quantidade de Contratos</span>
+                            <div class="metric-large-val" id="bbce-metric-contratos">-</div>
+                            <span class="metric-unit">Negócios</span>
+                        </div>
+                    </div>
+
+                    <!-- Gráfico de Histórico BBCE -->
+                    <div class="chart-container-large glass-card" style="margin-bottom: 24px;">
+                        <div class="chart-title-wrapper">
+                            <h3>Preços e Volumes de Negociação na BBCE</h3>
+                            <span class="unit-indicator">Preço Médio Ponderado (Linha, R$/MWh) e Volume Total (Barras, MWm) por Dia</span>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="chart-bbce-historico"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- TAB: AUDITORIA / CONFERIR DADOS -->
+                <div class="tab-pane" id="tab-auditoria">
+                    <div class="controls-card glass-card">
+                        <div class="control-group">
+                            <label for="auditoria-base-select">Selecione a Base:</label>
+                            <select id="auditoria-base-select" onchange="loadAuditoriaData()">
+                                <option value="balanco">Balanço Energético (ONS)</option>
+                                <option value="pld">PLD Horário (CCEE)</option>
+                                <option value="ampere">Projeções Ampere</option>
+                                <option value="bbce">Negócios BBCE</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <span class="unit-indicator">Exibindo os 100 registros mais recentes em ordem cronológica reversa.</span>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container glass-card">
+                        <div class="table-wrapper">
+                            <table class="data-table" id="auditoria-table">
+                                <thead id="auditoria-table-head">
+                                    <!-- Inserido dinamicamente pelo JS -->
+                                </thead>
+                                <tbody id="auditoria-table-body">
+                                    <!-- Inserido dinamicamente pelo JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- TAB: PAINEL DE ETL / IMPORTAÇÃO -->
+                <div class="tab-pane" id="tab-etl">
+                    <div class="etl-grid">
+                        
+                        <!-- Automação do Balanço ONS -->
+                        <div class="glass-card etl-control-card">
+                            <div class="etl-card-header bg-cyan">
+                                <i class="fa-solid fa-cloud-arrow-down"></i>
+                                <h3>Balanço Energético (ONS)</h3>
+                            </div>
+                            <p class="etl-card-desc">Sincroniza os dados de geração do subsistema diretamente com a API do ONS de 2026 e anexa novos dias de forma incremental.</p>
+                            <div class="etl-status-info">
+                                <span>Último registro na base: <strong id="etl-balanco-last">-</strong></span>
+                            </div>
+                            <button class="btn btn-cyan btn-block" id="btn-sync-balanco" onclick="runETL('balanco')">
+                                <i class="fa-solid fa-sync"></i> Sincronizar com ONS
+                            </button>
+                        </div>
+                        
+                        <!-- Automação do PLD CCEE -->
+                        <div class="glass-card etl-control-card">
+                            <div class="etl-card-header bg-orange">
+                                <i class="fa-solid fa-cloud-arrow-down"></i>
+                                <h3>PLD Horário (CCEE)</h3>
+                            </div>
+                            <p class="etl-card-desc">Baixa os dados do PLD horário diretamente da API da CCEE e atualiza a base do ano corrente de forma 100% automatizada.</p>
+                            <div class="etl-status-info">
+                                <span>Status da base: <strong id="etl-pld-last">-</strong></span>
+                            </div>
+                            <button class="btn btn-orange btn-block" id="btn-sync-pld" onclick="runETL('pld')">
+                                <i class="fa-solid fa-sync"></i> Sincronizar com CCEE
+                            </button>
+                        </div>
+                        
+                        <!-- Upload PDF Ampere -->
+                        <div class="glass-card etl-control-card full-width-card">
+                            <div class="etl-card-header bg-purple">
+                                <i class="fa-solid fa-file-pdf"></i>
+                                <h3>Relatório Semanal Ampere</h3>
+                            </div>
+                            <p class="etl-card-desc">Faça o upload do relatório PDF recebido semanalmente. O sistema extrairá 68 registros correspondentes a ENA, EAR e PLD do cenário BASE.</p>
+                            
+                            <div class="upload-dropzone" id="pdf-dropzone">
+                                <i class="fa-regular fa-file-pdf dropzone-icon"></i>
+                                <p class="dropzone-text">Arraste e solte o arquivo PDF aqui ou <span>clique para navegar</span></p>
+                                <span class="dropzone-sub">Formatos aceitos: .pdf (ex: Ampere_semanal_20260609.pdf)</span>
+                                <input type="file" id="pdf-file-input" accept=".pdf" style="display: none;">
+                            </div>
+                            
+                            <div class="selected-file-area" id="selected-file-area" style="display: none;">
+                                <div class="file-info">
+                                    <i class="fa-solid fa-file-pdf text-purple"></i>
+                                    <span id="selected-file-name">NomeDoArquivo.pdf</span>
+                                </div>
+                                <div class="file-actions">
+                                    <button class="btn btn-purple" id="btn-upload-ampere" onclick="uploadAmperePDF()">
+                                        <i class="fa-solid fa-upload"></i> Processar e Importar
+                                    </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Upload Manual BBCE -->
+                        <div class="glass-card etl-control-card full-width-card" style="margin-bottom: 16px;">
+                            <div class="etl-card-header bg-green">
+                                <i class="fa-solid fa-arrow-trend-up"></i>
+                                <h3>Histórico de Preços e Negócios (BBCE)</h3>
+                            </div>
+                            <p class="etl-card-desc">Atualize a base de negócios da BBCE de forma incremental e sem duplicados. O sistema analisa cada transação na planilha Excel exportada no eHub BBCE e descarta automaticamente lançamentos idênticos já existentes.</p>
+                            
+                            <div class="etl-status-info" style="margin-bottom: 16px;">
+                                <span>Último registro na base: <strong id="etl-bbce-last">-</strong></span>
+                                <span style="margin-left: 16px; color: var(--color-green); font-size: 11px;"><i class="fa-solid fa-shield-halved"></i> Proteção contra Duplicidade Ativa</span>
+                            </div>
+                            
+                            <div class="bbce-etl-actions-wrapper" style="display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 8px;">
+                                <!-- Bloco Importação Manual Ampliado -->
+                                <div style="flex: 1; min-width: 280px; background: rgba(255,255,255,0.02); padding: 20px; border-radius: 6px; border: 1px solid var(--glass-border); display: flex; flex-direction: column; justify-content: space-between; gap: 16px;">
+                                    <div>
+                                        <h4 style="margin-top: 0; margin-bottom: 8px; color: var(--text-primary); font-size: 14px;"><i class="fa-solid fa-file-excel" style="color: #107c41; margin-right: 6px;"></i> Upload de Negócios</h4>
+                                        <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.4;">Selecione ou arraste a planilha Excel (Todos os Negócios) gerada e baixada do portal eHub BBCE. Os novos registros serão mesclados com segurança na planilha local.</p>
+                                    </div>
+                                    
+                                    <div class="upload-dropzone" id="bbce-dropzone" style="padding: 24px 12px; min-height: 110px; border-style: dashed; border-color: rgba(255,255,255,0.15); display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                                        <i class="fa-regular fa-file-excel dropzone-icon" style="font-size: 32px; margin-bottom: 8px; color: #107c41;"></i>
+                                        <p class="dropzone-text" style="font-size: 12px; font-weight: 500; margin-bottom: 4px;">Arraste a planilha de negócios aqui ou <span style="color: var(--color-green); text-decoration: underline; cursor: pointer;">clique para navegar</span></p>
+                                        <span class="dropzone-sub" style="font-size: 10px; color: var(--text-muted);">Extensões aceitas: .xlsx ou .xls</span>
+                                        <input type="file" id="bbce-file-input" accept=".xlsx,.xls" style="display: none;">
+                                    </div>
+                                    
+                                    <div class="selected-file-area" id="bbce-selected-file-area" style="display: none; padding: 12px; background: rgba(0,0,0,0.3); border-radius: 4px; border: 1px solid rgba(255,255,255,0.05);">
+                                        <div class="file-info" style="font-size: 12px; display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                                            <span id="bbce-selected-file-name" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width: 70%; font-weight: 500;"><i class="fa-solid fa-file-excel text-green" style="margin-right: 6px;"></i>Planilha.xlsx</span>
+                                            <div style="display: flex; gap: 8px;">
+                                                <button class="btn btn-green" id="btn-upload-bbce" onclick="uploadBbceExcel()" style="padding: 6px 12px; font-size: 11px;">Importar</button>
+                                                <button class="btn btn-secondary" onclick="clearSelectedBbceFile()" style="padding: 6px 12px; font-size: 11px; background: transparent; border: 1px solid rgba(255,255,255,0.15);">Cancelar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Console de Logs da Operação -->
+                        <div class="glass-card console-card full-width-card">
+                            <div class="console-header">
+                                <h3>Console de Processamento</h3>
+                                <button class="btn btn-text btn-xs" onclick="clearConsole()"><i class="fa-solid fa-trash"></i> Limpar</button>
+                            </div>
+                            <div class="console-log-body" id="console-logs">
+                                <div class="log-line log-system">> Aguardando instrução...</div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+            </div>
+            
+        </main>
+    </div>
+    
+    <!-- Container de Toasts/Notificações -->
+    <div id="toast-container" class="toast-container"></div>
+    
+    <!-- Script Principal -->
+    <script src="/static/js/dashboard.js"></script>
+</body>
+</html>

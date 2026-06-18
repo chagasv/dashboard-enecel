@@ -1,0 +1,687 @@
+import os
+import tempfile
+import json
+from flask import Flask, jsonify, request, render_template
+import pandas as pd
+import datetime
+
+# Importa as rotinas de ETL criadas no etl.py
+from etl import atualizar_balanco_energetico, atualizar_pld, extrair_ampere_pdf, atualizar_negocios_bbce, ler_excel_com_copia
+from bbce_scraper import executar_automacao_bbce
+
+app = Flask(__name__, static_folder='static', template_folder='templates')
+
+# Caminhos dos arquivos de planilhas
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+PLANILHAS_DIR = os.path.join(BASE_DIR, 'planilhas_para_atualizar')
+
+PATH_BALANCO = os.path.join(PLANILHAS_DIR, 'f_balanco_energetico.xlsx')
+PATH_PLD = os.path.join(PLANILHAS_DIR, 'f_pld.xlsx')
+PATH_AMPERE = os.path.join(PLANILHAS_DIR, 'f_rodadas_ampere.xlsx')
+PATH_BBCE = os.path.join(PLANILHAS_DIR, 'f_todos_os_negocios_bbce.xlsx')
+
+# Caminhos dos arquivos de cache JSON
+CACHE_BALANCO = os.path.join(PLANILHAS_DIR, 'balanco_cache.json')
+CACHE_PLD = os.path.join(PLANILHAS_DIR, 'pld_cache.json')
+CACHE_AMPERE = os.path.join(PLANILHAS_DIR, 'ampere_cache.json')
+CACHE_AMPERE_COMPLETO = os.path.join(PLANILHAS_DIR, 'ampere_completo_cache.json')
+
+CACHE_BALANCO_RECENT = os.path.join(PLANILHAS_DIR, 'balanco_recent_cache.json')
+CACHE_PLD_RECENT = os.path.join(PLANILHAS_DIR, 'pld_recent_cache.json')
+CACHE_AMPERE_RECENT = os.path.join(PLANILHAS_DIR, 'ampere_recent_cache.json')
+CACHE_PLD_HORARIO = os.path.join(PLANILHAS_DIR, 'pld_horario_cache.json')
+CACHE_BBCE = os.path.join(PLANILHAS_DIR, 'bbce_diario_cache.json')
+CACHE_BBCE_RECENT = os.path.join(PLANILHAS_DIR, 'bbce_recent_cache.json')
+
+PATH_METADADOS = os.path.join(PLANILHAS_DIR, 'metadata.json')
+
+# Garante que o diretorio de planilhas exista
+os.makedirs(PLANILHAS_DIR, exist_ok=True)
+
+# ----------------- AUXILIARES DE ATUALIZAÇÃO DE CACHE E METADADOS -----------------
+
+def format_date_str(timestamp):
+    return datetime.datetime.fromtimestamp(timestamp).strftime('%d/%m/%Y %H:%M:%S')
+
+def atualizar_cache_e_metadata_balanco():
+    """Lê a planilha de balanço, atualiza os caches JSON e reconstrói seu metadado."""
+    print("Atualizando caches e metadados de Balanço Energético...")
+    df = ler_excel_com_copia(PATH_BALANCO, sheet_name="balanco_energetico")
+    df['din_instante'] = pd.to_datetime(df['din_instante'])
+    
+    # Cache do Gráfico (2026 horário agrupado por hora e subsistema)
+    df_2026 = df[df['din_instante'] >= '2026-01-01'].copy()
+    df_grouped = df_2026.groupby(['din_instante', 'id_subsistema']).mean(numeric_only=True).reset_index()
+    df_grouped['din_instante'] = df_grouped['din_instante'].dt.strftime('%Y-%m-%d %H:%M')
+    
+    data_balanco = df_grouped.to_dict(orient='records')
+    with open(CACHE_BALANCO, 'w', encoding='utf-8') as f:
+        json.dump(data_balanco, f, ensure_ascii=False, indent=2)
+        
+    # Cache Recente (100 linhas brutos)
+    df_recent = df.sort_values(by=['din_instante', 'id_subsistema'], ascending=[False, True]).head(100).copy()
+    df_recent['din_instante'] = df_recent['din_instante'].dt.strftime('%d/%m/%Y %H:%M')
+    df_recent = df_recent.fillna("")
+    data_recent = df_recent.to_dict(orient='records')
+    with open(CACHE_BALANCO_RECENT, 'w', encoding='utf-8') as f:
+        json.dump(data_recent, f, ensure_ascii=False, indent=2)
+        
+    # Metadados
+    max_date = df['din_instante'].max().strftime('%d/%m/%Y %H:%M')
+    
+    if os.path.exists(PATH_METADADOS):
+        with open(PATH_METADADOS, 'r', encoding='utf-8') as f:
+            meta = json.load(f)
+    else:
+        meta = {}
+        
+    meta['balanco'] = {
+        'linhas': len(df),
+        'max_data': max_date,
+        'tamanho': f"{os.path.getsize(PATH_BALANCO) / (1024*1024):.2f} MB",
+        'modificado': format_date_str(os.path.getmtime(PATH_BALANCO))
+    }
+    
+    with open(PATH_METADADOS, 'w', encoding='utf-8') as f:
+        json.dump(meta, f, ensure_ascii=False, indent=2)
+    print("Caches e metadados de Balanço atualizados.")
+
+
+def atualizar_cache_e_metadata_pld():
+    """Lê a planilha de PLD, atualiza os caches JSON e reconstrói seu metadado."""
+    print("Atualizando caches e metadados de PLD...")
+    df = ler_excel_com_copia(PATH_PLD, sheet_name="pld")
+    
+    # Cache do Gráfico
+    df_2026 = df[df['MES_REFERENCIA'] >= 202601]
+    df_day = df_2026.groupby(['MES_REFERENCIA', 'DIA', 'SUBMERCADO']).mean(numeric_only=True).reset_index()
+    
+    def format_date(row):
+        ano = int(str(row['MES_REFERENCIA'])[:4])
+        mes = int(str(row['MES_REFERENCIA'])[4:])
+        dia = int(row['DIA'])
+        return f"{ano}-{mes:02d}-{dia:02d}"
+        
+    df_day['data'] = df_day.apply(format_date, axis=1)
+    df_day = df_day.sort_values(by='data')
+    
+    submercados = df_day['SUBMERCADO'].unique().tolist()
+    data_by_sub = {}
+    for sub in submercados:
+        df_sub = df_day[df_day['SUBMERCADO'] == sub]
+        data_by_sub[sub] = {
+            'labels': df_sub['data'].tolist(),
+            'valores': df_sub['PLD_HORA'].round(2).tolist()
+        }
+        
+    with open(CACHE_PLD, 'w', encoding='utf-8') as f:
+        json.dump(data_by_sub, f, ensure_ascii=False, indent=2)
+        
+    # Cache Recente (100 linhas brutos)
+    df_recent = df.sort_values(by=['MES_REFERENCIA', 'DIA', 'HORA', 'SUBMERCADO'], ascending=[False, False, False, True]).head(100).copy()
+    df_recent = df_recent.fillna("")
+    data_recent = df_recent.to_dict(orient='records')
+    with open(CACHE_PLD_RECENT, 'w', encoding='utf-8') as f:
+        json.dump(data_recent, f, ensure_ascii=False, indent=2)
+        
+    # Cache Horário de PLD por Data e Submercado
+    # Estrutura: { "YYYY-MM-DD": { "SUDESTE": [v0, v1, ..., v23], ... } }
+    pld_horario_cache = {}
+    for _, row in df.iterrows():
+        try:
+            mes = int(row['MES_REFERENCIA'])
+            ano = mes // 100
+            mes_num = mes % 100
+            dia = int(row['DIA'])
+            data_str = f"{ano}-{mes_num:02d}-{dia:02d}"
+            
+            sub = str(row['SUBMERCADO']).upper()
+            hora = int(row['HORA'])
+            valor = float(row['PLD_HORA'])
+            
+            if data_str not in pld_horario_cache:
+                pld_horario_cache[data_str] = {}
+            if sub not in pld_horario_cache[data_str]:
+                pld_horario_cache[data_str][sub] = [None] * 24
+                
+            if 0 <= hora <= 23:
+                pld_horario_cache[data_str][sub][hora] = valor
+        except Exception as e:
+            continue
+            
+    with open(CACHE_PLD_HORARIO, 'w', encoding='utf-8') as f:
+        json.dump(pld_horario_cache, f, ensure_ascii=False, indent=2)
+        
+    # Metadados
+    max_ref = df['MES_REFERENCIA'].max()
+    df_last_ref = df[df['MES_REFERENCIA'] == max_ref]
+    max_dia = df_last_ref['DIA'].max()
+    max_data = f"{str(max_ref)[4:]}/{str(max_ref)[:4]} (Dia {max_dia})"
+    
+    if os.path.exists(PATH_METADADOS):
+        with open(PATH_METADADOS, 'r', encoding='utf-8') as f:
+            meta = json.load(f)
+    else:
+        meta = {}
+        
+    meta['pld'] = {
+        'linhas': len(df),
+        'max_data': max_data,
+        'tamanho': f"{os.path.getsize(PATH_PLD) / (1024*1024):.2f} MB",
+        'modificado': format_date_str(os.path.getmtime(PATH_PLD))
+    }
+    
+    with open(PATH_METADADOS, 'w', encoding='utf-8') as f:
+        json.dump(meta, f, ensure_ascii=False, indent=2)
+    print("Caches e metadados de PLD atualizados.")
+
+
+def atualizar_cache_e_metadata_ampere():
+    """Lê a planilha da Ampere, atualiza os caches JSON e reconstrói seu metadado."""
+    print("Atualizando caches e metadados da Ampere...")
+    df = ler_excel_com_copia(PATH_AMPERE, sheet_name="f_dados")
+    
+    if len(df) > 0:
+        max_rodada = df['rodada'].max()
+        df_last = df[df['rodada'] == max_rodada].copy()
+        df_last['data_referencia'] = pd.to_datetime(df_last['data_referencia']).dt.strftime('%Y-%m-%d')
+        
+        # Cache do Gráfico (Última Rodada)
+        df_ena = df_last[df_last['indicador'] == 'ENA']
+        ena_data = []
+        for _, r in df_ena.iterrows():
+            ena_data.append({
+                'data': r['data_referencia'],
+                'subsistema': r['subsistema'],
+                'unidade': r['unidade'],
+                'valor': r['valor']
+            })
+            
+        df_arm = df_last[df_last['indicador'] == 'Armazenamento']
+        arm_data = []
+        for _, r in df_arm.iterrows():
+            arm_data.append({
+                'data': r['data_referencia'],
+                'subsistema': r['subsistema'],
+                'valor': r['valor']
+            })
+            
+        df_pld = df_last[df_last['indicador'] == 'PLD']
+        pld_data = []
+        for _, r in df_pld.iterrows():
+            pld_data.append({
+                'data': r['data_referencia'],
+                'subsistema': r['subsistema'],
+                'valor': r['valor']
+            })
+            
+        cache_data = {
+            'rodada': int(max_rodada),
+            'data_publicacao': pd.to_datetime(df_last['data_publicacao'].iloc[0]).strftime('%d/%m/%Y'),
+            'ena': ena_data,
+            'armazenamento': arm_data,
+            'pld': pld_data
+        }
+        
+        with open(CACHE_AMPERE, 'w', encoding='utf-8') as f:
+            json.dump(cache_data, f, ensure_ascii=False, indent=2)
+            
+        # Cache Completo (Todas as rodadas)
+        df_sorted = df.sort_values(by=['rodada', 'data_referencia']).copy()
+        df_sorted['data_referencia'] = pd.to_datetime(df_sorted['data_referencia']).dt.strftime('%Y-%m-%d')
+        df_sorted['data_publicacao'] = pd.to_datetime(df_sorted['data_publicacao']).dt.strftime('%Y-%m-%d')
+        df_sorted = df_sorted.fillna("")
+        data_completa = df_sorted.to_dict(orient='records')
+        with open(CACHE_AMPERE_COMPLETO, 'w', encoding='utf-8') as f:
+            json.dump(data_completa, f, ensure_ascii=False, indent=2)
+            
+        # Cache Recente (100 linhas brutos)
+        df_recent = df.sort_values(by=['rodada', 'data_referencia', 'indicador'], ascending=[False, False, True]).head(100).copy()
+        df_recent['data_referencia'] = pd.to_datetime(df_recent['data_referencia']).dt.strftime('%d/%m/%Y')
+        df_recent['data_publicacao'] = pd.to_datetime(df_recent['data_publicacao']).dt.strftime('%d/%m/%Y')
+        df_recent = df_recent.fillna("")
+        data_recent = df_recent.to_dict(orient='records')
+        with open(CACHE_AMPERE_RECENT, 'w', encoding='utf-8') as f:
+            json.dump(data_recent, f, ensure_ascii=False, indent=2)
+            
+        # Metadados
+        max_pub = pd.to_datetime(df_last['data_publicacao'].iloc[0]).strftime('%d/%m/%Y')
+        max_data = f"Rodada {max_rodada} (Publicado em {max_pub})"
+        
+        if os.path.exists(PATH_METADADOS):
+            with open(PATH_METADADOS, 'r', encoding='utf-8') as f:
+                meta = json.load(f)
+        else:
+            meta = {}
+            
+        meta['ampere'] = {
+            'linhas': len(df),
+            'max_data': max_data,
+            'tamanho': f"{os.path.getsize(PATH_AMPERE) / 1024:.2f} KB",
+            'modificado': format_date_str(os.path.getmtime(PATH_AMPERE))
+        }
+        
+        with open(PATH_METADADOS, 'w', encoding='utf-8') as f:
+            json.dump(meta, f, ensure_ascii=False, indent=2)
+        print("Caches e metadados da Ampere atualizados.")
+
+
+def atualizar_cache_e_metadata_bbce():
+    """Lê a planilha da BBCE, atualiza os caches JSON agregados e reconstrói seu metadado."""
+    print("Atualizando caches e metadados da BBCE...")
+    if not os.path.exists(PATH_BBCE):
+        print("Planilha BBCE não encontrada. Ignorando atualização de cache.")
+        return
+        
+    df = ler_excel_com_copia(PATH_BBCE)
+    
+    if len(df) > 0:
+        # Garante nomenclatura das colunas correspondentes primeiro para evitar colisão de renomeação
+        mapa_colunas = {}
+        for c in df.columns:
+            c_upper = str(c).upper().strip()
+            if 'PRODUTO' in c_upper: mapa_colunas[c] = 'PRODUTO'
+            elif c_upper in ['Q.N', 'Q.N.', 'QUANTIDADE NEGOCIAÇÃO']: mapa_colunas[c] = 'Q.N'
+            elif 'PRE' in c_upper and ('O' in c_upper or 'Ç' in c_upper): mapa_colunas[c] = 'PREÇO'
+            elif 'TIPO' in c_upper and 'CONTRATO' in c_upper: mapa_colunas[c] = 'TIPO DE CONTRATO'
+            
+        df = df.rename(columns=mapa_colunas)
+        
+        df['DATA/HORA'] = pd.to_datetime(df['DATA/HORA'])
+        
+        # Cria colunas auxiliares
+        df['DATA_DIA'] = df['DATA/HORA'].dt.strftime('%Y-%m-%d')
+        
+        # Mapeamento do Submercado
+        def extrair_submercado(prod):
+            prod = str(prod).upper()
+            if ' - SE ' in prod or ' SE ' in prod or prod.startswith('SE '):
+                return 'Sudeste/Centro-Oeste'
+            elif ' - S ' in prod or ' S ' in prod or prod.startswith('S '):
+                return 'Sul'
+            elif ' - NE ' in prod or ' NE ' in prod or prod.startswith('NE '):
+                return 'Nordeste'
+            elif ' - N ' in prod or ' N ' in prod or prod.startswith('N '):
+                return 'Norte'
+            return 'Outros'
+            
+        # Mapeamento do Tipo de Produto
+        def extrair_tipo_produto(prod):
+            prod = str(prod).upper()
+            if ' MEN ' in prod: return 'Mensal'
+            if ' TRI ' in prod: return 'Trimestral'
+            if ' SEM ' in prod: return 'Semestral'
+            if ' ANU ' in prod: return 'Anual'
+            return 'Outros'
+            
+        df['SUBMERCADO'] = df['PRODUTO'].apply(extrair_submercado)
+        df['TIPO_PRODUTO'] = df['PRODUTO'].apply(extrair_tipo_produto)
+        
+        # Garante tipos corretos
+        df['Q.N'] = df['Q.N'].astype(float)
+        df['PREÇO'] = df['PREÇO'].astype(float)
+        
+        # Coluna auxiliar para média ponderada
+        df['PRECO_VOL'] = df['PREÇO'] * df['Q.N']
+        
+        # Filtra apenas registros ativos (se a coluna STATUS existir)
+        df_ativos = df[df['STATUS'].str.upper() == 'ATIVO'].copy() if 'STATUS' in df.columns else df.copy()
+        
+        # Agrupa os dados por produto e contrato
+        gp = df_ativos.groupby(['DATA_DIA', 'PRODUTO', 'SUBMERCADO', 'TIPO DE CONTRATO', 'TIPO_PRODUTO']).agg(
+            soma_preco_vol=('PRECO_VOL', 'sum'),
+            soma_qn=('Q.N', 'sum'),
+            total_contratos=('PRODUTO', 'count')
+        ).reset_index()
+        
+        # Média ponderada por volume (Q.N)
+        gp['PRECO_MEDIO'] = gp.apply(lambda r: r['soma_preco_vol'] / r['soma_qn'] if r['soma_qn'] > 0 else 0.0, axis=1)
+        gp['PRECO_MEDIO'] = gp['PRECO_MEDIO'].round(2)
+        gp['VOLUME_TOTAL'] = gp['soma_qn'].round(2)
+        
+        # Descarta colunas temporárias
+        gp = gp.drop(columns=['soma_preco_vol', 'soma_qn'])
+        
+        # Salva o cache diário agregador
+        data_bbce = gp.to_dict(orient='records')
+        with open(CACHE_BBCE, 'w', encoding='utf-8') as f:
+            json.dump(data_bbce, f, ensure_ascii=False, indent=2)
+            
+        # Cache Recente (100 linhas brutas para a tabela de auditoria)
+        df_recent = df.sort_values(by='DATA/HORA', ascending=False).head(100).copy()
+        df_recent['DATA/HORA'] = df_recent['DATA/HORA'].dt.strftime('%d/%m/%Y %H:%M:%S')
+        df_recent = df_recent.fillna("")
+        data_recent = df_recent.to_dict(orient='records')
+        with open(CACHE_BBCE_RECENT, 'w', encoding='utf-8') as f:
+            json.dump(data_recent, f, ensure_ascii=False, indent=2)
+            
+        # Metadados
+        max_date = df['DATA/HORA'].max().strftime('%d/%m/%Y %H:%M:%S')
+        
+        if os.path.exists(PATH_METADADOS):
+            with open(PATH_METADADOS, 'r', encoding='utf-8') as f:
+                meta = json.load(f)
+        else:
+            meta = {}
+            
+        meta['bbce'] = {
+            'linhas': len(df),
+            'max_data': max_date,
+            'tamanho': f"{os.path.getsize(PATH_BBCE) / (1024*1024):.2f} MB",
+            'modificado': format_date_str(os.path.getmtime(PATH_BBCE))
+        }
+        
+        with open(PATH_METADADOS, 'w', encoding='utf-8') as f:
+            json.dump(meta, f, ensure_ascii=False, indent=2)
+        print("Caches e metadados da BBCE atualizados.")
+
+
+# ----------------- ROTAS FRONTEND -----------------
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+# ----------------- ROTA STATUS (METADADOS LEVES EM 1ms) -----------------
+
+@app.route('/api/status', methods=['GET'])
+def get_status():
+    if not os.path.exists(PATH_METADADOS):
+        from gerar_cache import gerar_todos_os_caches
+        gerar_todos_os_caches()
+        
+    with open(PATH_METADADOS, 'r', encoding='utf-8') as f:
+        status = json.load(f)
+    return jsonify(status)
+
+# ----------------- ROTAS API ATUALIZAÇÃO -----------------
+
+@app.route('/api/update/balanco', methods=['POST'])
+def update_balanco():
+    try:
+        novas_linhas, total_linhas = atualizar_balanco_energetico(PATH_BALANCO)
+        atualizar_cache_e_metadata_balanco()
+        return jsonify({
+            'success': True,
+            'message': f'Balanço Energético atualizado com sucesso!',
+            'novos_registros': novas_linhas,
+            'total_registros': total_linhas
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+
+@app.route('/api/update/pld', methods=['POST'])
+def update_pld_ccee():
+    try:
+        novas_linhas, total_linhas = atualizar_pld(PATH_PLD)
+        atualizar_cache_e_metadata_pld()
+        return jsonify({
+            'success': True,
+            'message': f'PLD Horário atualizado com sucesso!',
+            'novos_registros': novas_linhas,
+            'total_registros': total_linhas
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+
+@app.route('/api/update/ampere', methods=['POST'])
+def update_ampere_pdf():
+    if 'file' not in request.files:
+        return jsonify({'success': False, 'message': 'Nenhum arquivo enviado.'}), 400
+        
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({'success': False, 'message': 'Nome do arquivo está vazio.'}), 400
+        
+    if not file.filename.lower().endswith('.pdf'):
+        return jsonify({'success': False, 'message': 'O arquivo deve ser um PDF.'}), 400
+        
+    try:
+        temp_dir = tempfile.gettempdir()
+        temp_path = os.path.join(temp_dir, file.filename)
+        file.save(temp_path)
+        
+        novas_linhas, total_linhas = extrair_ampere_pdf(temp_path, PATH_AMPERE)
+        
+        if os.path.exists(temp_path):
+            os.remove(temp_path)
+            
+        atualizar_cache_e_metadata_ampere()
+            
+        return jsonify({
+            'success': True,
+            'message': f'Dados do relatório Ampere extraídos e importados com sucesso!',
+            'novos_registros': novas_linhas,
+            'total_registros': total_linhas
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+# ----------------- ROTAS API BBCE -----------------
+import threading
+
+# Caminho do log temporário da automação BBCE
+BBCE_LOG_FILE = os.path.join(PLANILHAS_DIR, 'bbce_automation.log')
+
+@app.route('/api/bbce/ultimo_registro', methods=['GET'])
+def get_bbce_ultimo_registro():
+    try:
+        if not os.path.exists(PATH_BBCE):
+            return jsonify({'max_data': 'Nenhum registro encontrado.'})
+        df = ler_excel_com_copia(PATH_BBCE)
+        if len(df) > 0:
+            df['DATA/HORA'] = pd.to_datetime(df['DATA/HORA'])
+            max_date = df['DATA/HORA'].max().strftime('%d/%m/%Y %H:%M:%S')
+            return jsonify({'max_data': max_date})
+        return jsonify({'max_data': 'Base vazia.'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/data/bbce', methods=['GET'])
+def get_data_bbce():
+    try:
+        if not os.path.exists(CACHE_BBCE):
+            atualizar_cache_e_metadata_bbce()
+        with open(CACHE_BBCE, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/update/bbce_upload', methods=['POST'])
+def update_bbce_upload():
+    if 'file' not in request.files:
+        return jsonify({'success': False, 'message': 'Nenhum arquivo enviado.'}), 400
+        
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({'success': False, 'message': 'Nome do arquivo está vazio.'}), 400
+        
+    try:
+        temp_dir = tempfile.gettempdir()
+        temp_path = os.path.join(temp_dir, file.filename)
+        file.save(temp_path)
+        
+        novas_linhas, total_linhas = atualizar_negocios_bbce(PATH_BBCE, planilha_novos_negocios_path=temp_path)
+        
+        if os.path.exists(temp_path):
+            os.remove(temp_path)
+            
+        atualizar_cache_e_metadata_bbce()
+            
+        return jsonify({
+            'success': True,
+            'message': f'Dados da BBCE importados com sucesso!',
+            'novos_registros': novas_linhas,
+            'total_registros': total_linhas
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+
+def rodar_selenium_bbce_thread(data_inicio, data_fim):
+    def escrever_log(msg):
+        with open(BBCE_LOG_FILE, 'a', encoding='utf-8') as fl:
+            fl.write(f"[{datetime.datetime.now().strftime('%H:%M:%S')}] {msg}\n")
+            
+    # Limpa log anterior
+    with open(BBCE_LOG_FILE, 'w', encoding='utf-8') as fl:
+        fl.write(f"[{datetime.datetime.now().strftime('%H:%M:%S')}] Iniciando automação assistida da BBCE...\n")
+        
+    try:
+        # Roda o scraper
+        arquivo_baixado = executar_automacao_bbce(data_inicio, data_fim, logger_func=escrever_log)
+        
+        # Faz a importação do arquivo baixado
+        escrever_log("Processando arquivo baixado e atualizando planilha base...")
+        novas, total = atualizar_negocios_bbce(PATH_BBCE, planilha_novos_negocios_path=arquivo_baixado)
+        
+        # Remove arquivo temporário baixado
+        if os.path.exists(arquivo_baixado):
+            os.remove(arquivo_baixado)
+            
+        # Atualiza caches
+        escrever_log("Reconstruindo cache e metadados diários...")
+        atualizar_cache_e_metadata_bbce()
+        
+        escrever_log(f"[SUCCESS] Importação concluída! Novos negócios: {novas}, Total na base: {total}")
+        
+    except Exception as e:
+        escrever_log(f"[ERROR] Ocorreu uma falha na automação: {str(e)}")
+
+
+@app.route('/api/update/bbce_auto', methods=['POST'])
+def update_bbce_auto():
+    dados = request.get_json() or {}
+    data_inicio = dados.get('data_inicio')
+    data_fim = dados.get('data_fim')
+    
+    if not data_inicio or not data_fim:
+        return jsonify({'success': False, 'message': 'Datas de início e fim são obrigatórias.'}), 400
+        
+    # Dispara a thread em background
+    threading.Thread(
+        target=rodar_selenium_bbce_thread,
+        args=(data_inicio, data_fim),
+        daemon=True
+    ).start()
+    
+    return jsonify({
+        'success': True,
+        'message': 'Automação da BBCE iniciada em segundo plano.'
+    })
+
+
+@app.route('/api/update/bbce_auto/logs', methods=['GET'])
+def get_bbce_auto_logs():
+    if not os.path.exists(BBCE_LOG_FILE):
+        return jsonify({'logs': []})
+        
+    with open(BBCE_LOG_FILE, 'r', encoding='utf-8') as f:
+        linhas = f.readlines()
+        
+    linhas_limpas = [l.strip() for l in linhas]
+    return jsonify({'logs': linhas_limpas})
+
+
+# ----------------- ROTAS API DADOS DASHBOARD (INSTANTÂNEO) -----------------
+
+@app.route('/api/data/balanco', methods=['GET'])
+def get_data_balanco():
+    try:
+        if not os.path.exists(CACHE_BALANCO):
+            atualizar_cache_e_metadata_balanco()
+        with open(CACHE_BALANCO, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/data/pld', methods=['GET'])
+def get_data_pld():
+    try:
+        if not os.path.exists(CACHE_PLD):
+            atualizar_cache_e_metadata_pld()
+        with open(CACHE_PLD, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/data/pld_horario', methods=['GET'])
+def get_data_pld_horario():
+    try:
+        if not os.path.exists(CACHE_PLD_HORARIO):
+            atualizar_cache_e_metadata_pld()
+        with open(CACHE_PLD_HORARIO, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/data/ampere', methods=['GET'])
+def get_data_ampere():
+    try:
+        if not os.path.exists(CACHE_AMPERE):
+            atualizar_cache_e_metadata_ampere()
+        with open(CACHE_AMPERE, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/data/ampere_completo', methods=['GET'])
+def get_data_ampere_completo():
+    try:
+        if not os.path.exists(CACHE_AMPERE_COMPLETO):
+            atualizar_cache_e_metadata_ampere()
+        with open(CACHE_AMPERE_COMPLETO, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+# ---------------- ROTA DE VISUALIZAÇÃO DE DADOS BRUTOS (AUDITORIA) ----------------
+
+@app.route('/api/data/view/<base>', methods=['GET'])
+def get_data_view(base):
+    """
+    Retorna as 100 linhas mais recentes da base solicitada para conferência de dados.
+    """
+    try:
+        if base == 'balanco':
+            cache_path = CACHE_BALANCO_RECENT
+            if not os.path.exists(cache_path):
+                atualizar_cache_e_metadata_balanco()
+        elif base == 'pld':
+            cache_path = CACHE_PLD_RECENT
+            if not os.path.exists(cache_path):
+                atualizar_cache_e_metadata_pld()
+        elif base == 'ampere':
+            cache_path = CACHE_AMPERE_RECENT
+            if not os.path.exists(cache_path):
+                atualizar_cache_e_metadata_ampere()
+        elif base == 'bbce':
+            cache_path = CACHE_BBCE_RECENT
+            if not os.path.exists(cache_path):
+                atualizar_cache_e_metadata_bbce()
+        else:
+            return jsonify({'error': 'Base inválida.'}), 400
+            
+        with open(cache_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+if __name__ == '__main__':
+    # Roda o servidor local na porta 5000
+    app.run(host='0.0.0.0', port=5000, debug=True)

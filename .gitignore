@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.toast/
+.pytest_cache/
+
+# Excel e Arquivos Temporários
+**/~$*.xlsx
+**/~$*.xls
+temp_downloads/*
+!temp_downloads/.gitkeep
+
+# IDEs e Sistema
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+.DS_Store
+Thumbs.db

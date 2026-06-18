@@ -1,0 +1,382 @@
+{
+  "rodada": 20260616,
+  "data_publicacao": "16/06/2026",
+  "ena": [
+    {
+      "data": "2026-06-01",
+      "subsistema": "Sudeste/Centro-Oeste",
+      "unidade": "MWmed",
+      "valor": 28696.0
+    },
+    {
+      "data": "2026-06-01",
+      "subsistema": "Sudeste/Centro-Oeste",
+      "unidade": "%",
+      "valor": 88.0
+    },
+    {
+      "data": "2026-07-01",
+      "subsistema": "Sudeste/Centro-Oeste",
+      "unidade": "MWmed",
+      "valor": 23469.0
+    },
+    {
+      "data": "2026-07-01",
+      "subsistema": "Sudeste/Centro-Oeste",
+      "unidade": "%",
+      "valor": 92.0
+    },
+    {
+      "data": "2026-08-01",
+      "subsistema": "Sudeste/Centro-Oeste",
+      "unidade": "MWmed",
+      "valor": 19266.0
+    },
+    {
+      "data": "2026-08-01",
+      "subsistema": "Sudeste/Centro-Oeste",
+      "unidade": "%",
+      "valor": 94.0
+    },
+    {
+      "data": "2026-09-01",
+      "subsistema": "Sudeste/Centro-Oeste",
+      "unidade": "MWmed",
+      "valor": 18328.0
+    },
+    {
+      "data": "2026-09-01",
+      "subsistema": "Sudeste/Centro-Oeste",
+      "unidade": "%",
+      "valor": 94.0
+    },
+    {
+      "data": "2026-06-01",
+      "subsistema": "Sul",
+      "unidade": "MWmed",
+      "valor": 7898.0
+    },
+    {
+      "data": "2026-06-01",
+      "subsistema": "Sul",
+      "unidade": "%",
+      "valor": 74.0
+    },
+    {
+      "data": "2026-07-01",
+      "subsistema": "Sul",
+      "unidade": "MWmed",
+      "valor": 15006.0
+    },
+    {
+      "data": "2026-07-01",
+      "subsistema": "Sul",
+      "unidade": "%",
+      "valor": 136.0
+    },
+    {
+      "data": "2026-08-01",
+      "subsistema": "Sul",
+      "unidade": "MWmed",
+      "valor": 13227.0
+    },
+    {
+      "data": "2026-08-01",
+      "subsistema": "Sul",
+      "unidade": "%",
+      "valor": 133.0
+    },
+    {
+      "data": "2026-09-01",
+      "subsistema": "Sul",
+      "unidade": "MWmed",
+      "valor": 15357.0
+    },
+    {
+      "data": "2026-09-01",
+      "subsistema": "Sul",
+      "unidade": "%",
+      "valor": 132.0
+    },
+    {
+      "data": "2026-06-01",
+      "subsistema": "Nordeste",
+      "unidade": "MWmed",
+      "valor": 2575.0
+    },
+    {
+      "data": "2026-06-01",
+      "subsistema": "Nordeste",
+      "unidade": "%",
+      "valor": 57.0
+    },
+    {
+      "data": "2026-07-01",
+      "subsistema": "Nordeste",
+      "unidade": "MWmed",
+      "valor": 2246.0
+    },
+    {
+      "data": "2026-07-01",
+      "subsistema": "Nordeste",
+      "unidade": "%",
+      "valor": 60.0
+    },
+    {
+      "data": "2026-08-01",
+      "subsistema": "Nordeste",
+      "unidade": "MWmed",
+      "valor": 2027.0
+    },
+    {
+      "data": "2026-08-01",
+      "subsistema": "Nordeste",
+      "unidade": "%",
+      "valor": 62.0
+    },
+    {
+      "data": "2026-09-01",
+      "subsistema": "Nordeste",
+      "unidade": "MWmed",
+      "valor": 1861.0
+    },
+    {
+      "data": "2026-09-01",
+      "subsistema": "Nordeste",
+      "unidade": "%",
+      "valor": 64.0
+    },
+    {
+      "data": "2026-06-01",
+      "subsistema": "Norte",
+      "unidade": "MWmed",
+      "valor": 6663.0
+    },
+    {
+      "data": "2026-06-01",
+      "subsistema": "Norte",
+      "unidade": "%",
+      "valor": 63.0
+    },
+    {
+      "data": "2026-07-01",
+      "subsistema": "Norte",
+      "unidade": "MWmed",
+      "valor": 3723.0
+    },
+    {
+      "data": "2026-07-01",
+      "subsistema": "Norte",
+      "unidade": "%",
+      "valor": 71.0
+    },
+    {
+      "data": "2026-08-01",
+      "subsistema": "Norte",
+      "unidade": "MWmed",
+      "valor": 2273.0
+    },
+    {
+      "data": "2026-08-01",
+      "subsistema": "Norte",
+      "unidade": "%",
+      "valor": 72.0
+    },
+    {
+      "data": "2026-09-01",
+      "subsistema": "Norte",
+      "unidade": "MWmed",
+      "valor": 1458.0
+    },
+    {
+      "data": "2026-09-01",
+      "subsistema": "Norte",
+      "unidade": "%",
+      "valor": 65.0
+    }
+  ],
+  "armazenamento": [
+    {
+      "data": "2026-06-01",
+      "subsistema": "Sudeste/Centro-Oeste",
+      "valor": 66.5
+    },
+    {
+      "data": "2026-07-01",
+      "subsistema": "Sudeste/Centro-Oeste",
+      "valor": 66.2
+    },
+    {
+      "data": "2026-08-01",
+      "subsistema": "Sudeste/Centro-Oeste",
+      "valor": 64.5
+    },
+    {
+      "data": "2026-09-01",
+      "subsistema": "Sudeste/Centro-Oeste",
+      "valor": 61.9
+    },
+    {
+      "data": "2026-06-01",
+      "subsistema": "Sul",
+      "valor": 58.3
+    },
+    {
+      "data": "2026-07-01",
+      "subsistema": "Sul",
+      "valor": 89.8
+    },
+    {
+      "data": "2026-08-01",
+      "subsistema": "Sul",
+      "valor": 86.2
+    },
+    {
+      "data": "2026-09-01",
+      "subsistema": "Sul",
+      "valor": 89.6
+    },
+    {
+      "data": "2026-06-01",
+      "subsistema": "Nordeste",
+      "valor": 90.3
+    },
+    {
+      "data": "2026-07-01",
+      "subsistema": "Nordeste",
+      "valor": 85.9
+    },
+    {
+      "data": "2026-08-01",
+      "subsistema": "Nordeste",
+      "valor": 81.7
+    },
+    {
+      "data": "2026-09-01",
+      "subsistema": "Nordeste",
+      "valor": 75.6
+    },
+    {
+      "data": "2026-06-01",
+      "subsistema": "Norte",
+      "valor": 97.6
+    },
+    {
+      "data": "2026-07-01",
+      "subsistema": "Norte",
+      "valor": 96.3
+    },
+    {
+      "data": "2026-08-01",
+      "subsistema": "Norte",
+      "valor": 94.4
+    },
+    {
+      "data": "2026-09-01",
+      "subsistema": "Norte",
+      "valor": 84.1
+    },
+    {
+      "data": "2026-06-01",
+      "subsistema": "SIN",
+      "valor": 71.8
+    },
+    {
+      "data": "2026-07-01",
+      "subsistema": "SIN",
+      "valor": 72.9
+    },
+    {
+      "data": "2026-08-01",
+      "subsistema": "SIN",
+      "valor": 70.7
+    },
+    {
+      "data": "2026-09-01",
+      "subsistema": "SIN",
+      "valor": 67.4
+    }
+  ],
+  "pld": [
+    {
+      "data": "2026-06-01",
+      "subsistema": "Sudeste/Centro-Oeste",
+      "valor": 193.94
+    },
+    {
+      "data": "2026-07-01",
+      "subsistema": "Sudeste/Centro-Oeste",
+      "valor": 57.31
+    },
+    {
+      "data": "2026-08-01",
+      "subsistema": "Sudeste/Centro-Oeste",
+      "valor": 81.45
+    },
+    {
+      "data": "2026-09-01",
+      "subsistema": "Sudeste/Centro-Oeste",
+      "valor": 110.49
+    },
+    {
+      "data": "2026-06-01",
+      "subsistema": "Sul",
+      "valor": 193.94
+    },
+    {
+      "data": "2026-07-01",
+      "subsistema": "Sul",
+      "valor": 57.31
+    },
+    {
+      "data": "2026-08-01",
+      "subsistema": "Sul",
+      "valor": 81.45
+    },
+    {
+      "data": "2026-09-01",
+      "subsistema": "Sul",
+      "valor": 110.49
+    },
+    {
+      "data": "2026-06-01",
+      "subsistema": "Nordeste",
+      "valor": 193.94
+    },
+    {
+      "data": "2026-07-01",
+      "subsistema": "Nordeste",
+      "valor": 57.31
+    },
+    {
+      "data": "2026-08-01",
+      "subsistema": "Nordeste",
+      "valor": 81.45
+    },
+    {
+      "data": "2026-09-01",
+      "subsistema": "Nordeste",
+      "valor": 110.49
+    },
+    {
+      "data": "2026-06-01",
+      "subsistema": "Norte",
+      "valor": 193.94
+    },
+    {
+      "data": "2026-07-01",
+      "subsistema": "Norte",
+      "valor": 57.31
+    },
+    {
+      "data": "2026-08-01",
+      "subsistema": "Norte",
+      "valor": 81.45
+    },
+    {
+      "data": "2026-09-01",
+      "subsistema": "Norte",
+      "valor": 110.49
+    }
+  ]
+}
