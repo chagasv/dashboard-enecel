@@ -5,6 +5,7 @@ import requests
 import pandas as pd
 import pdfplumber
 from curl_cffi import requests as cffi_requests
+from github_storage import github_read_file, github_write_file, github_file_exists
 
 # Mapeamentos para a planilha Ampere
 SUB_MAP = {
@@ -64,11 +65,12 @@ def atualizar_balanco_energetico(planilha_base_path, ons_url=None):
     print(f"[{datetime.datetime.now()}] Iniciando atualização do Balanço Energético...")
     print(f"Lendo base local: {planilha_base_path}")
     
-    if not os.path.exists(planilha_base_path):
+    if not github_file_exists(planilha_base_path):
         raise FileNotFoundError(f"Planilha base não encontrada no caminho: {planilha_base_path}")
     
     # Carrega a planilha base existente
-    df_base = pd.read_excel(planilha_base_path, sheet_name="balanco_energetico")
+    conteudo_excel = github_read_file(planilha_base_path)
+    df_base = pd.read_excel(io.BytesIO(conteudo_excel), sheet_name="balanco_energetico")
     print(f"Base local carregada. Total de linhas: {len(df_base)}")
     
     # Converte coluna de data para datetime
@@ -102,7 +104,9 @@ def atualizar_balanco_energetico(planilha_base_path, ons_url=None):
         
         # Salva de volta na planilha
         print(f"Gravando dados atualizados em {planilha_base_path} (isso pode levar alguns segundos)...")
-        df_final.to_excel(planilha_base_path, sheet_name="balanco_energetico", index=False)
+        buffer = io.BytesIO()
+        df_final.to_excel(buffer, sheet_name="balanco_energetico", index=False)
+        github_write_file(planilha_base_path, buffer.getvalue())
         print(f"Sucesso! Planilha de Balanço Energético atualizada. Total de linhas agora: {len(df_final)}")
         return len(df_novos), len(df_final)
     else:
@@ -121,11 +125,12 @@ def atualizar_pld(planilha_base_path, ccee_url=None):
     print(f"[{datetime.datetime.now()}] Iniciando atualização do PLD Horário...")
     print(f"Lendo base local: {planilha_base_path}")
     
-    if not os.path.exists(planilha_base_path):
+    if not github_file_exists(planilha_base_path):
         raise FileNotFoundError(f"Planilha base não encontrada no caminho: {planilha_base_path}")
         
     # Carrega base local
-    df_base = pd.read_excel(planilha_base_path, sheet_name="pld")
+    conteudo_excel = github_read_file(planilha_base_path)
+    df_base = pd.read_excel(io.BytesIO(conteudo_excel), sheet_name="pld")
     print(f"Base local carregada. Total de linhas: {len(df_base)}")
     
     # Baixa os novos dados da CCEE usando curl_cffi para evitar bloqueio WAF/Cloudflare
@@ -162,7 +167,9 @@ def atualizar_pld(planilha_base_path, ccee_url=None):
     
     # Salva de volta
     print(f"Gravando dados atualizados em {planilha_base_path}...")
-    df_final.to_excel(planilha_base_path, sheet_name="pld", index=False)
+    buffer = io.BytesIO()
+    df_final.to_excel(buffer, sheet_name="pld", index=False)
+    github_write_file(planilha_base_path, buffer.getvalue())
     print(f"Sucesso! Planilha de PLD Horário atualizada. Total de linhas agora: {len(df_final)}")
     return len(df_new), len(df_final)
 
@@ -176,14 +183,15 @@ def extrair_ampere_pdf(pdf_path, planilha_base_path):
     print(f"Arquivo PDF: {pdf_path}")
     print(f"Lendo base local: {planilha_base_path}")
     
-    if not os.path.exists(planilha_base_path):
+    if not github_file_exists(planilha_base_path):
         raise FileNotFoundError(f"Planilha base não encontrada no caminho: {planilha_base_path}")
         
     if not os.path.exists(pdf_path):
         raise FileNotFoundError(f"Relatório PDF não encontrado no caminho: {pdf_path}")
         
     # Carrega planilha base
-    df_base = pd.read_excel(planilha_base_path, sheet_name="f_dados")
+    conteudo_excel = github_read_file(planilha_base_path)
+    df_base = pd.read_excel(io.BytesIO(conteudo_excel), sheet_name="f_dados")
     print(f"Base local de rodadas carregada. Total de linhas: {len(df_base)}")
     
     # Converte colunas de data para datetime
@@ -417,7 +425,9 @@ def extrair_ampere_pdf(pdf_path, planilha_base_path):
     
     # Salva de volta
     print(f"Gravando dados atualizados em {planilha_base_path}...")
-    df_final.to_excel(planilha_base_path, sheet_name="f_dados", index=False)
+    buffer = io.BytesIO()
+    df_final.to_excel(buffer, sheet_name="f_dados", index=False)
+    github_write_file(planilha_base_path, buffer.getvalue())
     print("Sucesso! Planilha de rodadas Ampere atualizada.")
     return len(df_novos), len(df_final)
 
@@ -426,7 +436,20 @@ def ler_excel_com_copia(caminho_excel, **kwargs):
     """
     Lê uma planilha Excel criando uma cópia temporária para evitar
     erros de permissão/locks (Permission denied) no Windows.
+    No modo GitHub, faz o download do conteúdo da API do GitHub.
     """
+    from github_storage import usar_github, github_read_file
+    
+    # Se o storage for o GitHub e o arquivo pertencer ao projeto, faz a leitura da API
+    # (Note que arquivos temporários de upload estarão fora do projeto, começando com '..')
+    from github_storage import _obter_caminho_relativo
+    rel_path = _obter_caminho_relativo(caminho_excel)
+    
+    if usar_github() and not rel_path.startswith('..'):
+        conteudo = github_read_file(caminho_excel)
+        return pd.read_excel(io.BytesIO(conteudo), **kwargs)
+        
+    # Lógica tradicional em disco local
     import shutil
     import tempfile
     
@@ -455,7 +478,7 @@ def atualizar_negocios_bbce(planilha_base_path, planilha_novos_negocios_path=Non
     print(f"[{datetime.datetime.now()}] Iniciando atualização da base BBCE...")
     print(f"Lendo base local: {planilha_base_path}")
     
-    if not os.path.exists(planilha_base_path):
+    if not github_file_exists(planilha_base_path):
         raise FileNotFoundError(f"Planilha base BBCE não encontrada no caminho: {planilha_base_path}")
         
     # Carrega a base local usando cópia temporária resiliente a locks
@@ -583,7 +606,9 @@ def atualizar_negocios_bbce(planilha_base_path, planilha_novos_negocios_path=Non
         
         # Grava de volta na planilha
         print(f"Gravando dados atualizados em {planilha_base_path}...")
-        df_final.to_excel(planilha_base_path, index=False)
+        buffer = io.BytesIO()
+        df_final.to_excel(buffer, index=False)
+        github_write_file(planilha_base_path, buffer.getvalue())
         print(f"Sucesso! Base BBCE atualizada. Total de linhas agora: {len(df_final)}")
         return len(df_novos), len(df_final)
     else:

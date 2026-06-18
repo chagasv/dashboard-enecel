@@ -8,6 +8,7 @@ import datetime
 # Importa as rotinas de ETL criadas no etl.py
 from etl import atualizar_balanco_energetico, atualizar_pld, extrair_ampere_pdf, atualizar_negocios_bbce, ler_excel_com_copia
 from bbce_scraper import executar_automacao_bbce
+from github_storage import github_read_file, github_write_file, github_file_exists, github_get_file_info, usar_github
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
 
@@ -38,7 +39,7 @@ PATH_METADADOS = os.path.join(PLANILHAS_DIR, 'metadata.json')
 # Garante que o diretorio de planilhas exista
 os.makedirs(PLANILHAS_DIR, exist_ok=True)
 
-# Se o diretório de planilhas (Volume no Render) estiver vazio ou faltarem arquivos essenciais, restaura o backup inicial
+# Se o diretório de planilhas estiver vazio ou faltarem arquivos essenciais, restaura o backup inicial
 BACKUP_DIR = os.path.join(BASE_DIR, 'planilhas_originais_backup')
 if os.path.exists(BACKUP_DIR):
     arquivos_essenciais = [
@@ -51,11 +52,25 @@ if os.path.exists(BACKUP_DIR):
     import shutil
     for arq in arquivos_essenciais:
         caminho_destino = os.path.join(PLANILHAS_DIR, arq)
-        if not os.path.exists(caminho_destino):
-            caminho_origem = os.path.join(BACKUP_DIR, arq)
-            if os.path.exists(caminho_origem):
-                print(f"Restaurando arquivo padrão de backup: {arq} para {caminho_destino}")
-                shutil.copy2(caminho_origem, caminho_destino)
+        
+        if usar_github():
+            # No modo GitHub (produção), inicializa o repositório remoto caso o arquivo de dados não exista nele
+            try:
+                if not github_file_exists(caminho_destino):
+                    caminho_origem = os.path.join(BACKUP_DIR, arq)
+                    if os.path.exists(caminho_origem):
+                        print(f"[Boot] Inicializando arquivo no GitHub a partir do backup: {arq}")
+                        with open(caminho_origem, 'rb') as f:
+                            github_write_file(caminho_destino, f.read(), message=f"Initial seed: {arq}")
+            except Exception as e:
+                print(f"[Boot] AVISO: Falha ao verificar/inicializar {arq} no GitHub: {str(e)}")
+        else:
+            # Modo local tradicional
+            if not os.path.exists(caminho_destino):
+                caminho_origem = os.path.join(BACKUP_DIR, arq)
+                if os.path.exists(caminho_origem):
+                    print(f"Restaurando arquivo padrão de backup: {arq} para {caminho_destino}")
+                    shutil.copy2(caminho_origem, caminho_destino)
 
 # ----------------- AUXILIARES DE ATUALIZAÇÃO DE CACHE E METADADOS -----------------
 
@@ -74,35 +89,33 @@ def atualizar_cache_e_metadata_balanco():
     df_grouped['din_instante'] = df_grouped['din_instante'].dt.strftime('%Y-%m-%d %H:%M')
     
     data_balanco = df_grouped.to_dict(orient='records')
-    with open(CACHE_BALANCO, 'w', encoding='utf-8') as f:
-        json.dump(data_balanco, f, ensure_ascii=False, indent=2)
+    github_write_file(CACHE_BALANCO, json.dumps(data_balanco, ensure_ascii=False, indent=2).encode('utf-8'))
         
     # Cache Recente (100 linhas brutos)
     df_recent = df.sort_values(by=['din_instante', 'id_subsistema'], ascending=[False, True]).head(100).copy()
     df_recent['din_instante'] = df_recent['din_instante'].dt.strftime('%d/%m/%Y %H:%M')
     df_recent = df_recent.fillna("")
     data_recent = df_recent.to_dict(orient='records')
-    with open(CACHE_BALANCO_RECENT, 'w', encoding='utf-8') as f:
-        json.dump(data_recent, f, ensure_ascii=False, indent=2)
+    github_write_file(CACHE_BALANCO_RECENT, json.dumps(data_recent, ensure_ascii=False, indent=2).encode('utf-8'))
         
     # Metadados
     max_date = df['din_instante'].max().strftime('%d/%m/%Y %H:%M')
     
-    if os.path.exists(PATH_METADADOS):
-        with open(PATH_METADADOS, 'r', encoding='utf-8') as f:
-            meta = json.load(f)
+    if github_file_exists(PATH_METADADOS):
+        conteudo_meta = github_read_file(PATH_METADADOS)
+        meta = json.loads(conteudo_meta.decode('utf-8'))
     else:
         meta = {}
         
+    info_balanco = github_get_file_info(PATH_BALANCO)
     meta['balanco'] = {
         'linhas': len(df),
         'max_data': max_date,
-        'tamanho': f"{os.path.getsize(PATH_BALANCO) / (1024*1024):.2f} MB",
-        'modificado': format_date_str(os.path.getmtime(PATH_BALANCO))
+        'tamanho': info_balanco['tamanho'],
+        'modificado': info_balanco['modificado']
     }
     
-    with open(PATH_METADADOS, 'w', encoding='utf-8') as f:
-        json.dump(meta, f, ensure_ascii=False, indent=2)
+    github_write_file(PATH_METADADOS, json.dumps(meta, ensure_ascii=False, indent=2).encode('utf-8'))
     print("Caches e metadados de Balanço atualizados.")
 
 
@@ -133,15 +146,13 @@ def atualizar_cache_e_metadata_pld():
             'valores': df_sub['PLD_HORA'].round(2).tolist()
         }
         
-    with open(CACHE_PLD, 'w', encoding='utf-8') as f:
-        json.dump(data_by_sub, f, ensure_ascii=False, indent=2)
+    github_write_file(CACHE_PLD, json.dumps(data_by_sub, ensure_ascii=False, indent=2).encode('utf-8'))
         
     # Cache Recente (100 linhas brutos)
     df_recent = df.sort_values(by=['MES_REFERENCIA', 'DIA', 'HORA', 'SUBMERCADO'], ascending=[False, False, False, True]).head(100).copy()
     df_recent = df_recent.fillna("")
     data_recent = df_recent.to_dict(orient='records')
-    with open(CACHE_PLD_RECENT, 'w', encoding='utf-8') as f:
-        json.dump(data_recent, f, ensure_ascii=False, indent=2)
+    github_write_file(CACHE_PLD_RECENT, json.dumps(data_recent, ensure_ascii=False, indent=2).encode('utf-8'))
         
     # Cache Horário de PLD por Data e Submercado
     # Estrutura: { "YYYY-MM-DD": { "SUDESTE": [v0, v1, ..., v23], ... } }
@@ -168,8 +179,7 @@ def atualizar_cache_e_metadata_pld():
         except Exception as e:
             continue
             
-    with open(CACHE_PLD_HORARIO, 'w', encoding='utf-8') as f:
-        json.dump(pld_horario_cache, f, ensure_ascii=False, indent=2)
+    github_write_file(CACHE_PLD_HORARIO, json.dumps(pld_horario_cache, ensure_ascii=False, indent=2).encode('utf-8'))
         
     # Metadados
     max_ref = df['MES_REFERENCIA'].max()
@@ -177,21 +187,21 @@ def atualizar_cache_e_metadata_pld():
     max_dia = df_last_ref['DIA'].max()
     max_data = f"{str(max_ref)[4:]}/{str(max_ref)[:4]} (Dia {max_dia})"
     
-    if os.path.exists(PATH_METADADOS):
-        with open(PATH_METADADOS, 'r', encoding='utf-8') as f:
-            meta = json.load(f)
+    if github_file_exists(PATH_METADADOS):
+        conteudo_meta = github_read_file(PATH_METADADOS)
+        meta = json.loads(conteudo_meta.decode('utf-8'))
     else:
         meta = {}
         
+    info_pld = github_get_file_info(PATH_PLD)
     meta['pld'] = {
         'linhas': len(df),
         'max_data': max_data,
-        'tamanho': f"{os.path.getsize(PATH_PLD) / (1024*1024):.2f} MB",
-        'modificado': format_date_str(os.path.getmtime(PATH_PLD))
+        'tamanho': info_pld['tamanho'],
+        'modificado': info_pld['modificado']
     }
     
-    with open(PATH_METADADOS, 'w', encoding='utf-8') as f:
-        json.dump(meta, f, ensure_ascii=False, indent=2)
+    github_write_file(PATH_METADADOS, json.dumps(meta, ensure_ascii=False, indent=2).encode('utf-8'))
     print("Caches e metadados de PLD atualizados.")
 
 
@@ -242,8 +252,7 @@ def atualizar_cache_e_metadata_ampere():
             'pld': pld_data
         }
         
-        with open(CACHE_AMPERE, 'w', encoding='utf-8') as f:
-            json.dump(cache_data, f, ensure_ascii=False, indent=2)
+        github_write_file(CACHE_AMPERE, json.dumps(cache_data, ensure_ascii=False, indent=2).encode('utf-8'))
             
         # Cache Completo (Todas as rodadas)
         df_sorted = df.sort_values(by=['rodada', 'data_referencia']).copy()
@@ -251,8 +260,7 @@ def atualizar_cache_e_metadata_ampere():
         df_sorted['data_publicacao'] = pd.to_datetime(df_sorted['data_publicacao']).dt.strftime('%Y-%m-%d')
         df_sorted = df_sorted.fillna("")
         data_completa = df_sorted.to_dict(orient='records')
-        with open(CACHE_AMPERE_COMPLETO, 'w', encoding='utf-8') as f:
-            json.dump(data_completa, f, ensure_ascii=False, indent=2)
+        github_write_file(CACHE_AMPERE_COMPLETO, json.dumps(data_completa, ensure_ascii=False, indent=2).encode('utf-8'))
             
         # Cache Recente (100 linhas brutos)
         df_recent = df.sort_values(by=['rodada', 'data_referencia', 'indicador'], ascending=[False, False, True]).head(100).copy()
@@ -260,35 +268,34 @@ def atualizar_cache_e_metadata_ampere():
         df_recent['data_publicacao'] = pd.to_datetime(df_recent['data_publicacao']).dt.strftime('%d/%m/%Y')
         df_recent = df_recent.fillna("")
         data_recent = df_recent.to_dict(orient='records')
-        with open(CACHE_AMPERE_RECENT, 'w', encoding='utf-8') as f:
-            json.dump(data_recent, f, ensure_ascii=False, indent=2)
+        github_write_file(CACHE_AMPERE_RECENT, json.dumps(data_recent, ensure_ascii=False, indent=2).encode('utf-8'))
             
         # Metadados
         max_pub = pd.to_datetime(df_last['data_publicacao'].iloc[0]).strftime('%d/%m/%Y')
         max_data = f"Rodada {max_rodada} (Publicado em {max_pub})"
         
-        if os.path.exists(PATH_METADADOS):
-            with open(PATH_METADADOS, 'r', encoding='utf-8') as f:
-                meta = json.load(f)
+        if github_file_exists(PATH_METADADOS):
+            conteudo_meta = github_read_file(PATH_METADADOS)
+            meta = json.loads(conteudo_meta.decode('utf-8'))
         else:
             meta = {}
             
+        info_ampere = github_get_file_info(PATH_AMPERE)
         meta['ampere'] = {
             'linhas': len(df),
             'max_data': max_data,
-            'tamanho': f"{os.path.getsize(PATH_AMPERE) / 1024:.2f} KB",
-            'modificado': format_date_str(os.path.getmtime(PATH_AMPERE))
+            'tamanho': info_ampere['tamanho'],
+            'modificado': info_ampere['modificado']
         }
         
-        with open(PATH_METADADOS, 'w', encoding='utf-8') as f:
-            json.dump(meta, f, ensure_ascii=False, indent=2)
+        github_write_file(PATH_METADADOS, json.dumps(meta, ensure_ascii=False, indent=2).encode('utf-8'))
         print("Caches e metadados da Ampere atualizados.")
 
 
 def atualizar_cache_e_metadata_bbce():
     """Lê a planilha da BBCE, atualiza os caches JSON agregados e reconstrói seu metadado."""
     print("Atualizando caches e metadados da BBCE...")
-    if not os.path.exists(PATH_BBCE):
+    if not github_file_exists(PATH_BBCE):
         print("Planilha BBCE não encontrada. Ignorando atualização de cache.")
         return
         
@@ -363,35 +370,33 @@ def atualizar_cache_e_metadata_bbce():
         
         # Salva o cache diário agregador
         data_bbce = gp.to_dict(orient='records')
-        with open(CACHE_BBCE, 'w', encoding='utf-8') as f:
-            json.dump(data_bbce, f, ensure_ascii=False, indent=2)
+        github_write_file(CACHE_BBCE, json.dumps(data_bbce, ensure_ascii=False, indent=2).encode('utf-8'))
             
         # Cache Recente (100 linhas brutas para a tabela de auditoria)
         df_recent = df.sort_values(by='DATA/HORA', ascending=False).head(100).copy()
         df_recent['DATA/HORA'] = df_recent['DATA/HORA'].dt.strftime('%d/%m/%Y %H:%M:%S')
         df_recent = df_recent.fillna("")
         data_recent = df_recent.to_dict(orient='records')
-        with open(CACHE_BBCE_RECENT, 'w', encoding='utf-8') as f:
-            json.dump(data_recent, f, ensure_ascii=False, indent=2)
+        github_write_file(CACHE_BBCE_RECENT, json.dumps(data_recent, ensure_ascii=False, indent=2).encode('utf-8'))
             
         # Metadados
         max_date = df['DATA/HORA'].max().strftime('%d/%m/%Y %H:%M:%S')
         
-        if os.path.exists(PATH_METADADOS):
-            with open(PATH_METADADOS, 'r', encoding='utf-8') as f:
-                meta = json.load(f)
+        if github_file_exists(PATH_METADADOS):
+            conteudo_meta = github_read_file(PATH_METADADOS)
+            meta = json.loads(conteudo_meta.decode('utf-8'))
         else:
             meta = {}
             
+        info_bbce = github_get_file_info(PATH_BBCE)
         meta['bbce'] = {
             'linhas': len(df),
             'max_data': max_date,
-            'tamanho': f"{os.path.getsize(PATH_BBCE) / (1024*1024):.2f} MB",
-            'modificado': format_date_str(os.path.getmtime(PATH_BBCE))
+            'tamanho': info_bbce['tamanho'],
+            'modificado': info_bbce['modificado']
         }
         
-        with open(PATH_METADADOS, 'w', encoding='utf-8') as f:
-            json.dump(meta, f, ensure_ascii=False, indent=2)
+        github_write_file(PATH_METADADOS, json.dumps(meta, ensure_ascii=False, indent=2).encode('utf-8'))
         print("Caches e metadados da BBCE atualizados.")
 
 
@@ -405,12 +410,12 @@ def index():
 
 @app.route('/api/status', methods=['GET'])
 def get_status():
-    if not os.path.exists(PATH_METADADOS):
+    if not github_file_exists(PATH_METADADOS):
         from gerar_cache import gerar_todos_os_caches
         gerar_todos_os_caches()
         
-    with open(PATH_METADADOS, 'r', encoding='utf-8') as f:
-        status = json.load(f)
+    conteudo_json = github_read_file(PATH_METADADOS)
+    status = json.loads(conteudo_json.decode('utf-8'))
     return jsonify(status)
 
 # ----------------- ROTAS API ATUALIZAÇÃO -----------------
@@ -487,7 +492,7 @@ BBCE_LOG_FILE = os.path.join(PLANILHAS_DIR, 'bbce_automation.log')
 @app.route('/api/bbce/ultimo_registro', methods=['GET'])
 def get_bbce_ultimo_registro():
     try:
-        if not os.path.exists(PATH_BBCE):
+        if not github_file_exists(PATH_BBCE):
             return jsonify({'max_data': 'Nenhum registro encontrado.'})
         df = ler_excel_com_copia(PATH_BBCE)
         if len(df) > 0:
@@ -502,10 +507,10 @@ def get_bbce_ultimo_registro():
 @app.route('/api/data/bbce', methods=['GET'])
 def get_data_bbce():
     try:
-        if not os.path.exists(CACHE_BBCE):
+        if not github_file_exists(CACHE_BBCE):
             atualizar_cache_e_metadata_bbce()
-        with open(CACHE_BBCE, 'r', encoding='utf-8') as f:
-            data = json.load(f)
+        conteudo_json = github_read_file(CACHE_BBCE)
+        data = json.loads(conteudo_json.decode('utf-8'))
         return jsonify(data)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -612,10 +617,10 @@ def get_bbce_auto_logs():
 @app.route('/api/data/balanco', methods=['GET'])
 def get_data_balanco():
     try:
-        if not os.path.exists(CACHE_BALANCO):
+        if not github_file_exists(CACHE_BALANCO):
             atualizar_cache_e_metadata_balanco()
-        with open(CACHE_BALANCO, 'r', encoding='utf-8') as f:
-            data = json.load(f)
+        conteudo_json = github_read_file(CACHE_BALANCO)
+        data = json.loads(conteudo_json.decode('utf-8'))
         return jsonify(data)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -624,10 +629,10 @@ def get_data_balanco():
 @app.route('/api/data/pld', methods=['GET'])
 def get_data_pld():
     try:
-        if not os.path.exists(CACHE_PLD):
+        if not github_file_exists(CACHE_PLD):
             atualizar_cache_e_metadata_pld()
-        with open(CACHE_PLD, 'r', encoding='utf-8') as f:
-            data = json.load(f)
+        conteudo_json = github_read_file(CACHE_PLD)
+        data = json.loads(conteudo_json.decode('utf-8'))
         return jsonify(data)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -636,10 +641,10 @@ def get_data_pld():
 @app.route('/api/data/pld_horario', methods=['GET'])
 def get_data_pld_horario():
     try:
-        if not os.path.exists(CACHE_PLD_HORARIO):
+        if not github_file_exists(CACHE_PLD_HORARIO):
             atualizar_cache_e_metadata_pld()
-        with open(CACHE_PLD_HORARIO, 'r', encoding='utf-8') as f:
-            data = json.load(f)
+        conteudo_json = github_read_file(CACHE_PLD_HORARIO)
+        data = json.loads(conteudo_json.decode('utf-8'))
         return jsonify(data)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -648,10 +653,10 @@ def get_data_pld_horario():
 @app.route('/api/data/ampere', methods=['GET'])
 def get_data_ampere():
     try:
-        if not os.path.exists(CACHE_AMPERE):
+        if not github_file_exists(CACHE_AMPERE):
             atualizar_cache_e_metadata_ampere()
-        with open(CACHE_AMPERE, 'r', encoding='utf-8') as f:
-            data = json.load(f)
+        conteudo_json = github_read_file(CACHE_AMPERE)
+        data = json.loads(conteudo_json.decode('utf-8'))
         return jsonify(data)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -660,10 +665,10 @@ def get_data_ampere():
 @app.route('/api/data/ampere_completo', methods=['GET'])
 def get_data_ampere_completo():
     try:
-        if not os.path.exists(CACHE_AMPERE_COMPLETO):
+        if not github_file_exists(CACHE_AMPERE_COMPLETO):
             atualizar_cache_e_metadata_ampere()
-        with open(CACHE_AMPERE_COMPLETO, 'r', encoding='utf-8') as f:
-            data = json.load(f)
+        conteudo_json = github_read_file(CACHE_AMPERE_COMPLETO)
+        data = json.loads(conteudo_json.decode('utf-8'))
         return jsonify(data)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -678,25 +683,25 @@ def get_data_view(base):
     try:
         if base == 'balanco':
             cache_path = CACHE_BALANCO_RECENT
-            if not os.path.exists(cache_path):
+            if not github_file_exists(cache_path):
                 atualizar_cache_e_metadata_balanco()
         elif base == 'pld':
             cache_path = CACHE_PLD_RECENT
-            if not os.path.exists(cache_path):
+            if not github_file_exists(cache_path):
                 atualizar_cache_e_metadata_pld()
         elif base == 'ampere':
             cache_path = CACHE_AMPERE_RECENT
-            if not os.path.exists(cache_path):
+            if not github_file_exists(cache_path):
                 atualizar_cache_e_metadata_ampere()
         elif base == 'bbce':
             cache_path = CACHE_BBCE_RECENT
-            if not os.path.exists(cache_path):
+            if not github_file_exists(cache_path):
                 atualizar_cache_e_metadata_bbce()
         else:
             return jsonify({'error': 'Base inválida.'}), 400
             
-        with open(cache_path, 'r', encoding='utf-8') as f:
-            data = json.load(f)
+        conteudo_json = github_read_file(cache_path)
+        data = json.loads(conteudo_json.decode('utf-8'))
         return jsonify(data)
     except Exception as e:
         return jsonify({'error': str(e)}), 500

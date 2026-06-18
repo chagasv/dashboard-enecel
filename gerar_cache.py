@@ -2,6 +2,8 @@ import os
 import json
 import pandas as pd
 import datetime
+import io
+from github_storage import github_read_file, github_write_file, github_file_exists, github_get_file_info
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PLANILHAS_DIR = os.path.join(BASE_DIR, 'planilhas_para_atualizar')
@@ -31,9 +33,10 @@ def gerar_todos_os_caches():
     metadata = {}
     
     # 1. Balanço Energético
-    if os.path.exists(PATH_BALANCO):
+    if github_file_exists(PATH_BALANCO):
         print("Processando Balanco Energetico...")
-        df = pd.read_excel(PATH_BALANCO, sheet_name="balanco_energetico")
+        conteudo = github_read_file(PATH_BALANCO)
+        df = pd.read_excel(io.BytesIO(conteudo), sheet_name="balanco_energetico")
         df['din_instante'] = pd.to_datetime(df['din_instante'])
         
         # 1.1 Cache do Gráfico (2026 horário agrupado por hora e subsistema)
@@ -41,8 +44,7 @@ def gerar_todos_os_caches():
         df_grouped = df_2026.groupby(['din_instante', 'id_subsistema']).mean(numeric_only=True).reset_index()
         df_grouped['din_instante'] = df_grouped['din_instante'].dt.strftime('%Y-%m-%d %H:%M')
         data_balanco = df_grouped.to_dict(orient='records')
-        with open(CACHE_BALANCO, 'w', encoding='utf-8') as f:
-            json.dump(data_balanco, f, ensure_ascii=False, indent=2)
+        github_write_file(CACHE_BALANCO, json.dumps(data_balanco, ensure_ascii=False, indent=2).encode('utf-8'))
             
         # 1.2 Cache das 100 linhas mais recentes (dados brutos ordenados de forma decrescente)
         df_recent = df.sort_values(by=['din_instante', 'id_subsistema'], ascending=[False, True]).head(100).copy()
@@ -50,15 +52,15 @@ def gerar_todos_os_caches():
         # Limpa nulos para JSON valido
         df_recent = df_recent.fillna("")
         data_recent = df_recent.to_dict(orient='records')
-        with open(CACHE_BALANCO_RECENT, 'w', encoding='utf-8') as f:
-            json.dump(data_recent, f, ensure_ascii=False, indent=2)
+        github_write_file(CACHE_BALANCO_RECENT, json.dumps(data_recent, ensure_ascii=False, indent=2).encode('utf-8'))
             
         max_date = df['din_instante'].max().strftime('%d/%m/%Y %H:%M')
+        info_balanco = github_get_file_info(PATH_BALANCO)
         metadata['balanco'] = {
             'linhas': len(df),
             'max_data': max_date,
-            'tamanho': f"{os.path.getsize(PATH_BALANCO) / (1024*1024):.2f} MB",
-            'modificado': format_date_str(os.path.getmtime(PATH_BALANCO))
+            'tamanho': info_balanco['tamanho'],
+            'modificado': info_balanco['modificado']
         }
         print(f"Cache do Balanco salvo. Max Data: {max_date}")
     else:
@@ -66,9 +68,10 @@ def gerar_todos_os_caches():
         metadata['balanco'] = {'status': 'Não Encontrado'}
         
     # 2. PLD
-    if os.path.exists(PATH_PLD):
+    if github_file_exists(PATH_PLD):
         print("Processando PLD...")
-        df = pd.read_excel(PATH_PLD, sheet_name="pld")
+        conteudo = github_read_file(PATH_PLD)
+        df = pd.read_excel(io.BytesIO(conteudo), sheet_name="pld")
         
         # 2.1 Cache do Gráfico
         df_2026 = df[df['MES_REFERENCIA'] >= 202601]
@@ -92,16 +95,14 @@ def gerar_todos_os_caches():
                 'valores': df_sub['PLD_HORA'].round(2).tolist()
             }
             
-        with open(CACHE_PLD, 'w', encoding='utf-8') as f:
-            json.dump(data_by_sub, f, ensure_ascii=False, indent=2)
+        github_write_file(CACHE_PLD, json.dumps(data_by_sub, ensure_ascii=False, indent=2).encode('utf-8'))
             
         # 2.2 Cache das 100 linhas mais recentes
         # Ordenado por MES_REFERENCIA, DIA, HORA de forma decrescente
         df_recent = df.sort_values(by=['MES_REFERENCIA', 'DIA', 'HORA', 'SUBMERCADO'], ascending=[False, False, False, True]).head(100).copy()
         df_recent = df_recent.fillna("")
         data_recent = df_recent.to_dict(orient='records')
-        with open(CACHE_PLD_RECENT, 'w', encoding='utf-8') as f:
-            json.dump(data_recent, f, ensure_ascii=False, indent=2)
+        github_write_file(CACHE_PLD_RECENT, json.dumps(data_recent, ensure_ascii=False, indent=2).encode('utf-8'))
             
         # 2.3 Cache Horário de PLD por Data e Submercado
         # Estrutura: { "YYYY-MM-DD": { "SUDESTE": [v0, v1, ..., v23], ... } }
@@ -128,19 +129,19 @@ def gerar_todos_os_caches():
             except Exception as e:
                 continue
                 
-        with open(CACHE_PLD_HORARIO, 'w', encoding='utf-8') as f:
-            json.dump(pld_horario_cache, f, ensure_ascii=False, indent=2)
+        github_write_file(CACHE_PLD_HORARIO, json.dumps(pld_horario_cache, ensure_ascii=False, indent=2).encode('utf-8'))
             
         max_ref = df['MES_REFERENCIA'].max()
         df_last_ref = df[df['MES_REFERENCIA'] == max_ref]
         max_dia = df_last_ref['DIA'].max()
         max_data = f"{str(max_ref)[4:]}/{str(max_ref)[:4]} (Dia {max_dia})"
         
+        info_pld = github_get_file_info(PATH_PLD)
         metadata['pld'] = {
             'linhas': len(df),
             'max_data': max_data,
-            'tamanho': f"{os.path.getsize(PATH_PLD) / (1024*1024):.2f} MB",
-            'modificado': format_date_str(os.path.getmtime(PATH_PLD))
+            'tamanho': info_pld['tamanho'],
+            'modificado': info_pld['modificado']
         }
         print("Cache do PLD salvo.")
     else:
@@ -148,9 +149,10 @@ def gerar_todos_os_caches():
         metadata['pld'] = {'status': 'Não Encontrado'}
         
     # 3. Ampere
-    if os.path.exists(PATH_AMPERE):
+    if github_file_exists(PATH_AMPERE):
         print("Processando Ampere...")
-        df = pd.read_excel(PATH_AMPERE, sheet_name="f_dados")
+        conteudo = github_read_file(PATH_AMPERE)
+        df = pd.read_excel(io.BytesIO(conteudo), sheet_name="f_dados")
         if len(df) > 0:
             max_rodada = df['rodada'].max()
             df_last = df[df['rodada'] == max_rodada].copy()
@@ -195,8 +197,7 @@ def gerar_todos_os_caches():
                 'pld': pld_data
             }
             
-            with open(CACHE_AMPERE, 'w', encoding='utf-8') as f:
-                json.dump(cache_ampere_data, f, ensure_ascii=False, indent=2)
+            github_write_file(CACHE_AMPERE, json.dumps(cache_ampere_data, ensure_ascii=False, indent=2).encode('utf-8'))
                 
             # Cache Completo (Todas as rodadas)
             df_sorted = df.sort_values(by=['rodada', 'data_referencia']).copy()
@@ -204,8 +205,7 @@ def gerar_todos_os_caches():
             df_sorted['data_publicacao'] = pd.to_datetime(df_sorted['data_publicacao']).dt.strftime('%Y-%m-%d')
             df_sorted = df_sorted.fillna("")
             data_completa = df_sorted.to_dict(orient='records')
-            with open(CACHE_AMPERE_COMPLETO, 'w', encoding='utf-8') as f:
-                json.dump(data_completa, f, ensure_ascii=False, indent=2)
+            github_write_file(CACHE_AMPERE_COMPLETO, json.dumps(data_completa, ensure_ascii=False, indent=2).encode('utf-8'))
                 
             # 3.2 Cache das 100 linhas mais recentes
             # Ordenado por rodada decrescente, data_referencia decrescente
@@ -214,25 +214,24 @@ def gerar_todos_os_caches():
             df_recent['data_publicacao'] = pd.to_datetime(df_recent['data_publicacao']).dt.strftime('%d/%m/%Y')
             df_recent = df_recent.fillna("")
             data_recent = df_recent.to_dict(orient='records')
-            with open(CACHE_AMPERE_RECENT, 'w', encoding='utf-8') as f:
-                json.dump(data_recent, f, ensure_ascii=False, indent=2)
+            github_write_file(CACHE_AMPERE_RECENT, json.dumps(data_recent, ensure_ascii=False, indent=2).encode('utf-8'))
                 
             max_pub = pd.to_datetime(df_last['data_publicacao'].iloc[0]).strftime('%d/%m/%Y')
             max_data = f"Rodada {max_rodada} (Publicado em {max_pub})"
             
+            info_ampere = github_get_file_info(PATH_AMPERE)
             metadata['ampere'] = {
                 'linhas': len(df),
                 'max_data': max_data,
-                'tamanho': f"{os.path.getsize(PATH_AMPERE) / 1024:.2f} KB",
-                'modificado': format_date_str(os.path.getmtime(PATH_AMPERE))
+                'tamanho': info_ampere['tamanho'],
+                'modificado': info_ampere['modificado']
             }
             print("Cache da Ampere salvo.")
     else:
         print("Planilha da Ampere nao encontrada.")
         metadata['ampere'] = {'status': 'Não Encontrado'}
         
-    with open(PATH_METADADOS, 'w', encoding='utf-8') as f:
-        json.dump(metadata, f, ensure_ascii=False, indent=2)
+    github_write_file(PATH_METADADOS, json.dumps(metadata, ensure_ascii=False, indent=2).encode('utf-8'))
     print("Arquivo de metadados metadata.json gerado com sucesso!")
 
 if __name__ == '__main__':
