@@ -106,14 +106,24 @@ def atualizar_balanco_energetico(planilha_base_path, ons_url=None):
         df_final = pd.concat([df_base, df_novos], ignore_index=True)
         
         # Salva de volta na planilha
-        print(f"Gravando dados atualizados em {planilha_base_path} (isso pode levar alguns segundos)...")
+        print(f"Gravando dados updated em {planilha_base_path} (isso pode levar alguns segundos)...")
         buffer = io.BytesIO()
         df_final.to_excel(buffer, sheet_name="balanco_energetico", index=False)
         github_write_file(planilha_base_path, buffer.getvalue())
         print(f"Sucesso! Planilha de Balanço Energético atualizada. Total de linhas agora: {len(df_final)}")
+        
+        # Força liberação de memória RAM
+        import gc
+        gc.collect()
+        
         return len(df_novos), len(df_final)
     else:
         print("Nenhum dado novo encontrado. A planilha já está atualizada.")
+        
+        # Força liberação de memória RAM
+        import gc
+        gc.collect()
+        
         return 0, len(df_base)
 
 
@@ -185,6 +195,11 @@ def atualizar_pld(planilha_base_path, ccee_url=None):
     df_final.to_excel(buffer, sheet_name="pld", index=False)
     github_write_file(planilha_base_path, buffer.getvalue())
     print(f"Sucesso! Planilha de PLD Horário atualizada. Total de linhas agora: {len(df_final)}")
+    
+    # Força liberação de memória RAM
+    import gc
+    gc.collect()
+    
     return len(df_new), len(df_final)
 
 
@@ -443,6 +458,11 @@ def extrair_ampere_pdf(pdf_path, planilha_base_path):
     df_final.to_excel(buffer, sheet_name="f_dados", index=False)
     github_write_file(planilha_base_path, buffer.getvalue())
     print("Sucesso! Planilha de rodadas Ampere atualizada.")
+    
+    # Força liberação de memória RAM
+    import gc
+    gc.collect()
+    
     return len(df_novos), len(df_final)
 
 
@@ -624,8 +644,18 @@ def atualizar_negocios_bbce(planilha_base_path, planilha_novos_negocios_path=Non
         df_final.to_excel(buffer, index=False)
         github_write_file(planilha_base_path, buffer.getvalue())
         print(f"Sucesso! Base BBCE atualizada. Total de linhas agora: {len(df_final)}")
+        
+        # Força liberação de memória RAM
+        import gc
+        gc.collect()
+        
         return len(df_novos), len(df_final)
     else:
         print("Nenhum registro novo encontrado. A planilha já está atualizada.")
+        
+        # Força liberação de memória RAM
+        import gc
+        gc.collect()
+        
         return 0, len(df_base)
 

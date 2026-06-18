@@ -138,6 +138,8 @@ def atualizar_cache_e_metadata_balanco():
     
     github_write_file(PATH_METADADOS, json.dumps(meta, ensure_ascii=False, indent=2).encode('utf-8'))
     print("Caches e metadados de Balanço atualizados.")
+    import gc
+    gc.collect()
 
 
 def atualizar_cache_e_metadata_pld():
@@ -224,6 +226,8 @@ def atualizar_cache_e_metadata_pld():
     
     github_write_file(PATH_METADADOS, json.dumps(meta, ensure_ascii=False, indent=2).encode('utf-8'))
     print("Caches e metadados de PLD atualizados.")
+    import gc
+    gc.collect()
 
 
 def atualizar_cache_e_metadata_ampere():
@@ -311,6 +315,8 @@ def atualizar_cache_e_metadata_ampere():
         
         github_write_file(PATH_METADADOS, json.dumps(meta, ensure_ascii=False, indent=2).encode('utf-8'))
         print("Caches e metadados da Ampere atualizados.")
+        import gc
+        gc.collect()
 
 
 def atualizar_cache_e_metadata_bbce():
@@ -419,6 +425,8 @@ def atualizar_cache_e_metadata_bbce():
         
         github_write_file(PATH_METADADOS, json.dumps(meta, ensure_ascii=False, indent=2).encode('utf-8'))
         print("Caches e metadados da BBCE atualizados.")
+        import gc
+        gc.collect()
 
 
 # ----------------- ROTAS FRONTEND -----------------
