@@ -116,7 +116,7 @@ def atualizar_balanco_energetico(planilha_base_path, ons_url=None):
         import gc
         gc.collect()
         
-        return len(df_novos), len(df_final)
+        return len(df_novos), len(df_final), df_final
     else:
         print("Nenhum dado novo encontrado. A planilha já está atualizada.")
         
@@ -124,7 +124,7 @@ def atualizar_balanco_energetico(planilha_base_path, ons_url=None):
         import gc
         gc.collect()
         
-        return 0, len(df_base)
+        return 0, len(df_base), df_base
 
 
 def obter_url_pld_atual(logger_func=print):
@@ -247,7 +247,7 @@ def atualizar_pld(planilha_base_path, ccee_url=None):
     import gc
     gc.collect()
     
-    return len(df_new), len(df_final)
+    return len(df_new), len(df_final), df_final
 
 
 def extrair_ampere_pdf(pdf_path, planilha_base_path):
@@ -510,7 +510,7 @@ def extrair_ampere_pdf(pdf_path, planilha_base_path):
     import gc
     gc.collect()
     
-    return len(df_novos), len(df_final)
+    return len(df_novos), len(df_final), df_final
 
 
 def ler_excel_com_copia(caminho_excel, **kwargs):
@@ -696,7 +696,7 @@ def atualizar_negocios_bbce(planilha_base_path, planilha_novos_negocios_path=Non
         import gc
         gc.collect()
         
-        return len(df_novos), len(df_final)
+        return len(df_novos), len(df_final), df_final
     else:
         print("Nenhum registro novo encontrado. A planilha já está atualizada.")
         
@@ -704,5 +704,5 @@ def atualizar_negocios_bbce(planilha_base_path, planilha_novos_negocios_path=Non
         import gc
         gc.collect()
         
-        return 0, len(df_base)
+        return 0, len(df_base), df_base
 
