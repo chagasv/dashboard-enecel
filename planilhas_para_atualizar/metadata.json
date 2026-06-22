@@ -1,15 +1,15 @@
 {
   "balanco": {
-    "linhas": 286662,
-    "max_data": "15/06/2026 23:00",
-    "tamanho": "17.80 MB",
-    "modificado": "17/06/2026 11:46:37"
+    "linhas": 287262,
+    "max_data": "20/06/2026 23:00",
+    "tamanho": "17.84 MB",
+    "modificado": "22/06/2026 14:22:51"
   },
   "pld": {
-    "linhas": 191424,
-    "max_data": "06/2026 (Dia 17)",
-    "tamanho": "4.16 MB",
-    "modificado": "17/06/2026 11:31:00"
+    "linhas": 191904,
+    "max_data": "06/2026 (Dia 22)",
+    "tamanho": "4.17 MB",
+    "modificado": "22/06/2026 14:23:20"
   },
   "ampere": {
     "linhas": 1660,
