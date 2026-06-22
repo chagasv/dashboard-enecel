@@ -810,6 +810,22 @@ def debug_curl_test():
     except Exception as e:
         return jsonify({'error': str(e)})
 
+@app.route('/api/debug/test_cffi', methods=['GET'])
+def debug_test_cffi():
+    try:
+        from curl_cffi import requests as cffi_requests
+        res = cffi_requests.get("https://dadosabertos.ccee.org.br/api/3/action/package_show?id=pld_horario", impersonate="chrome", timeout=10)
+        return jsonify({
+            'status_code': res.status_code,
+            'content_length': len(res.content),
+            'text': res.text[:200]
+        })
+    except Exception as e:
+        return jsonify({
+            'error': str(e),
+            'traceback': traceback.format_exc()
+        })
+
 if __name__ == '__main__':
     # Roda o servidor local na porta 5000
     app.run(host='0.0.0.0', port=5000, debug=True)
