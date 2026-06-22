@@ -127,13 +127,54 @@ def atualizar_balanco_energetico(planilha_base_path, ons_url=None):
         return 0, len(df_base)
 
 
+def obter_url_pld_atual(logger_func=print):
+    """
+    Consulta a API de Dados Abertos da CCEE (CKAN) para obter a URL de download
+    mais recente da planilha de PLD Horário de 2026.
+    """
+    url_api = "https://dadosabertos.ccee.org.br/api/3/action/package_show?id=pld_horario"
+    default_url = "https://pda-download.ccee.org.br/6A5wq97KTCWv_bvs3CqsQQ/content"
+    
+    logger_func("[ETL] Consultando API da CCEE para obter a URL do PLD do ano corrente...")
+    try:
+        if cffi_requests is not None:
+            res = cffi_requests.get(url_api, impersonate="chrome", timeout=20)
+        else:
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+            }
+            res = requests.get(url_api, headers=headers, timeout=20)
+            
+        if res.status_code == 200:
+            dados = res.json()
+            if dados.get("success"):
+                resources = dados.get("result", {}).get("resources", [])
+                ano_corrente = datetime.datetime.now().year
+                nome_procurado = f"pld_horario_{ano_corrente}"
+                for r in resources:
+                    if r.get("name") == nome_procurado:
+                        url_encontrada = r.get("url")
+                        if url_encontrada:
+                            logger_func(f"[ETL] URL encontrada para {nome_procurado}: {url_encontrada}")
+                            return url_encontrada
+                logger_func(f"[ETL] Recurso {nome_procurado} não encontrado na API. Usando URL padrão.")
+            else:
+                logger_func("[ETL] Resposta de insucesso da API da CCEE. Usando URL padrão.")
+        else:
+            logger_func(f"[ETL] Erro ao acessar API da CCEE (Status {res.status_code}). Usando URL padrão.")
+    except Exception as e:
+        logger_func(f"[ETL] Falha ao consultar a API da CCEE ({str(e)}). Usando URL padrão.")
+        
+    return default_url
+
+
 def atualizar_pld(planilha_base_path, ccee_url=None):
     """
     Baixa os dados horários do PLD da CCEE e atualiza a planilha base de PLD
     deletando os dados do ano corrente de 2026 e inserindo o novo lote completo.
     """
     if ccee_url is None:
-        ccee_url = "https://pda-download.ccee.org.br/6A5wq97KTCWv_bvs3CqsQQ/content"
+        ccee_url = obter_url_pld_atual()
         
     print(f"[{datetime.datetime.now()}] Iniciando atualização do PLD Horário...")
     print(f"Lendo base local: {planilha_base_path}")
@@ -147,19 +188,25 @@ def atualizar_pld(planilha_base_path, ccee_url=None):
     print(f"Base local carregada. Total de linhas: {len(df_base)}")
     
     # Baixa os novos dados da CCEE usando requests ou curl_cffi
-    print(f"Baixando dados do PLD da CCEE: {ccee_url}")
+    print(f"Baixando dados do PLD da CCEE de: {ccee_url}")
     
-    from github_storage import usar_github
-    
-    if usar_github() or cffi_requests is None:
-        print("[ETL] Usando requests padrão (modo nuvem/resiliente) para baixar dados da CCEE...")
+    # Preferimos curl_cffi se estiver disponível para evitar bloqueio WAF da CCEE
+    if cffi_requests is not None:
+        print("[ETL] Usando curl_cffi para baixar dados da CCEE (burlar WAF/Bloqueio)...")
+        try:
+            response = cffi_requests.get(ccee_url, impersonate="chrome", timeout=60)
+        except Exception as e:
+            print(f"[ETL] Erro ao baixar com curl_cffi ({str(e)}). Tentando requests padrão como fallback...")
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+            }
+            response = requests.get(ccee_url, headers=headers, timeout=60)
+    else:
+        print("[ETL] curl_cffi não disponível. Usando requests padrão...")
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
         }
         response = requests.get(ccee_url, headers=headers, timeout=60)
-    else:
-        print("[ETL] Usando curl_cffi (modo local) para baixar dados da CCEE...")
-        response = cffi_requests.get(ccee_url, impersonate="chrome", timeout=60)
     
     if response.status_code != 200:
         raise Exception(f"Erro ao baixar arquivo de PLD da CCEE. Status Code: {response.status_code}")
