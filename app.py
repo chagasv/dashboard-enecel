@@ -796,6 +796,20 @@ def get_debug_github():
             'traceback': traceback.format_exc()
         }), 500
 
+@app.route('/api/debug/curl_test', methods=['GET'])
+def debug_curl_test():
+    import subprocess
+    ccee_url = "https://pda-download.ccee.org.br/6A5wq97KTCWv_bvs3CqsQQ/content"
+    try:
+        res = subprocess.run(['curl', '-I', ccee_url], capture_output=True, text=True, timeout=10)
+        return jsonify({
+            'stdout': res.stdout,
+            'stderr': res.stderr,
+            'returncode': res.returncode
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
 if __name__ == '__main__':
     # Roda o servidor local na porta 5000
     app.run(host='0.0.0.0', port=5000, debug=True)
