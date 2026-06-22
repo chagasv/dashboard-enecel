@@ -48,9 +48,11 @@
                 <button class="nav-btn" data-tab="auditoria">
                     <i class="fa-solid fa-table"></i> Conferir Dados
                 </button>
+                {% if not is_cloud %}
                 <button class="nav-btn update-nav-btn" data-tab="etl">
                     <i class="fa-solid fa-rotate"></i> Painel de ETL
                 </button>
+                {% endif %}
             </nav>
             
             <div class="sidebar-footer">
@@ -70,9 +72,11 @@
                 </div>
                 
                 <div class="top-bar-actions">
+                    {% if not is_cloud %}
                     <button class="btn btn-primary btn-quick-etl" onclick="switchTab('etl')">
                         <i class="fa-solid fa-rotate"></i> Atualizar Dados
                     </button>
+                    {% endif %}
                 </div>
             </header>
             
@@ -884,6 +888,26 @@
                 
                 <!-- TAB: PAINEL DE ETL / IMPORTAÇÃO -->
                 <div class="tab-pane" id="tab-etl">
+                    {% if is_cloud %}
+                    <div class="glass-card" style="padding: 40px; text-align: center; max-width: 700px; margin: 40px auto; border: 1px solid rgba(6, 182, 212, 0.3); background: rgba(6, 182, 212, 0.03); border-radius: 8px;">
+                        <i class="fa-solid fa-triangle-exclamation" style="font-size: 48px; color: #06b6d4; margin-bottom: 20px;"></i>
+                        <h2 style="font-family: 'Outfit', sans-serif; color: var(--text-primary); margin-bottom: 12px; font-size: 24px;">Modo de Leitura Online</h2>
+                        <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.6; margin-bottom: 24px;">
+                            Por razões de segurança, limites de recursos e proteção de rede das APIs (CCEE, ONS, BBCE), as rotinas de ETL e atualizações diretas de dados via web foram movidas exclusivamente para o ambiente local.
+                        </p>
+                        <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--glass-border); padding: 20px; border-radius: 6px; text-align: left; font-size: 13px; color: var(--text-primary); margin-bottom: 24px;">
+                            <strong style="display: block; margin-bottom: 10px; color: #06b6d4; font-size: 14px;"><i class="fa-solid fa-circle-info"></i> Como atualizar os dados da base:</strong>
+                            <ol style="margin: 0; padding-left: 20px; line-height: 1.6; color: var(--text-secondary);">
+                                <li style="margin-bottom: 6px;">Abra a pasta do projeto no seu computador local.</li>
+                                <li style="margin-bottom: 6px;">Execute o arquivo <code style="background: rgba(255, 255, 255, 0.08); padding: 2px 6px; border-radius: 4px; color: #06b6d4; font-family: monospace;">atualizar_local.bat</code> com clique duplo (ou rode <code style="background: rgba(255, 255, 255, 0.08); padding: 2px 6px; border-radius: 4px; color: #06b6d4; font-family: monospace;">python atualizar_local.py</code> no terminal).</li>
+                                <li style="margin-bottom: 6px;">Escolha a base de dados que deseja atualizar na interface interativa do terminal.</li>
+                                <li style="margin-bottom: 6px;">O script rodará localmente, consolidará os dados das planilhas, atualizará os caches locais e fará o envio (<code style="background: rgba(255, 255, 255, 0.08); padding: 2px 4px; border-radius: 3px; font-family: monospace;">git push</code>) de forma 100% automatizada.</li>
+                                <li>O servidor na nuvem detectará a atualização no GitHub e atualizará os dados deste dashboard em poucos instantes.</li>
+                            </ol>
+                        </div>
+                        <span style="font-size: 12px; color: var(--text-muted); font-weight: 500;"><i class="fa-solid fa-lock"></i> Visualizador Online - Apenas Leitura</span>
+                    </div>
+                    {% else %}
                     <div class="etl-grid">
                         
                         <!-- Automação do Balanço ONS -->
@@ -996,6 +1020,7 @@
                         </div>
                         
                     </div>
+                    {% endif %}
                 </div>
                 
             </div>

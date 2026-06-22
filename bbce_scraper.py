@@ -57,28 +57,14 @@ def executar_automacao_bbce(data_inicio_str, data_fim_str, logger_func=print):
             logger_func("Conectado com sucesso ao Chrome ativo!")
             
             # 1. Gerenciar abas/guias
-            logger_func("Localizando abas do Chrome...")
-            abas = driver.window_handles
-            aba_bbce_handle = None
+            logger_func("Abrindo nova aba no Google Chrome ativo...")
+            driver.execute_script("window.open('about:blank', '_blank');")
+            time.sleep(1)
+            # Alterna para a aba recém-aberta (a última na lista)
+            driver.switch_to.window(driver.window_handles[-1])
             
-            for handle in abas:
-                try:
-                    driver.switch_to.window(handle)
-                    current_url = driver.current_url
-                    if "ehub.bbce.com.br" in current_url:
-                        aba_bbce_handle = handle
-                        logger_func("Aba do eHub BBCE detectada. Reutilizando a sessão ativa.")
-                        break
-                except Exception:
-                    continue
-                    
-            if aba_bbce_handle is None:
-                logger_func("Nenhuma aba da BBCE aberta encontrada. Abrindo nova aba...")
-                driver.execute_script("window.open('about:blank', '_blank');")
-                # Alterna para a aba aberta (última na lista)
-                driver.switch_to.window(driver.window_handles[-1])
-                logger_func("Acessando portal eHub BBCE...")
-                driver.get("https://ehub.bbce.com.br/pos-negociacao/relatorios")
+            logger_func("Acessando portal eHub BBCE...")
+            driver.get("https://ehub.bbce.com.br/pos-negociacao/relatorios")
                 
         except Exception as e:
             logger_func("[ERROR] Não foi possível conectar ao navegador Chrome na porta 9222.")

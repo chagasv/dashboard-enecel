@@ -447,7 +447,7 @@ def atualizar_cache_e_metadata_bbce(df=None):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', is_cloud=usar_github())
 
 # ----------------- ROTA STATUS (METADADOS LEVES EM 1ms) -----------------
 
@@ -465,6 +465,8 @@ def get_status():
 
 @app.route('/api/update/balanco', methods=['POST'])
 def update_balanco():
+    if usar_github():
+        return jsonify({'success': False, 'message': 'Atualizações automáticas suspensas na nuvem. Execute a atualização local para sincronizar os dados.'}), 403
     try:
         novas_linhas, total_linhas, df_final = atualizar_balanco_energetico(PATH_BALANCO)
         atualizar_cache_e_metadata_balanco(df_final)
@@ -483,6 +485,8 @@ def update_balanco():
 
 @app.route('/api/update/pld', methods=['POST'])
 def update_pld_ccee():
+    if usar_github():
+        return jsonify({'success': False, 'message': 'Atualizações automáticas suspensas na nuvem. Execute a atualização local para sincronizar os dados.'}), 403
     try:
         novas_linhas, total_linhas, df_final = atualizar_pld(PATH_PLD)
         atualizar_cache_e_metadata_pld(df_final)
@@ -501,6 +505,8 @@ def update_pld_ccee():
 
 @app.route('/api/update/ampere', methods=['POST'])
 def update_ampere_pdf():
+    if usar_github():
+        return jsonify({'success': False, 'message': 'Upload e processamento de PDFs suspensos na nuvem. Execute a atualização local para sincronizar os dados.'}), 403
     if 'file' not in request.files:
         return jsonify({'success': False, 'message': 'Nenhum arquivo enviado.'}), 400
         
@@ -570,6 +576,8 @@ def get_data_bbce():
 
 @app.route('/api/update/bbce_upload', methods=['POST'])
 def update_bbce_upload():
+    if usar_github():
+        return jsonify({'success': False, 'message': 'Upload de negócios suspenso na nuvem. Execute a atualização local para sincronizar os dados.'}), 403
     if 'file' not in request.files:
         return jsonify({'success': False, 'message': 'Nenhum arquivo enviado.'}), 400
         
@@ -635,6 +643,8 @@ def rodar_selenium_bbce_thread(data_inicio, data_fim):
 
 @app.route('/api/update/bbce_auto', methods=['POST'])
 def update_bbce_auto():
+    if usar_github():
+        return jsonify({'success': False, 'message': 'Automação BBCE suspensa na nuvem. Execute a atualização local para sincronizar os dados.'}), 403
     dados = request.get_json() or {}
     data_inicio = dados.get('data_inicio')
     data_fim = dados.get('data_fim')
