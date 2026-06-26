@@ -519,11 +519,11 @@ def ler_excel_com_copia(caminho_excel, **kwargs):
     erros de permissão/locks (Permission denied) no Windows.
     No modo GitHub, faz o download do conteúdo da API do GitHub.
     """
-    from github_storage import usar_github, github_read_file
+    from src.github_storage import usar_github, github_read_file
     
     # Se o storage for o GitHub e o arquivo pertencer ao projeto, faz a leitura da API
     # (Note que arquivos temporários de upload estarão fora do projeto, começando com '..')
-    from github_storage import _obter_caminho_relativo
+    from src.github_storage import _obter_caminho_relativo
     rel_path = _obter_caminho_relativo(caminho_excel)
     
     if usar_github() and not rel_path.startswith('..'):
