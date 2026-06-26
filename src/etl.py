@@ -8,7 +8,7 @@ try:
     from curl_cffi import requests as cffi_requests
 except ImportError:
     cffi_requests = None
-from github_storage import github_read_file, github_write_file, github_file_exists
+from src.github_storage import github_read_file, github_write_file, github_file_exists
 
 # Mapeamentos para a planilha Ampere
 SUB_MAP = {

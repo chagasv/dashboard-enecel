@@ -29,9 +29,9 @@ def ler_erro_debug():
     return "Nenhum erro registrado desde a inicialização."
 
 # Importa as rotinas de ETL criadas no etl.py
-from etl import atualizar_balanco_energetico, atualizar_pld, extrair_ampere_pdf, atualizar_negocios_bbce, ler_excel_com_copia, atualizar_ena, atualizar_carga, atualizar_ear
-from bbce_scraper import executar_automacao_bbce
-from github_storage import github_read_file, github_write_file, github_file_exists, github_get_file_info, usar_github
+from src.etl import atualizar_balanco_energetico, atualizar_pld, extrair_ampere_pdf, atualizar_negocios_bbce, ler_excel_com_copia, atualizar_ena, atualizar_carga, atualizar_ear
+from src.bbce_scraper import executar_automacao_bbce
+from src.github_storage import github_read_file, github_write_file, github_file_exists, github_get_file_info, usar_github
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
 
@@ -650,7 +650,7 @@ def index():
 @app.route('/api/status', methods=['GET'])
 def get_status():
     if not github_file_exists(PATH_METADADOS):
-        from gerar_cache import gerar_todos_os_caches
+        from src.gerar_cache import gerar_todos_os_caches
         gerar_todos_os_caches()
         
     conteudo_json = github_read_file(PATH_METADADOS)

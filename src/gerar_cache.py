@@ -3,9 +3,10 @@ import json
 import pandas as pd
 import datetime
 import io
-from github_storage import github_read_file, github_write_file, github_file_exists, github_get_file_info
+from src.github_storage import github_read_file, github_write_file, github_file_exists, github_get_file_info
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# Diretório raiz do projeto (sobe 1 nível por estar na pasta src/)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PLANILHAS_DIR = os.path.join(BASE_DIR, 'planilhas_para_atualizar')
 
 PATH_BALANCO = os.path.join(PLANILHAS_DIR, 'f_balanco_energetico.xlsx')

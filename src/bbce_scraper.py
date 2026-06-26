@@ -25,8 +25,8 @@ def executar_automacao_bbce(data_inicio_str, data_fim_str, logger_func=print):
     inicio_automacao = time.time()
     logger_func(f"Iniciando automação BBCE. Período: {data_inicio_str} até {data_fim_str}")
     
-    # Configura pasta temporária de downloads dentro do projeto
-    base_dir = os.path.dirname(os.path.abspath(__file__))
+    # Configura pasta temporária de downloads dentro do projeto (sobe 1 nível por estar na pasta src/)
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     temp_download_dir = os.path.join(base_dir, 'temp_downloads')
     os.makedirs(temp_download_dir, exist_ok=True)
     

@@ -3,8 +3,8 @@ import base64
 import requests
 import datetime
 
-# Diretório raiz do projeto
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# Diretório raiz do projeto (sobe 1 nível por estar na pasta src/)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Configurações do GitHub extraídas das variáveis de ambiente
 GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN')

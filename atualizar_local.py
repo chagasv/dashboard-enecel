@@ -11,7 +11,7 @@ os.environ['GITHUB_TOKEN'] = ''
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 try:
-    from etl import atualizar_balanco_energetico, atualizar_pld, atualizar_negocios_bbce, atualizar_ena, atualizar_carga, atualizar_ear
+    from src.etl import atualizar_balanco_energetico, atualizar_pld, atualizar_negocios_bbce, atualizar_ena, atualizar_carga, atualizar_ear
     from app import (
         atualizar_cache_e_metadata_balanco, 
         atualizar_cache_e_metadata_pld, 
@@ -26,7 +26,7 @@ try:
         PATH_CARGA,
         PATH_EAR
     )
-    from bbce_scraper import executar_automacao_bbce
+    from src.bbce_scraper import executar_automacao_bbce
 except ImportError as e:
     print(f"\n[ERRO] Falha ao importar dependências do projeto: {str(e)}")
     print("Certifique-se de que está executando o script dentro da pasta raiz do projeto.")
