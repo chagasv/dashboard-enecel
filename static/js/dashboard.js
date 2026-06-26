@@ -3678,7 +3678,7 @@ function renderEarComparativoCharts() {
                         
                         cellHtml = `
                             <div style="text-align: center;">
-                                <span style="font-weight: 600; font-size: 12px; color: var(--text-primary);">${formatNumber(val, 0)}%</span>
+                                <span style="font-weight: 600; font-size: 12px; color: var(--text-primary);">${formatNumber(val, 1)}%</span>
                                 ${diffHtml}
                             </div>
                         `;
@@ -3788,7 +3788,7 @@ function renderEarComparativoCharts() {
                 let displayMw = '-';
                 
                 if (prevVal !== null) {
-                    displayPct = formatNumber(prevVal, 0) + '%';
+                    displayPct = formatNumber(prevVal, 1) + '%';
                     if (capMax !== null) {
                         const mwmes = (prevVal / 100) * capMax;
                         displayMw = formatNumber(mwmes, 0) + ' MWmês';
@@ -3811,7 +3811,7 @@ function renderEarComparativoCharts() {
             let labelReal = 'Realizado';
             
             if (ultimo && ultimo.percentual !== null) {
-                displayRealPct = formatNumber(ultimo.percentual, 0) + '%';
+                displayRealPct = formatNumber(ultimo.percentual, 1) + '%';
                 displayRealMw = formatNumber(ultimo.mwmes, 0) + ' MWmês';
                 labelReal = `Realizado Atual (${ultimo.data})`;
             }
