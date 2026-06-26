@@ -1,0 +1,802 @@
+[
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ear_data": "25/06/2026",
+    "ear_max_subsistema": 20459.242,
+    "ear_verif_subsistema_mwmes": 11608.471,
+    "ear_verif_subsistema_percentual": 56.7395
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ear_data": "25/06/2026",
+    "ear_max_subsistema": 204615.328,
+    "ear_verif_subsistema_mwmes": 134231.985,
+    "ear_verif_subsistema_percentual": 65.6021
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ear_data": "25/06/2026",
+    "ear_max_subsistema": 15302.396,
+    "ear_verif_subsistema_mwmes": 14487.027,
+    "ear_verif_subsistema_percentual": 94.6716
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ear_data": "25/06/2026",
+    "ear_max_subsistema": 51691.226,
+    "ear_verif_subsistema_mwmes": 46394.417,
+    "ear_verif_subsistema_percentual": 89.753
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ear_data": "24/06/2026",
+    "ear_max_subsistema": 20459.242,
+    "ear_verif_subsistema_mwmes": 11591.888,
+    "ear_verif_subsistema_percentual": 56.6584
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ear_data": "24/06/2026",
+    "ear_max_subsistema": 204615.328,
+    "ear_verif_subsistema_mwmes": 134236.756,
+    "ear_verif_subsistema_percentual": 65.6044
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ear_data": "24/06/2026",
+    "ear_max_subsistema": 15302.396,
+    "ear_verif_subsistema_mwmes": 14518.849,
+    "ear_verif_subsistema_percentual": 94.8796
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ear_data": "24/06/2026",
+    "ear_max_subsistema": 51691.226,
+    "ear_verif_subsistema_mwmes": 46702.951,
+    "ear_verif_subsistema_percentual": 90.3499
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ear_data": "23/06/2026",
+    "ear_max_subsistema": 204615.328,
+    "ear_verif_subsistema_mwmes": 134087.423,
+    "ear_verif_subsistema_percentual": 65.5315
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ear_data": "23/06/2026",
+    "ear_max_subsistema": 51691.226,
+    "ear_verif_subsistema_mwmes": 46749.027,
+    "ear_verif_subsistema_percentual": 90.439
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ear_data": "23/06/2026",
+    "ear_max_subsistema": 15302.396,
+    "ear_verif_subsistema_mwmes": 14533.949,
+    "ear_verif_subsistema_percentual": 94.9783
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ear_data": "23/06/2026",
+    "ear_max_subsistema": 20459.242,
+    "ear_verif_subsistema_mwmes": 11544.237,
+    "ear_verif_subsistema_percentual": 56.4255
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ear_data": "22/06/2026",
+    "ear_max_subsistema": 20459.242,
+    "ear_verif_subsistema_mwmes": 11443.612,
+    "ear_verif_subsistema_percentual": 55.9337
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ear_data": "22/06/2026",
+    "ear_max_subsistema": 204615.328,
+    "ear_verif_subsistema_mwmes": 134104.947,
+    "ear_verif_subsistema_percentual": 65.54
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ear_data": "22/06/2026",
+    "ear_max_subsistema": 15302.396,
+    "ear_verif_subsistema_mwmes": 14558.172,
+    "ear_verif_subsistema_percentual": 95.1366
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ear_data": "22/06/2026",
+    "ear_max_subsistema": 51691.226,
+    "ear_verif_subsistema_mwmes": 46795.952,
+    "ear_verif_subsistema_percentual": 90.5298
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ear_data": "21/06/2026",
+    "ear_max_subsistema": 20459.242,
+    "ear_verif_subsistema_mwmes": 11407.955,
+    "ear_verif_subsistema_percentual": 55.7594
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ear_data": "21/06/2026",
+    "ear_max_subsistema": 204615.328,
+    "ear_verif_subsistema_mwmes": 134332.142,
+    "ear_verif_subsistema_percentual": 65.6511
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ear_data": "21/06/2026",
+    "ear_max_subsistema": 15302.396,
+    "ear_verif_subsistema_mwmes": 14576.355,
+    "ear_verif_subsistema_percentual": 95.2554
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ear_data": "21/06/2026",
+    "ear_max_subsistema": 51691.226,
+    "ear_verif_subsistema_mwmes": 46848.62,
+    "ear_verif_subsistema_percentual": 90.6317
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ear_data": "20/06/2026",
+    "ear_max_subsistema": 15302.396,
+    "ear_verif_subsistema_mwmes": 14603.555,
+    "ear_verif_subsistema_percentual": 95.4331
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ear_data": "20/06/2026",
+    "ear_max_subsistema": 51691.226,
+    "ear_verif_subsistema_mwmes": 46895.597,
+    "ear_verif_subsistema_percentual": 90.7225
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ear_data": "20/06/2026",
+    "ear_max_subsistema": 20459.242,
+    "ear_verif_subsistema_mwmes": 11412.81,
+    "ear_verif_subsistema_percentual": 55.7832
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ear_data": "20/06/2026",
+    "ear_max_subsistema": 204615.328,
+    "ear_verif_subsistema_mwmes": 134337.186,
+    "ear_verif_subsistema_percentual": 65.6535
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ear_data": "19/06/2026",
+    "ear_max_subsistema": 20459.242,
+    "ear_verif_subsistema_mwmes": 11474.446,
+    "ear_verif_subsistema_percentual": 56.0844
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ear_data": "19/06/2026",
+    "ear_max_subsistema": 204615.328,
+    "ear_verif_subsistema_mwmes": 134493.763,
+    "ear_verif_subsistema_percentual": 65.7301
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ear_data": "19/06/2026",
+    "ear_max_subsistema": 15302.396,
+    "ear_verif_subsistema_mwmes": 14641.478,
+    "ear_verif_subsistema_percentual": 95.681
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ear_data": "19/06/2026",
+    "ear_max_subsistema": 51691.226,
+    "ear_verif_subsistema_mwmes": 46942.67,
+    "ear_verif_subsistema_percentual": 90.8136
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ear_data": "18/06/2026",
+    "ear_max_subsistema": 204615.328,
+    "ear_verif_subsistema_mwmes": 134652.389,
+    "ear_verif_subsistema_percentual": 65.8076
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ear_data": "18/06/2026",
+    "ear_max_subsistema": 15302.396,
+    "ear_verif_subsistema_mwmes": 14655.876,
+    "ear_verif_subsistema_percentual": 95.775
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ear_data": "18/06/2026",
+    "ear_max_subsistema": 51691.226,
+    "ear_verif_subsistema_mwmes": 46995.297,
+    "ear_verif_subsistema_percentual": 90.9154
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ear_data": "18/06/2026",
+    "ear_max_subsistema": 20459.242,
+    "ear_verif_subsistema_mwmes": 11498.399,
+    "ear_verif_subsistema_percentual": 56.2015
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ear_data": "17/06/2026",
+    "ear_max_subsistema": 20459.242,
+    "ear_verif_subsistema_mwmes": 11533.151,
+    "ear_verif_subsistema_percentual": 56.3714
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ear_data": "17/06/2026",
+    "ear_max_subsistema": 204615.328,
+    "ear_verif_subsistema_mwmes": 134600.449,
+    "ear_verif_subsistema_percentual": 65.7822
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ear_data": "17/06/2026",
+    "ear_max_subsistema": 15302.396,
+    "ear_verif_subsistema_mwmes": 14666.604,
+    "ear_verif_subsistema_percentual": 95.8451
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ear_data": "17/06/2026",
+    "ear_max_subsistema": 51691.226,
+    "ear_verif_subsistema_mwmes": 47045.952,
+    "ear_verif_subsistema_percentual": 91.0134
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ear_data": "16/06/2026",
+    "ear_max_subsistema": 20459.242,
+    "ear_verif_subsistema_mwmes": 11612.947,
+    "ear_verif_subsistema_percentual": 56.7614
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ear_data": "16/06/2026",
+    "ear_max_subsistema": 204615.328,
+    "ear_verif_subsistema_mwmes": 134635.44,
+    "ear_verif_subsistema_percentual": 65.7993
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ear_data": "16/06/2026",
+    "ear_max_subsistema": 15302.396,
+    "ear_verif_subsistema_mwmes": 14747.035,
+    "ear_verif_subsistema_percentual": 96.3708
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ear_data": "16/06/2026",
+    "ear_max_subsistema": 51691.226,
+    "ear_verif_subsistema_mwmes": 47138.109,
+    "ear_verif_subsistema_percentual": 91.1917
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ear_data": "15/06/2026",
+    "ear_max_subsistema": 204615.328,
+    "ear_verif_subsistema_mwmes": 134629.078,
+    "ear_verif_subsistema_percentual": 65.7962
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ear_data": "15/06/2026",
+    "ear_max_subsistema": 51691.226,
+    "ear_verif_subsistema_mwmes": 47245.965,
+    "ear_verif_subsistema_percentual": 91.4004
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ear_data": "15/06/2026",
+    "ear_max_subsistema": 15302.396,
+    "ear_verif_subsistema_mwmes": 14787.87,
+    "ear_verif_subsistema_percentual": 96.6376
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ear_data": "15/06/2026",
+    "ear_max_subsistema": 20459.242,
+    "ear_verif_subsistema_mwmes": 11664.055,
+    "ear_verif_subsistema_percentual": 57.0112
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ear_data": "14/06/2026",
+    "ear_max_subsistema": 20459.242,
+    "ear_verif_subsistema_mwmes": 11711.655,
+    "ear_verif_subsistema_percentual": 57.2438
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ear_data": "14/06/2026",
+    "ear_max_subsistema": 204615.328,
+    "ear_verif_subsistema_mwmes": 134507.862,
+    "ear_verif_subsistema_percentual": 65.7369
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ear_data": "14/06/2026",
+    "ear_max_subsistema": 15302.396,
+    "ear_verif_subsistema_mwmes": 14817.83,
+    "ear_verif_subsistema_percentual": 96.8334
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ear_data": "14/06/2026",
+    "ear_max_subsistema": 51691.226,
+    "ear_verif_subsistema_mwmes": 47336.405,
+    "ear_verif_subsistema_percentual": 91.5753
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ear_data": "13/06/2026",
+    "ear_max_subsistema": 204615.328,
+    "ear_verif_subsistema_mwmes": 134171.58,
+    "ear_verif_subsistema_percentual": 65.5726
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ear_data": "13/06/2026",
+    "ear_max_subsistema": 15302.396,
+    "ear_verif_subsistema_mwmes": 14835.362,
+    "ear_verif_subsistema_percentual": 96.948
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ear_data": "13/06/2026",
+    "ear_max_subsistema": 51691.226,
+    "ear_verif_subsistema_mwmes": 47408.111,
+    "ear_verif_subsistema_percentual": 91.714
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ear_data": "13/06/2026",
+    "ear_max_subsistema": 20459.242,
+    "ear_verif_subsistema_mwmes": 11720.78,
+    "ear_verif_subsistema_percentual": 57.2884
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ear_data": "12/06/2026",
+    "ear_max_subsistema": 20459.242,
+    "ear_verif_subsistema_mwmes": 11704.564,
+    "ear_verif_subsistema_percentual": 57.2092
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ear_data": "12/06/2026",
+    "ear_max_subsistema": 204615.328,
+    "ear_verif_subsistema_mwmes": 133859.058,
+    "ear_verif_subsistema_percentual": 65.4199
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ear_data": "12/06/2026",
+    "ear_max_subsistema": 15302.396,
+    "ear_verif_subsistema_mwmes": 14892.083,
+    "ear_verif_subsistema_percentual": 97.3186
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ear_data": "12/06/2026",
+    "ear_max_subsistema": 51691.226,
+    "ear_verif_subsistema_mwmes": 47481.174,
+    "ear_verif_subsistema_percentual": 91.8554
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ear_data": "11/06/2026",
+    "ear_max_subsistema": 20459.242,
+    "ear_verif_subsistema_mwmes": 11742.25,
+    "ear_verif_subsistema_percentual": 57.3934
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ear_data": "11/06/2026",
+    "ear_max_subsistema": 204615.328,
+    "ear_verif_subsistema_mwmes": 133898.701,
+    "ear_verif_subsistema_percentual": 65.4392
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ear_data": "11/06/2026",
+    "ear_max_subsistema": 15302.396,
+    "ear_verif_subsistema_mwmes": 14923.709,
+    "ear_verif_subsistema_percentual": 97.5253
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ear_data": "11/06/2026",
+    "ear_max_subsistema": 51691.226,
+    "ear_verif_subsistema_mwmes": 47565.786,
+    "ear_verif_subsistema_percentual": 92.0191
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ear_data": "10/06/2026",
+    "ear_max_subsistema": 204615.328,
+    "ear_verif_subsistema_mwmes": 134059.445,
+    "ear_verif_subsistema_percentual": 65.5178
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ear_data": "10/06/2026",
+    "ear_max_subsistema": 51691.226,
+    "ear_verif_subsistema_mwmes": 47632.532,
+    "ear_verif_subsistema_percentual": 92.1482
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ear_data": "10/06/2026",
+    "ear_max_subsistema": 15302.396,
+    "ear_verif_subsistema_mwmes": 14941.371,
+    "ear_verif_subsistema_percentual": 97.6407
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ear_data": "10/06/2026",
+    "ear_max_subsistema": 20459.242,
+    "ear_verif_subsistema_mwmes": 11825.22,
+    "ear_verif_subsistema_percentual": 57.7989
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ear_data": "09/06/2026",
+    "ear_max_subsistema": 20459.242,
+    "ear_verif_subsistema_mwmes": 11893.384,
+    "ear_verif_subsistema_percentual": 58.1321
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ear_data": "09/06/2026",
+    "ear_max_subsistema": 204615.328,
+    "ear_verif_subsistema_mwmes": 134334.926,
+    "ear_verif_subsistema_percentual": 65.6524
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ear_data": "09/06/2026",
+    "ear_max_subsistema": 15302.396,
+    "ear_verif_subsistema_mwmes": 14954.598,
+    "ear_verif_subsistema_percentual": 97.7272
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ear_data": "09/06/2026",
+    "ear_max_subsistema": 51691.226,
+    "ear_verif_subsistema_mwmes": 47718.165,
+    "ear_verif_subsistema_percentual": 92.3139
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ear_data": "08/06/2026",
+    "ear_max_subsistema": 51691.226,
+    "ear_verif_subsistema_mwmes": 47774.689,
+    "ear_verif_subsistema_percentual": 92.4232
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ear_data": "08/06/2026",
+    "ear_max_subsistema": 20459.242,
+    "ear_verif_subsistema_mwmes": 11955.728,
+    "ear_verif_subsistema_percentual": 58.4368
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ear_data": "08/06/2026",
+    "ear_max_subsistema": 204615.328,
+    "ear_verif_subsistema_mwmes": 134497.662,
+    "ear_verif_subsistema_percentual": 65.732
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ear_data": "08/06/2026",
+    "ear_max_subsistema": 15302.396,
+    "ear_verif_subsistema_mwmes": 14967.87,
+    "ear_verif_subsistema_percentual": 97.8139
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ear_data": "07/06/2026",
+    "ear_max_subsistema": 15302.396,
+    "ear_verif_subsistema_mwmes": 14946.646,
+    "ear_verif_subsistema_percentual": 97.6752
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ear_data": "07/06/2026",
+    "ear_max_subsistema": 51691.226,
+    "ear_verif_subsistema_mwmes": 47823.384,
+    "ear_verif_subsistema_percentual": 92.5174
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ear_data": "07/06/2026",
+    "ear_max_subsistema": 20459.242,
+    "ear_verif_subsistema_mwmes": 12009.749,
+    "ear_verif_subsistema_percentual": 58.7009
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ear_data": "07/06/2026",
+    "ear_max_subsistema": 204615.328,
+    "ear_verif_subsistema_mwmes": 134652.358,
+    "ear_verif_subsistema_percentual": 65.8076
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ear_data": "06/06/2026",
+    "ear_max_subsistema": 20459.242,
+    "ear_verif_subsistema_mwmes": 12026.398,
+    "ear_verif_subsistema_percentual": 58.7822
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ear_data": "06/06/2026",
+    "ear_max_subsistema": 204615.328,
+    "ear_verif_subsistema_mwmes": 134762.619,
+    "ear_verif_subsistema_percentual": 65.8614
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ear_data": "06/06/2026",
+    "ear_max_subsistema": 15302.396,
+    "ear_verif_subsistema_mwmes": 14924.187,
+    "ear_verif_subsistema_percentual": 97.5284
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ear_data": "06/06/2026",
+    "ear_max_subsistema": 51691.226,
+    "ear_verif_subsistema_mwmes": 47832.64,
+    "ear_verif_subsistema_percentual": 92.5353
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ear_data": "05/06/2026",
+    "ear_max_subsistema": 204615.328,
+    "ear_verif_subsistema_mwmes": 134795.937,
+    "ear_verif_subsistema_percentual": 65.8777
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ear_data": "05/06/2026",
+    "ear_max_subsistema": 51691.226,
+    "ear_verif_subsistema_mwmes": 47893.773,
+    "ear_verif_subsistema_percentual": 92.6536
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ear_data": "05/06/2026",
+    "ear_max_subsistema": 20459.242,
+    "ear_verif_subsistema_mwmes": 12064.189,
+    "ear_verif_subsistema_percentual": 58.9669
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ear_data": "05/06/2026",
+    "ear_max_subsistema": 15302.396,
+    "ear_verif_subsistema_mwmes": 14885.256,
+    "ear_verif_subsistema_percentual": 97.274
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ear_data": "04/06/2026",
+    "ear_max_subsistema": 204615.328,
+    "ear_verif_subsistema_mwmes": 134953.88,
+    "ear_verif_subsistema_percentual": 65.9549
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ear_data": "04/06/2026",
+    "ear_max_subsistema": 51691.226,
+    "ear_verif_subsistema_mwmes": 47926.308,
+    "ear_verif_subsistema_percentual": 92.7165
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ear_data": "04/06/2026",
+    "ear_max_subsistema": 15302.396,
+    "ear_verif_subsistema_mwmes": 14844.438,
+    "ear_verif_subsistema_percentual": 97.0073
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ear_data": "04/06/2026",
+    "ear_max_subsistema": 20459.242,
+    "ear_verif_subsistema_mwmes": 12094.213,
+    "ear_verif_subsistema_percentual": 59.1137
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ear_data": "03/06/2026",
+    "ear_max_subsistema": 20459.242,
+    "ear_verif_subsistema_mwmes": 12089.786,
+    "ear_verif_subsistema_percentual": 59.0921
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ear_data": "03/06/2026",
+    "ear_max_subsistema": 204615.328,
+    "ear_verif_subsistema_mwmes": 135000.21,
+    "ear_verif_subsistema_percentual": 65.9776
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ear_data": "03/06/2026",
+    "ear_max_subsistema": 15302.396,
+    "ear_verif_subsistema_mwmes": 14809.019,
+    "ear_verif_subsistema_percentual": 96.7758
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ear_data": "03/06/2026",
+    "ear_max_subsistema": 51691.226,
+    "ear_verif_subsistema_mwmes": 47985.923,
+    "ear_verif_subsistema_percentual": 92.8319
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ear_data": "02/06/2026",
+    "ear_max_subsistema": 20459.242,
+    "ear_verif_subsistema_mwmes": 12079.072,
+    "ear_verif_subsistema_percentual": 59.0397
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ear_data": "02/06/2026",
+    "ear_max_subsistema": 204615.328,
+    "ear_verif_subsistema_mwmes": 135126.02,
+    "ear_verif_subsistema_percentual": 66.0391
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ear_data": "02/06/2026",
+    "ear_max_subsistema": 15302.396,
+    "ear_verif_subsistema_mwmes": 14768.095,
+    "ear_verif_subsistema_percentual": 96.5084
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ear_data": "02/06/2026",
+    "ear_max_subsistema": 51691.226,
+    "ear_verif_subsistema_mwmes": 48131.275,
+    "ear_verif_subsistema_percentual": 93.113
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ear_data": "01/06/2026",
+    "ear_max_subsistema": 15302.396,
+    "ear_verif_subsistema_mwmes": 14739.176,
+    "ear_verif_subsistema_percentual": 96.3194
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ear_data": "01/06/2026",
+    "ear_max_subsistema": 51691.226,
+    "ear_verif_subsistema_mwmes": 48247.765,
+    "ear_verif_subsistema_percentual": 93.3384
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ear_data": "01/06/2026",
+    "ear_max_subsistema": 204615.328,
+    "ear_verif_subsistema_mwmes": 135202.855,
+    "ear_verif_subsistema_percentual": 66.0766
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ear_data": "01/06/2026",
+    "ear_max_subsistema": 20459.242,
+    "ear_verif_subsistema_mwmes": 12062.883,
+    "ear_verif_subsistema_percentual": 58.9606
+  }
+]

@@ -2,6 +2,774 @@
   {
     "MES_REFERENCIA": 202606,
     "SUBMERCADO": "NORDESTE",
+    "PERIODO_COMERCIALIZACAO": 624,
+    "DIA": 26,
+    "HORA": 23,
+    "PLD_HORA": 228.5
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORTE",
+    "PERIODO_COMERCIALIZACAO": 624,
+    "DIA": 26,
+    "HORA": 23,
+    "PLD_HORA": 228.51
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUDESTE",
+    "PERIODO_COMERCIALIZACAO": 624,
+    "DIA": 26,
+    "HORA": 23,
+    "PLD_HORA": 228.51
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUL",
+    "PERIODO_COMERCIALIZACAO": 624,
+    "DIA": 26,
+    "HORA": 23,
+    "PLD_HORA": 228.51
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORDESTE",
+    "PERIODO_COMERCIALIZACAO": 623,
+    "DIA": 26,
+    "HORA": 22,
+    "PLD_HORA": 229.45
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORTE",
+    "PERIODO_COMERCIALIZACAO": 623,
+    "DIA": 26,
+    "HORA": 22,
+    "PLD_HORA": 229.45
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUDESTE",
+    "PERIODO_COMERCIALIZACAO": 623,
+    "DIA": 26,
+    "HORA": 22,
+    "PLD_HORA": 229.45
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUL",
+    "PERIODO_COMERCIALIZACAO": 623,
+    "DIA": 26,
+    "HORA": 22,
+    "PLD_HORA": 229.46
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORDESTE",
+    "PERIODO_COMERCIALIZACAO": 622,
+    "DIA": 26,
+    "HORA": 21,
+    "PLD_HORA": 231.78
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORTE",
+    "PERIODO_COMERCIALIZACAO": 622,
+    "DIA": 26,
+    "HORA": 21,
+    "PLD_HORA": 231.79
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUDESTE",
+    "PERIODO_COMERCIALIZACAO": 622,
+    "DIA": 26,
+    "HORA": 21,
+    "PLD_HORA": 231.79
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUL",
+    "PERIODO_COMERCIALIZACAO": 622,
+    "DIA": 26,
+    "HORA": 21,
+    "PLD_HORA": 231.8
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORDESTE",
+    "PERIODO_COMERCIALIZACAO": 621,
+    "DIA": 26,
+    "HORA": 20,
+    "PLD_HORA": 234.75
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORTE",
+    "PERIODO_COMERCIALIZACAO": 621,
+    "DIA": 26,
+    "HORA": 20,
+    "PLD_HORA": 234.76
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUDESTE",
+    "PERIODO_COMERCIALIZACAO": 621,
+    "DIA": 26,
+    "HORA": 20,
+    "PLD_HORA": 234.76
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUL",
+    "PERIODO_COMERCIALIZACAO": 621,
+    "DIA": 26,
+    "HORA": 20,
+    "PLD_HORA": 234.77
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORDESTE",
+    "PERIODO_COMERCIALIZACAO": 620,
+    "DIA": 26,
+    "HORA": 19,
+    "PLD_HORA": 243.74
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORTE",
+    "PERIODO_COMERCIALIZACAO": 620,
+    "DIA": 26,
+    "HORA": 19,
+    "PLD_HORA": 243.74
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUDESTE",
+    "PERIODO_COMERCIALIZACAO": 620,
+    "DIA": 26,
+    "HORA": 19,
+    "PLD_HORA": 243.75
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUL",
+    "PERIODO_COMERCIALIZACAO": 620,
+    "DIA": 26,
+    "HORA": 19,
+    "PLD_HORA": 243.75
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORDESTE",
+    "PERIODO_COMERCIALIZACAO": 619,
+    "DIA": 26,
+    "HORA": 18,
+    "PLD_HORA": 255.82
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORTE",
+    "PERIODO_COMERCIALIZACAO": 619,
+    "DIA": 26,
+    "HORA": 18,
+    "PLD_HORA": 255.83
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUDESTE",
+    "PERIODO_COMERCIALIZACAO": 619,
+    "DIA": 26,
+    "HORA": 18,
+    "PLD_HORA": 255.83
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUL",
+    "PERIODO_COMERCIALIZACAO": 619,
+    "DIA": 26,
+    "HORA": 18,
+    "PLD_HORA": 255.83
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORDESTE",
+    "PERIODO_COMERCIALIZACAO": 618,
+    "DIA": 26,
+    "HORA": 17,
+    "PLD_HORA": 246.17
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORTE",
+    "PERIODO_COMERCIALIZACAO": 618,
+    "DIA": 26,
+    "HORA": 17,
+    "PLD_HORA": 246.18
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUDESTE",
+    "PERIODO_COMERCIALIZACAO": 618,
+    "DIA": 26,
+    "HORA": 17,
+    "PLD_HORA": 246.18
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUL",
+    "PERIODO_COMERCIALIZACAO": 618,
+    "DIA": 26,
+    "HORA": 17,
+    "PLD_HORA": 246.18
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORDESTE",
+    "PERIODO_COMERCIALIZACAO": 617,
+    "DIA": 26,
+    "HORA": 16,
+    "PLD_HORA": 231.9
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORTE",
+    "PERIODO_COMERCIALIZACAO": 617,
+    "DIA": 26,
+    "HORA": 16,
+    "PLD_HORA": 231.91
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUDESTE",
+    "PERIODO_COMERCIALIZACAO": 617,
+    "DIA": 26,
+    "HORA": 16,
+    "PLD_HORA": 231.91
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUL",
+    "PERIODO_COMERCIALIZACAO": 617,
+    "DIA": 26,
+    "HORA": 16,
+    "PLD_HORA": 231.91
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORDESTE",
+    "PERIODO_COMERCIALIZACAO": 616,
+    "DIA": 26,
+    "HORA": 15,
+    "PLD_HORA": 226.41
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORTE",
+    "PERIODO_COMERCIALIZACAO": 616,
+    "DIA": 26,
+    "HORA": 15,
+    "PLD_HORA": 226.42
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUDESTE",
+    "PERIODO_COMERCIALIZACAO": 616,
+    "DIA": 26,
+    "HORA": 15,
+    "PLD_HORA": 226.42
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUL",
+    "PERIODO_COMERCIALIZACAO": 616,
+    "DIA": 26,
+    "HORA": 15,
+    "PLD_HORA": 226.43
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORDESTE",
+    "PERIODO_COMERCIALIZACAO": 615,
+    "DIA": 26,
+    "HORA": 14,
+    "PLD_HORA": 183.97
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORTE",
+    "PERIODO_COMERCIALIZACAO": 615,
+    "DIA": 26,
+    "HORA": 14,
+    "PLD_HORA": 183.98
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUDESTE",
+    "PERIODO_COMERCIALIZACAO": 615,
+    "DIA": 26,
+    "HORA": 14,
+    "PLD_HORA": 183.99
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUL",
+    "PERIODO_COMERCIALIZACAO": 615,
+    "DIA": 26,
+    "HORA": 14,
+    "PLD_HORA": 223.05
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORDESTE",
+    "PERIODO_COMERCIALIZACAO": 614,
+    "DIA": 26,
+    "HORA": 13,
+    "PLD_HORA": 57.31
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORTE",
+    "PERIODO_COMERCIALIZACAO": 614,
+    "DIA": 26,
+    "HORA": 13,
+    "PLD_HORA": 57.31
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUDESTE",
+    "PERIODO_COMERCIALIZACAO": 614,
+    "DIA": 26,
+    "HORA": 13,
+    "PLD_HORA": 57.31
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUL",
+    "PERIODO_COMERCIALIZACAO": 614,
+    "DIA": 26,
+    "HORA": 13,
+    "PLD_HORA": 108.7
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORDESTE",
+    "PERIODO_COMERCIALIZACAO": 613,
+    "DIA": 26,
+    "HORA": 12,
+    "PLD_HORA": 57.31
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORTE",
+    "PERIODO_COMERCIALIZACAO": 613,
+    "DIA": 26,
+    "HORA": 12,
+    "PLD_HORA": 57.31
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUDESTE",
+    "PERIODO_COMERCIALIZACAO": 613,
+    "DIA": 26,
+    "HORA": 12,
+    "PLD_HORA": 57.31
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUL",
+    "PERIODO_COMERCIALIZACAO": 613,
+    "DIA": 26,
+    "HORA": 12,
+    "PLD_HORA": 57.31
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORDESTE",
+    "PERIODO_COMERCIALIZACAO": 612,
+    "DIA": 26,
+    "HORA": 11,
+    "PLD_HORA": 57.31
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORTE",
+    "PERIODO_COMERCIALIZACAO": 612,
+    "DIA": 26,
+    "HORA": 11,
+    "PLD_HORA": 57.31
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUDESTE",
+    "PERIODO_COMERCIALIZACAO": 612,
+    "DIA": 26,
+    "HORA": 11,
+    "PLD_HORA": 57.31
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUL",
+    "PERIODO_COMERCIALIZACAO": 612,
+    "DIA": 26,
+    "HORA": 11,
+    "PLD_HORA": 57.31
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORDESTE",
+    "PERIODO_COMERCIALIZACAO": 611,
+    "DIA": 26,
+    "HORA": 10,
+    "PLD_HORA": 57.31
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORTE",
+    "PERIODO_COMERCIALIZACAO": 611,
+    "DIA": 26,
+    "HORA": 10,
+    "PLD_HORA": 57.31
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUDESTE",
+    "PERIODO_COMERCIALIZACAO": 611,
+    "DIA": 26,
+    "HORA": 10,
+    "PLD_HORA": 57.31
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUL",
+    "PERIODO_COMERCIALIZACAO": 611,
+    "DIA": 26,
+    "HORA": 10,
+    "PLD_HORA": 181.76
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORDESTE",
+    "PERIODO_COMERCIALIZACAO": 610,
+    "DIA": 26,
+    "HORA": 9,
+    "PLD_HORA": 57.31
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORTE",
+    "PERIODO_COMERCIALIZACAO": 610,
+    "DIA": 26,
+    "HORA": 9,
+    "PLD_HORA": 152.6
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUDESTE",
+    "PERIODO_COMERCIALIZACAO": 610,
+    "DIA": 26,
+    "HORA": 9,
+    "PLD_HORA": 215.83
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUL",
+    "PERIODO_COMERCIALIZACAO": 610,
+    "DIA": 26,
+    "HORA": 9,
+    "PLD_HORA": 220.27
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORDESTE",
+    "PERIODO_COMERCIALIZACAO": 609,
+    "DIA": 26,
+    "HORA": 8,
+    "PLD_HORA": 57.31
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORTE",
+    "PERIODO_COMERCIALIZACAO": 609,
+    "DIA": 26,
+    "HORA": 8,
+    "PLD_HORA": 159.39
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUDESTE",
+    "PERIODO_COMERCIALIZACAO": 609,
+    "DIA": 26,
+    "HORA": 8,
+    "PLD_HORA": 225.43
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUL",
+    "PERIODO_COMERCIALIZACAO": 609,
+    "DIA": 26,
+    "HORA": 8,
+    "PLD_HORA": 225.44
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORDESTE",
+    "PERIODO_COMERCIALIZACAO": 608,
+    "DIA": 26,
+    "HORA": 7,
+    "PLD_HORA": 220.57
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORTE",
+    "PERIODO_COMERCIALIZACAO": 608,
+    "DIA": 26,
+    "HORA": 7,
+    "PLD_HORA": 226.32
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUDESTE",
+    "PERIODO_COMERCIALIZACAO": 608,
+    "DIA": 26,
+    "HORA": 7,
+    "PLD_HORA": 226.32
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUL",
+    "PERIODO_COMERCIALIZACAO": 608,
+    "DIA": 26,
+    "HORA": 7,
+    "PLD_HORA": 226.33
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORDESTE",
+    "PERIODO_COMERCIALIZACAO": 607,
+    "DIA": 26,
+    "HORA": 6,
+    "PLD_HORA": 227.6
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORTE",
+    "PERIODO_COMERCIALIZACAO": 607,
+    "DIA": 26,
+    "HORA": 6,
+    "PLD_HORA": 227.61
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUDESTE",
+    "PERIODO_COMERCIALIZACAO": 607,
+    "DIA": 26,
+    "HORA": 6,
+    "PLD_HORA": 227.6
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUL",
+    "PERIODO_COMERCIALIZACAO": 607,
+    "DIA": 26,
+    "HORA": 6,
+    "PLD_HORA": 227.61
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORDESTE",
+    "PERIODO_COMERCIALIZACAO": 606,
+    "DIA": 26,
+    "HORA": 5,
+    "PLD_HORA": 226.96
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORTE",
+    "PERIODO_COMERCIALIZACAO": 606,
+    "DIA": 26,
+    "HORA": 5,
+    "PLD_HORA": 226.97
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUDESTE",
+    "PERIODO_COMERCIALIZACAO": 606,
+    "DIA": 26,
+    "HORA": 5,
+    "PLD_HORA": 226.97
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUL",
+    "PERIODO_COMERCIALIZACAO": 606,
+    "DIA": 26,
+    "HORA": 5,
+    "PLD_HORA": 226.97
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORDESTE",
+    "PERIODO_COMERCIALIZACAO": 605,
+    "DIA": 26,
+    "HORA": 4,
+    "PLD_HORA": 226.56
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORTE",
+    "PERIODO_COMERCIALIZACAO": 605,
+    "DIA": 26,
+    "HORA": 4,
+    "PLD_HORA": 226.57
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUDESTE",
+    "PERIODO_COMERCIALIZACAO": 605,
+    "DIA": 26,
+    "HORA": 4,
+    "PLD_HORA": 226.57
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUL",
+    "PERIODO_COMERCIALIZACAO": 605,
+    "DIA": 26,
+    "HORA": 4,
+    "PLD_HORA": 226.57
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORDESTE",
+    "PERIODO_COMERCIALIZACAO": 604,
+    "DIA": 26,
+    "HORA": 3,
+    "PLD_HORA": 226.54
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORTE",
+    "PERIODO_COMERCIALIZACAO": 604,
+    "DIA": 26,
+    "HORA": 3,
+    "PLD_HORA": 226.55
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUDESTE",
+    "PERIODO_COMERCIALIZACAO": 604,
+    "DIA": 26,
+    "HORA": 3,
+    "PLD_HORA": 226.54
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUL",
+    "PERIODO_COMERCIALIZACAO": 604,
+    "DIA": 26,
+    "HORA": 3,
+    "PLD_HORA": 226.55
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORDESTE",
+    "PERIODO_COMERCIALIZACAO": 603,
+    "DIA": 26,
+    "HORA": 2,
+    "PLD_HORA": 226.91
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORTE",
+    "PERIODO_COMERCIALIZACAO": 603,
+    "DIA": 26,
+    "HORA": 2,
+    "PLD_HORA": 226.92
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUDESTE",
+    "PERIODO_COMERCIALIZACAO": 603,
+    "DIA": 26,
+    "HORA": 2,
+    "PLD_HORA": 226.91
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUL",
+    "PERIODO_COMERCIALIZACAO": 603,
+    "DIA": 26,
+    "HORA": 2,
+    "PLD_HORA": 226.92
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORDESTE",
+    "PERIODO_COMERCIALIZACAO": 602,
+    "DIA": 26,
+    "HORA": 1,
+    "PLD_HORA": 227.31
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORTE",
+    "PERIODO_COMERCIALIZACAO": 602,
+    "DIA": 26,
+    "HORA": 1,
+    "PLD_HORA": 227.32
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUDESTE",
+    "PERIODO_COMERCIALIZACAO": 602,
+    "DIA": 26,
+    "HORA": 1,
+    "PLD_HORA": 227.31
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUL",
+    "PERIODO_COMERCIALIZACAO": 602,
+    "DIA": 26,
+    "HORA": 1,
+    "PLD_HORA": 227.32
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORDESTE",
+    "PERIODO_COMERCIALIZACAO": 601,
+    "DIA": 26,
+    "HORA": 0,
+    "PLD_HORA": 228.41
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORTE",
+    "PERIODO_COMERCIALIZACAO": 601,
+    "DIA": 26,
+    "HORA": 0,
+    "PLD_HORA": 228.42
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUDESTE",
+    "PERIODO_COMERCIALIZACAO": 601,
+    "DIA": 26,
+    "HORA": 0,
+    "PLD_HORA": 228.42
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "SUL",
+    "PERIODO_COMERCIALIZACAO": 601,
+    "DIA": 26,
+    "HORA": 0,
+    "PLD_HORA": 228.42
+  },
+  {
+    "MES_REFERENCIA": 202606,
+    "SUBMERCADO": "NORDESTE",
     "PERIODO_COMERCIALIZACAO": 600,
     "DIA": 25,
     "HORA": 23,
@@ -30,773 +798,5 @@
     "DIA": 25,
     "HORA": 23,
     "PLD_HORA": 230.06
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORDESTE",
-    "PERIODO_COMERCIALIZACAO": 599,
-    "DIA": 25,
-    "HORA": 22,
-    "PLD_HORA": 231.17
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORTE",
-    "PERIODO_COMERCIALIZACAO": 599,
-    "DIA": 25,
-    "HORA": 22,
-    "PLD_HORA": 231.18
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUDESTE",
-    "PERIODO_COMERCIALIZACAO": 599,
-    "DIA": 25,
-    "HORA": 22,
-    "PLD_HORA": 231.18
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUL",
-    "PERIODO_COMERCIALIZACAO": 599,
-    "DIA": 25,
-    "HORA": 22,
-    "PLD_HORA": 231.18
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORDESTE",
-    "PERIODO_COMERCIALIZACAO": 598,
-    "DIA": 25,
-    "HORA": 21,
-    "PLD_HORA": 232.81
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORTE",
-    "PERIODO_COMERCIALIZACAO": 598,
-    "DIA": 25,
-    "HORA": 21,
-    "PLD_HORA": 232.82
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUDESTE",
-    "PERIODO_COMERCIALIZACAO": 598,
-    "DIA": 25,
-    "HORA": 21,
-    "PLD_HORA": 232.82
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUL",
-    "PERIODO_COMERCIALIZACAO": 598,
-    "DIA": 25,
-    "HORA": 21,
-    "PLD_HORA": 232.82
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORDESTE",
-    "PERIODO_COMERCIALIZACAO": 597,
-    "DIA": 25,
-    "HORA": 20,
-    "PLD_HORA": 234.51
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORTE",
-    "PERIODO_COMERCIALIZACAO": 597,
-    "DIA": 25,
-    "HORA": 20,
-    "PLD_HORA": 234.52
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUDESTE",
-    "PERIODO_COMERCIALIZACAO": 597,
-    "DIA": 25,
-    "HORA": 20,
-    "PLD_HORA": 234.52
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUL",
-    "PERIODO_COMERCIALIZACAO": 597,
-    "DIA": 25,
-    "HORA": 20,
-    "PLD_HORA": 234.52
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORDESTE",
-    "PERIODO_COMERCIALIZACAO": 596,
-    "DIA": 25,
-    "HORA": 19,
-    "PLD_HORA": 241.61
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORTE",
-    "PERIODO_COMERCIALIZACAO": 596,
-    "DIA": 25,
-    "HORA": 19,
-    "PLD_HORA": 241.62
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUDESTE",
-    "PERIODO_COMERCIALIZACAO": 596,
-    "DIA": 25,
-    "HORA": 19,
-    "PLD_HORA": 241.62
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUL",
-    "PERIODO_COMERCIALIZACAO": 596,
-    "DIA": 25,
-    "HORA": 19,
-    "PLD_HORA": 241.62
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORDESTE",
-    "PERIODO_COMERCIALIZACAO": 595,
-    "DIA": 25,
-    "HORA": 18,
-    "PLD_HORA": 246.85
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORTE",
-    "PERIODO_COMERCIALIZACAO": 595,
-    "DIA": 25,
-    "HORA": 18,
-    "PLD_HORA": 246.85
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUDESTE",
-    "PERIODO_COMERCIALIZACAO": 595,
-    "DIA": 25,
-    "HORA": 18,
-    "PLD_HORA": 246.85
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUL",
-    "PERIODO_COMERCIALIZACAO": 595,
-    "DIA": 25,
-    "HORA": 18,
-    "PLD_HORA": 246.85
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORDESTE",
-    "PERIODO_COMERCIALIZACAO": 594,
-    "DIA": 25,
-    "HORA": 17,
-    "PLD_HORA": 246.52
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORTE",
-    "PERIODO_COMERCIALIZACAO": 594,
-    "DIA": 25,
-    "HORA": 17,
-    "PLD_HORA": 246.53
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUDESTE",
-    "PERIODO_COMERCIALIZACAO": 594,
-    "DIA": 25,
-    "HORA": 17,
-    "PLD_HORA": 246.53
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUL",
-    "PERIODO_COMERCIALIZACAO": 594,
-    "DIA": 25,
-    "HORA": 17,
-    "PLD_HORA": 246.53
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORDESTE",
-    "PERIODO_COMERCIALIZACAO": 593,
-    "DIA": 25,
-    "HORA": 16,
-    "PLD_HORA": 232.28
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORTE",
-    "PERIODO_COMERCIALIZACAO": 593,
-    "DIA": 25,
-    "HORA": 16,
-    "PLD_HORA": 232.29
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUDESTE",
-    "PERIODO_COMERCIALIZACAO": 593,
-    "DIA": 25,
-    "HORA": 16,
-    "PLD_HORA": 232.29
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUL",
-    "PERIODO_COMERCIALIZACAO": 593,
-    "DIA": 25,
-    "HORA": 16,
-    "PLD_HORA": 232.29
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORDESTE",
-    "PERIODO_COMERCIALIZACAO": 592,
-    "DIA": 25,
-    "HORA": 15,
-    "PLD_HORA": 225.3
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORTE",
-    "PERIODO_COMERCIALIZACAO": 592,
-    "DIA": 25,
-    "HORA": 15,
-    "PLD_HORA": 225.31
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUDESTE",
-    "PERIODO_COMERCIALIZACAO": 592,
-    "DIA": 25,
-    "HORA": 15,
-    "PLD_HORA": 225.31
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUL",
-    "PERIODO_COMERCIALIZACAO": 592,
-    "DIA": 25,
-    "HORA": 15,
-    "PLD_HORA": 225.32
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORDESTE",
-    "PERIODO_COMERCIALIZACAO": 591,
-    "DIA": 25,
-    "HORA": 14,
-    "PLD_HORA": 101.89
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORTE",
-    "PERIODO_COMERCIALIZACAO": 591,
-    "DIA": 25,
-    "HORA": 14,
-    "PLD_HORA": 180.48
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUDESTE",
-    "PERIODO_COMERCIALIZACAO": 591,
-    "DIA": 25,
-    "HORA": 14,
-    "PLD_HORA": 213.05
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUL",
-    "PERIODO_COMERCIALIZACAO": 591,
-    "DIA": 25,
-    "HORA": 14,
-    "PLD_HORA": 213.06
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORDESTE",
-    "PERIODO_COMERCIALIZACAO": 590,
-    "DIA": 25,
-    "HORA": 13,
-    "PLD_HORA": 57.31
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORTE",
-    "PERIODO_COMERCIALIZACAO": 590,
-    "DIA": 25,
-    "HORA": 13,
-    "PLD_HORA": 57.31
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUDESTE",
-    "PERIODO_COMERCIALIZACAO": 590,
-    "DIA": 25,
-    "HORA": 13,
-    "PLD_HORA": 57.31
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUL",
-    "PERIODO_COMERCIALIZACAO": 590,
-    "DIA": 25,
-    "HORA": 13,
-    "PLD_HORA": 57.31
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORDESTE",
-    "PERIODO_COMERCIALIZACAO": 589,
-    "DIA": 25,
-    "HORA": 12,
-    "PLD_HORA": 57.31
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORTE",
-    "PERIODO_COMERCIALIZACAO": 589,
-    "DIA": 25,
-    "HORA": 12,
-    "PLD_HORA": 57.31
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUDESTE",
-    "PERIODO_COMERCIALIZACAO": 589,
-    "DIA": 25,
-    "HORA": 12,
-    "PLD_HORA": 57.31
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUL",
-    "PERIODO_COMERCIALIZACAO": 589,
-    "DIA": 25,
-    "HORA": 12,
-    "PLD_HORA": 57.31
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORDESTE",
-    "PERIODO_COMERCIALIZACAO": 588,
-    "DIA": 25,
-    "HORA": 11,
-    "PLD_HORA": 57.31
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORTE",
-    "PERIODO_COMERCIALIZACAO": 588,
-    "DIA": 25,
-    "HORA": 11,
-    "PLD_HORA": 57.31
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUDESTE",
-    "PERIODO_COMERCIALIZACAO": 588,
-    "DIA": 25,
-    "HORA": 11,
-    "PLD_HORA": 57.31
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUL",
-    "PERIODO_COMERCIALIZACAO": 588,
-    "DIA": 25,
-    "HORA": 11,
-    "PLD_HORA": 57.31
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORDESTE",
-    "PERIODO_COMERCIALIZACAO": 587,
-    "DIA": 25,
-    "HORA": 10,
-    "PLD_HORA": 57.31
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORTE",
-    "PERIODO_COMERCIALIZACAO": 587,
-    "DIA": 25,
-    "HORA": 10,
-    "PLD_HORA": 57.31
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUDESTE",
-    "PERIODO_COMERCIALIZACAO": 587,
-    "DIA": 25,
-    "HORA": 10,
-    "PLD_HORA": 57.31
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUL",
-    "PERIODO_COMERCIALIZACAO": 587,
-    "DIA": 25,
-    "HORA": 10,
-    "PLD_HORA": 148.48
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORDESTE",
-    "PERIODO_COMERCIALIZACAO": 586,
-    "DIA": 25,
-    "HORA": 9,
-    "PLD_HORA": 57.31
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORTE",
-    "PERIODO_COMERCIALIZACAO": 586,
-    "DIA": 25,
-    "HORA": 9,
-    "PLD_HORA": 152.9
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUDESTE",
-    "PERIODO_COMERCIALIZACAO": 586,
-    "DIA": 25,
-    "HORA": 9,
-    "PLD_HORA": 216.26
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUL",
-    "PERIODO_COMERCIALIZACAO": 586,
-    "DIA": 25,
-    "HORA": 9,
-    "PLD_HORA": 217.39
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORDESTE",
-    "PERIODO_COMERCIALIZACAO": 585,
-    "DIA": 25,
-    "HORA": 8,
-    "PLD_HORA": 57.31
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORTE",
-    "PERIODO_COMERCIALIZACAO": 585,
-    "DIA": 25,
-    "HORA": 8,
-    "PLD_HORA": 158.97
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUDESTE",
-    "PERIODO_COMERCIALIZACAO": 585,
-    "DIA": 25,
-    "HORA": 8,
-    "PLD_HORA": 224.84
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUL",
-    "PERIODO_COMERCIALIZACAO": 585,
-    "DIA": 25,
-    "HORA": 8,
-    "PLD_HORA": 224.85
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORDESTE",
-    "PERIODO_COMERCIALIZACAO": 584,
-    "DIA": 25,
-    "HORA": 7,
-    "PLD_HORA": 112.74
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORTE",
-    "PERIODO_COMERCIALIZACAO": 584,
-    "DIA": 25,
-    "HORA": 7,
-    "PLD_HORA": 226.22
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUDESTE",
-    "PERIODO_COMERCIALIZACAO": 584,
-    "DIA": 25,
-    "HORA": 7,
-    "PLD_HORA": 226.22
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUL",
-    "PERIODO_COMERCIALIZACAO": 584,
-    "DIA": 25,
-    "HORA": 7,
-    "PLD_HORA": 226.23
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORDESTE",
-    "PERIODO_COMERCIALIZACAO": 583,
-    "DIA": 25,
-    "HORA": 6,
-    "PLD_HORA": 227.64
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORTE",
-    "PERIODO_COMERCIALIZACAO": 583,
-    "DIA": 25,
-    "HORA": 6,
-    "PLD_HORA": 227.65
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUDESTE",
-    "PERIODO_COMERCIALIZACAO": 583,
-    "DIA": 25,
-    "HORA": 6,
-    "PLD_HORA": 227.65
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUL",
-    "PERIODO_COMERCIALIZACAO": 583,
-    "DIA": 25,
-    "HORA": 6,
-    "PLD_HORA": 227.66
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORDESTE",
-    "PERIODO_COMERCIALIZACAO": 582,
-    "DIA": 25,
-    "HORA": 5,
-    "PLD_HORA": 226.93
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORTE",
-    "PERIODO_COMERCIALIZACAO": 582,
-    "DIA": 25,
-    "HORA": 5,
-    "PLD_HORA": 226.94
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUDESTE",
-    "PERIODO_COMERCIALIZACAO": 582,
-    "DIA": 25,
-    "HORA": 5,
-    "PLD_HORA": 226.93
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUL",
-    "PERIODO_COMERCIALIZACAO": 582,
-    "DIA": 25,
-    "HORA": 5,
-    "PLD_HORA": 226.94
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORDESTE",
-    "PERIODO_COMERCIALIZACAO": 581,
-    "DIA": 25,
-    "HORA": 4,
-    "PLD_HORA": 226.25
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORTE",
-    "PERIODO_COMERCIALIZACAO": 581,
-    "DIA": 25,
-    "HORA": 4,
-    "PLD_HORA": 226.26
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUDESTE",
-    "PERIODO_COMERCIALIZACAO": 581,
-    "DIA": 25,
-    "HORA": 4,
-    "PLD_HORA": 226.25
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUL",
-    "PERIODO_COMERCIALIZACAO": 581,
-    "DIA": 25,
-    "HORA": 4,
-    "PLD_HORA": 226.26
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORDESTE",
-    "PERIODO_COMERCIALIZACAO": 580,
-    "DIA": 25,
-    "HORA": 3,
-    "PLD_HORA": 225.88
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORTE",
-    "PERIODO_COMERCIALIZACAO": 580,
-    "DIA": 25,
-    "HORA": 3,
-    "PLD_HORA": 225.89
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUDESTE",
-    "PERIODO_COMERCIALIZACAO": 580,
-    "DIA": 25,
-    "HORA": 3,
-    "PLD_HORA": 225.89
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUL",
-    "PERIODO_COMERCIALIZACAO": 580,
-    "DIA": 25,
-    "HORA": 3,
-    "PLD_HORA": 225.89
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORDESTE",
-    "PERIODO_COMERCIALIZACAO": 579,
-    "DIA": 25,
-    "HORA": 2,
-    "PLD_HORA": 226.36
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORTE",
-    "PERIODO_COMERCIALIZACAO": 579,
-    "DIA": 25,
-    "HORA": 2,
-    "PLD_HORA": 226.37
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUDESTE",
-    "PERIODO_COMERCIALIZACAO": 579,
-    "DIA": 25,
-    "HORA": 2,
-    "PLD_HORA": 226.37
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUL",
-    "PERIODO_COMERCIALIZACAO": 579,
-    "DIA": 25,
-    "HORA": 2,
-    "PLD_HORA": 226.37
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORDESTE",
-    "PERIODO_COMERCIALIZACAO": 578,
-    "DIA": 25,
-    "HORA": 1,
-    "PLD_HORA": 227.36
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORTE",
-    "PERIODO_COMERCIALIZACAO": 578,
-    "DIA": 25,
-    "HORA": 1,
-    "PLD_HORA": 227.37
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUDESTE",
-    "PERIODO_COMERCIALIZACAO": 578,
-    "DIA": 25,
-    "HORA": 1,
-    "PLD_HORA": 227.36
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUL",
-    "PERIODO_COMERCIALIZACAO": 578,
-    "DIA": 25,
-    "HORA": 1,
-    "PLD_HORA": 227.37
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORDESTE",
-    "PERIODO_COMERCIALIZACAO": 577,
-    "DIA": 25,
-    "HORA": 0,
-    "PLD_HORA": 228.81
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORTE",
-    "PERIODO_COMERCIALIZACAO": 577,
-    "DIA": 25,
-    "HORA": 0,
-    "PLD_HORA": 228.82
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUDESTE",
-    "PERIODO_COMERCIALIZACAO": 577,
-    "DIA": 25,
-    "HORA": 0,
-    "PLD_HORA": 228.81
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUL",
-    "PERIODO_COMERCIALIZACAO": 577,
-    "DIA": 25,
-    "HORA": 0,
-    "PLD_HORA": 228.81
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORDESTE",
-    "PERIODO_COMERCIALIZACAO": 576,
-    "DIA": 24,
-    "HORA": 23,
-    "PLD_HORA": 230.29
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "NORTE",
-    "PERIODO_COMERCIALIZACAO": 576,
-    "DIA": 24,
-    "HORA": 23,
-    "PLD_HORA": 230.3
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUDESTE",
-    "PERIODO_COMERCIALIZACAO": 576,
-    "DIA": 24,
-    "HORA": 23,
-    "PLD_HORA": 230.3
-  },
-  {
-    "MES_REFERENCIA": 202606,
-    "SUBMERCADO": "SUL",
-    "PERIODO_COMERCIALIZACAO": 576,
-    "DIA": 24,
-    "HORA": 23,
-    "PLD_HORA": 230.3
   }
 ]

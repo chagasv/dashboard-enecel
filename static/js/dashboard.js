@@ -5,12 +5,30 @@ let charts = {
     balancoCompB: null,
     pld: null,
     ampereForward: null,
-    ampereEvolution: null
+    ampereEvolution: null,
+    enaSE: null,
+    enaS: null,
+    enaNE: null,
+    enaN: null,
+    enaCompSE: null,
+    enaCompS: null,
+    enaCompNE: null,
+    enaCompN: null,
+    cargaCompSIN: null,
+    cargaCompSE: null,
+    cargaCompS: null,
+    cargaCompNE: null,
+    cargaCompN: null,
+    earCompSE: null,
+    earCompS: null,
+    earCompNE: null,
+    earCompN: null
 };
 
-// Estado do modo comparativo do balanço e ampere
+// Estado do modo comparativo do balanço, ampere e ena
 let currentBalancoModo = 'simples';
 let currentAmpereModo = 'forward';
+let currentEnaModo = 'historico';
 let currentAmpereFwView = 'chart';
 let currentAmpereEvView = 'chart';
 
@@ -19,6 +37,8 @@ let rawBalancoData = null;
 let rawPldHorarioData = null;
 let rawAmpereCompletoData = null;
 let rawBbceData = null;
+let rawEnaData = null;
+let rawCargaComparativoData = null;
 
 // Inicialização da Página
 document.addEventListener('DOMContentLoaded', () => {
@@ -77,6 +97,25 @@ function switchTab(tabId) {
             } else {
                 renderBalancoComparison();
             }
+            break;
+        case 'ena':
+            title.textContent = 'ENA (Energia Natural Afluente)';
+            subtitle.textContent = 'Energia Natural Afluente diária e comparativo de previsões com realizados.';
+            if (currentEnaModo === 'historico') {
+                renderEnaCharts();
+            } else {
+                loadEnaComparativoMeses();
+            }
+            break;
+        case 'carga':
+            title.textContent = 'Carga (Demanda de Energia)';
+            subtitle.textContent = 'Comparativo de previsões com realizados semanais de Carga ONS.';
+            loadCargaComparativoMeses();
+            break;
+        case 'ear':
+            title.textContent = 'Reservatório (Energia Armazenada)';
+            subtitle.textContent = 'Acompanhamento de Energia Armazenada (EAR) e comparação com previsões das RVs.';
+            loadEarComparativoMeses();
             break;
         case 'ampere':
             title.textContent = 'Projeções Ampere';
@@ -253,6 +292,70 @@ async function loadAuditoriaData() {
                     </tr>
                 `;
             });
+        } else if (base === 'ena') {
+            headHtml = `
+                <tr>
+                    <th>Data</th>
+                    <th>Subsistema</th>
+                    <th style="text-align: right;">ENA Bruta (MWm)</th>
+                    <th style="text-align: right;">ENA Bruta (% MLT)</th>
+                    <th style="text-align: right;">ENA Armazenável (MWm)</th>
+                    <th style="text-align: right;">ENA Armazenável (% MLT)</th>
+                </tr>
+            `;
+            
+            data.forEach(row => {
+                bodyHtml += `
+                    <tr>
+                        <td><strong>${row.ena_data}</strong></td>
+                        <td><span class="indicator-badge arm">${row.id_subsistema}</span> (${row.nom_subsistema || ''})</td>
+                        <td style="text-align: right; font-weight: 600; color: #38bdf8;">${formatNumber(row.ena_bruta_regiao_mwmed, 2)}</td>
+                        <td style="text-align: right; color: var(--color-orange);">${formatNumber(row.ena_bruta_regiao_percentualmlt, 2)}%</td>
+                        <td style="text-align: right; font-weight: 600; color: #10b981;">${formatNumber(row.ena_armazenavel_regiao_mwmed, 2)}</td>
+                        <td style="text-align: right; color: var(--color-purple);">${formatNumber(row.ena_armazenavel_regiao_percentualmlt, 2)}%</td>
+                    </tr>
+                `;
+            });
+        } else if (base === 'carga') {
+            headHtml = `
+                <tr>
+                    <th>Data</th>
+                    <th>Subsistema</th>
+                    <th style="text-align: right;">Carga Média (MWm)</th>
+                </tr>
+            `;
+            
+            data.forEach(row => {
+                bodyHtml += `
+                    <tr>
+                        <td><strong>${row.din_instante}</strong></td>
+                        <td><span class="indicator-badge arm">${row.id_subsistema}</span> (${row.nom_subsistema || ''})</td>
+                        <td style="text-align: right; font-weight: 600; color: var(--color-yellow);">${formatNumber(row.val_cargaenergiamwmed, 2)}</td>
+                    </tr>
+                `;
+            });
+        } else if (base === 'ear') {
+            headHtml = `
+                <tr>
+                    <th>Data</th>
+                    <th>Subsistema</th>
+                    <th style="text-align: right;">Capacidade Máxima (MWmês)</th>
+                    <th style="text-align: right;">EAR Verificada (MWmês)</th>
+                    <th style="text-align: right;">EAR Verificada (%)</th>
+                </tr>
+            `;
+            
+            data.forEach(row => {
+                bodyHtml += `
+                    <tr>
+                        <td><strong>${row.ear_data}</strong></td>
+                        <td><span class="indicator-badge arm">${row.id_subsistema}</span> (${row.nom_subsistema || ''})</td>
+                        <td style="text-align: right;">${formatNumber(row.ear_max_subsistema, 2)}</td>
+                        <td style="text-align: right; font-weight: 600; color: var(--color-teal);">${formatNumber(row.ear_verif_subsistema_mwmes, 2)}</td>
+                        <td style="text-align: right; color: var(--color-teal); font-weight: 600;">${formatNumber(row.ear_verif_subsistema_percentual, 2)}%</td>
+                    </tr>
+                `;
+            });
         }
         
         tableHead.innerHTML = headHtml;
@@ -298,6 +401,33 @@ async function fetchStatus() {
             if (etlPld) etlPld.textContent = status.pld.max_data;
         }
         
+        if (status.ena && !status.ena.status) {
+            document.getElementById('status-ena-data').textContent = status.ena.max_data;
+            document.getElementById('status-ena-tamanho').textContent = status.ena.tamanho;
+            document.getElementById('status-ena-linhas').textContent = status.ena.linhas.toLocaleString('pt-BR');
+            
+            const etlEna = document.getElementById('etl-ena-last');
+            if (etlEna) etlEna.textContent = status.ena.max_data;
+        }
+        
+        if (status.carga && !status.carga.status) {
+            document.getElementById('status-carga-data').textContent = status.carga.max_data;
+            document.getElementById('status-carga-tamanho').textContent = status.carga.tamanho;
+            document.getElementById('status-carga-linhas').textContent = status.carga.linhas.toLocaleString('pt-BR');
+            
+            const etlCarga = document.getElementById('etl-carga-last');
+            if (etlCarga) etlCarga.textContent = status.carga.max_data;
+        }
+        
+        if (status.ear && !status.ear.status) {
+            document.getElementById('status-ear-data').textContent = status.ear.max_data;
+            document.getElementById('status-ear-tamanho').textContent = status.ear.tamanho;
+            document.getElementById('status-ear-linhas').textContent = status.ear.linhas.toLocaleString('pt-BR');
+            
+            const etlEar = document.getElementById('etl-ear-last');
+            if (etlEar) etlEar.textContent = status.ear.max_data;
+        }
+        
         if (status.ampere && !status.ampere.status) {
             document.getElementById('status-ampere-data').textContent = status.ampere.max_data;
             document.getElementById('status-ampere-tamanho').textContent = status.ampere.tamanho;
@@ -335,6 +465,184 @@ async function loadDashboardData() {
     loadPldData();
     loadAmpereCompletoData();
     loadBbceData();
+    loadEnaData();
+}
+
+// ENA Diária (ONS)
+async function loadEnaData() {
+    try {
+        const response = await fetch('/api/data/ena');
+        if (response.ok) {
+            rawEnaData = await response.json();
+            
+            // Se a aba ENA estiver ativa, renderiza os gráficos
+            const enaBtn = document.querySelector('.nav-btn[data-tab="ena"]');
+            if (enaBtn && enaBtn.classList.contains('active')) {
+                renderEnaCharts();
+            }
+        }
+    } catch (error) {
+        console.error("Erro ao carregar dados da ENA:", error);
+    }
+}
+
+function renderEnaCharts() {
+    if (!rawEnaData) return;
+    
+    // Obtém a variável selecionada no filtro do cabeçalho
+    const varSelect = document.getElementById('ena-variavel-select');
+    const variavel = varSelect ? varSelect.value : 'armazenavel';
+    
+    const subsistemas = [
+        { id: 'SE', chartId: 'chart-ena-se', chartRef: 'enaSE' },
+        { id: 'S', chartId: 'chart-ena-s', chartRef: 'enaS' },
+        { id: 'NE', chartId: 'chart-ena-ne', chartRef: 'enaNE' },
+        { id: 'N', chartId: 'chart-ena-n', chartRef: 'enaN' }
+    ];
+    
+    subsistemas.forEach(subInfo => {
+        const subData = rawEnaData[subInfo.id];
+        if (!subData) return;
+        
+        const canvas = document.getElementById(subInfo.chartId);
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        
+        if (charts[subInfo.chartRef]) {
+            charts[subInfo.chartRef].destroy();
+        }
+        
+        // Formata as datas do eixo X para DD/MM
+        const labelsFormatados = subData.labels.map(l => {
+            const partes = l.split('-');
+            if (partes.length === 3) {
+                return `${partes[2]}/${partes[1]}`;
+            }
+            return l;
+        });
+        
+        // Define os datasets dinamicamente baseados na seleção do usuário
+        let datasets = [];
+        if (variavel === 'armazenavel') {
+            datasets = [
+                {
+                    label: 'Armazenável (MWm)',
+                    data: subData.ena_armazenavel_mwmed,
+                    borderColor: '#10b981', // Verde
+                    backgroundColor: 'rgba(16, 185, 129, 0.05)',
+                    borderWidth: 2,
+                    yAxisID: 'y',
+                    tension: 0.15,
+                    fill: true,
+                    pointRadius: 1,
+                    pointHoverRadius: 4
+                },
+                {
+                    label: 'Armazenável (% MLT)',
+                    data: subData.ena_armazenavel_percentualmlt,
+                    borderColor: '#a855f7', // Roxo
+                    borderDash: [5, 5],
+                    backgroundColor: 'transparent',
+                    borderWidth: 1.5,
+                    yAxisID: 'y1',
+                    tension: 0.1,
+                    pointRadius: 0,
+                    pointHoverRadius: 3
+                }
+            ];
+        } else {
+            datasets = [
+                {
+                    label: 'Bruta (MWm)',
+                    data: subData.ena_bruta_mwmed,
+                    borderColor: '#38bdf8', // Ciano
+                    backgroundColor: 'rgba(56, 189, 248, 0.05)',
+                    borderWidth: 2,
+                    yAxisID: 'y',
+                    tension: 0.15,
+                    fill: true,
+                    pointRadius: 1,
+                    pointHoverRadius: 4
+                },
+                {
+                    label: 'Bruta (% MLT)',
+                    data: subData.ena_bruta_percentualmlt,
+                    borderColor: '#f97316', // Laranja
+                    borderDash: [5, 5],
+                    backgroundColor: 'transparent',
+                    borderWidth: 1.5,
+                    yAxisID: 'y1',
+                    tension: 0.1,
+                    pointRadius: 0,
+                    pointHoverRadius: 3
+                }
+            ];
+        }
+        
+        charts[subInfo.chartRef] = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labelsFormatados,
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+                scales: {
+                    x: {
+                        grid: { color: 'rgba(255, 255, 255, 0.03)' },
+                        ticks: { color: '#a1a1aa', font: { family: 'Inter', size: 10 }, maxTicksLimit: 12 }
+                    },
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: {
+                            display: true,
+                            text: 'MWmedio',
+                            color: '#a1a1aa',
+                            font: { family: 'Inter', size: 10 }
+                        },
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        ticks: { color: '#a1a1aa', font: { family: 'Inter', size: 10 } }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        title: {
+                            display: true,
+                            text: '% MLT',
+                            color: '#a1a1aa',
+                            font: { family: 'Inter', size: 10 }
+                        },
+                        grid: { drawOnChartArea: false },
+                        ticks: {
+                            color: '#a1a1aa',
+                            font: { family: 'Inter', size: 10 },
+                            callback: function(value) { return value + '%'; }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: { color: '#f4f4f5', font: { family: 'Inter', size: 10 }, boxWidth: 12 }
+                    },
+                    tooltip: {
+                        backgroundColor: '#18181b',
+                        titleColor: '#f4f4f5',
+                        bodyColor: '#a1a1aa',
+                        borderColor: '#27272a',
+                        borderWidth: 1
+                    }
+                }
+            }
+        });
+    });
 }
 
 // 1. Balanço Energético (ONS)
@@ -1047,6 +1355,18 @@ async function runETL(type) {
         btn = document.getElementById('btn-sync-pld');
         logPrefix = 'PLD Horário (CCEE)';
         url = '/api/update/pld';
+    } else if (type === 'ena') {
+        btn = document.getElementById('btn-sync-ena');
+        logPrefix = 'ENA (ONS)';
+        url = '/api/update/ena';
+    } else if (type === 'carga') {
+        btn = document.getElementById('btn-sync-carga');
+        logPrefix = 'Carga (ONS)';
+        url = '/api/update/carga';
+    } else if (type === 'ear') {
+        btn = document.getElementById('btn-sync-ear');
+        logPrefix = 'Reservatório EAR (ONS)';
+        url = '/api/update/ear';
     }
     
     if (!btn) return;
@@ -1080,6 +1400,19 @@ async function runETL(type) {
             fetchStatus();
             if (type === 'balanco') loadBalancoData();
             if (type === 'pld') loadPldData();
+            if (type === 'ena') {
+                if (currentEnaModo === 'historico') {
+                    renderEnaCharts();
+                } else {
+                    loadEnaComparativoData();
+                }
+            }
+            if (type === 'carga') {
+                loadCargaComparativoData();
+            }
+            if (type === 'ear') {
+                loadEarComparativoData();
+            }
         } else {
             appendLog(`[ERRO] Falha ao atualizar: ${res.message}`, 'error');
             showToast('Erro', `Falha ao atualizar ${logPrefix}. Verifique o console.`, 'error');
@@ -2521,4 +2854,1115 @@ async function pollBbceAutomationLogs() {
     } catch (error) {
         console.error("Erro no polling de logs da BBCE:", error);
     }
+}
+
+// ----------------- COMPARATIVO DE ENA (PREVISTO VS REALIZADO) -----------------
+function switchEnaModo(modo) {
+    currentEnaModo = modo;
+    
+    const btnHistorico = document.getElementById('subtab-ena-historico');
+    const btnComparativo = document.getElementById('subtab-ena-comparativo');
+    const painelHistorico = document.getElementById('ena-painel-historico');
+    const painelComparativo = document.getElementById('ena-painel-comparativo');
+    
+    if (btnHistorico && btnComparativo && painelHistorico && painelComparativo) {
+        if (modo === 'historico') {
+            btnHistorico.classList.add('active');
+            btnComparativo.classList.remove('active');
+            painelHistorico.style.display = 'block';
+            painelComparativo.style.display = 'none';
+            renderEnaCharts();
+        } else {
+            btnHistorico.classList.remove('active');
+            btnComparativo.classList.add('active');
+            painelHistorico.style.display = 'none';
+            painelComparativo.style.display = 'block';
+            loadEnaComparativoMeses();
+        }
+    }
+}
+
+let rawEnaComparativoData = null;
+
+async function loadEnaComparativoMeses() {
+    try {
+        const select = document.getElementById('ena-comp-mes-select');
+        if (!select) return;
+        
+        const response = await fetch('/api/data/ena_comparativo/meses');
+        if (!response.ok) throw new Error('Falha ao buscar meses de comparação.');
+        
+        const meses = await response.json();
+        
+        if (meses && meses.length > 0) {
+            let html = '';
+            meses.forEach(m => {
+                html += `<option value="${m.id}">${m.label}</option>`;
+            });
+            select.innerHTML = html;
+            
+            // Dispara carregamento dos dados para o primeiro mês
+            loadEnaComparativoData();
+        } else {
+            select.innerHTML = '<option value="">Nenhum mês disponível</option>';
+        }
+    } catch (error) {
+        console.error("Erro ao buscar meses de comparação da ENA:", error);
+        showToast('Erro', 'Não foi possível carregar os meses de comparação da ENA.', 'error');
+    }
+}
+
+async function loadEnaComparativoData() {
+    try {
+        const select = document.getElementById('ena-comp-mes-select');
+        if (!select || !select.value) return;
+        
+        const mes = select.value;
+        
+        // Exibe spinner temporário nos canvas
+        ['se', 's', 'ne', 'n'].forEach(sub => {
+            const canvas = document.getElementById(`chart-ena-comp-${sub}`);
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.font = '14px Inter, sans-serif';
+                ctx.fillStyle = '#a1a1aa';
+                ctx.textAlign = 'center';
+                ctx.fillText('Carregando comparativo...', canvas.width / 2, canvas.height / 2);
+            }
+        });
+        
+        const response = await fetch(`/api/data/ena_comparativo?mes=${mes}`);
+        if (!response.ok) throw new Error('Erro ao buscar dados do comparativo de ENA.');
+        
+        rawEnaComparativoData = await response.json();
+        
+        renderEnaComparativoCharts();
+    } catch (error) {
+        console.error("Erro ao carregar dados comparativos de ENA:", error);
+        showToast('Erro de Carregamento', 'Falha ao buscar dados comparativos de ENA.', 'error');
+    }
+}
+
+function renderEnaComparativoCharts() {
+    if (!rawEnaComparativoData || !rawEnaComparativoData.dados) return;
+    
+    const variavelRealizado = document.getElementById('ena-comp-variavel-select').value; // 'armazenavel' ou 'bruta'
+    const semanasInfo = rawEnaComparativoData.semanas_info;
+    const dados = rawEnaComparativoData.dados;
+    
+    // Labels do Eixo X: "Semana 1\n(30/05 a 05/06)" etc.
+    const labels = semanasInfo.map(sem => [sem.label, `(${sem.periodo})`]);
+    
+    const subsistemas = [
+        { id: 'SE', chartId: 'chart-ena-comp-se', chartRef: 'enaCompSE', tableId: 'table-ena-comp-se' },
+        { id: 'S', chartId: 'chart-ena-comp-s', chartRef: 'enaCompS', tableId: 'table-ena-comp-s' },
+        { id: 'NE', chartId: 'chart-ena-comp-ne', chartRef: 'enaCompNE', tableId: 'table-ena-comp-ne' },
+        { id: 'N', chartId: 'chart-ena-comp-n', chartRef: 'enaCompN', tableId: 'table-ena-comp-n' }
+    ];
+    
+    // Cores neon para o layout escuro
+    const coresRVs = {
+        'RV0': 'rgba(56, 189, 248, 0.45)',  // Ciano translúcido
+        'RV1': 'rgba(249, 115, 22, 0.45)',  // Laranja translúcido
+        'RV2': 'rgba(168, 85, 247, 0.45)',  // Roxo translúcido
+        'RV3': 'rgba(236, 72, 153, 0.45)',  // Rosa translúcido
+        'RV4': 'rgba(234, 179, 8, 0.45)'    // Amarelo translúcido
+    };
+    
+    const coresBordasRVs = {
+        'RV0': '#38bdf8',
+        'RV1': '#f97316',
+        'RV2': '#a855f7',
+        'RV3': '#ec4899',
+        'RV4': '#eab308'
+    };
+    
+    // Cor do Realizado: Verde para Armazenável, Ciano para Bruta
+    const corRealizado = variavelRealizado === 'armazenavel' ? '#10b981' : '#06b6d4';
+    const labelRealizado = variavelRealizado === 'armazenavel' ? 'Realizado Armazenável' : 'Realizado Bruta';
+    
+    subsistemas.forEach(subInfo => {
+        const subData = dados[subInfo.id];
+        if (!subData) return;
+        
+        // ----------------- RENDERIZAR TABELA COMPARATIVA -----------------
+        const tableElement = document.getElementById(subInfo.tableId);
+        if (tableElement) {
+            let headHtml = `
+                <thead>
+                    <tr>
+                        <th style="text-align: left; font-size: 11px;">Revisão / Real</th>
+            `;
+            semanasInfo.forEach(sem => {
+                headHtml += `<th style="text-align: right; font-size: 11px;">${sem.label.replace('Semana', 'Sem.')} <span style="font-size: 9px; color: var(--text-muted); font-weight: normal; display: block;">(${sem.dias_no_mes} dias)</span></th>`;
+            });
+            headHtml += `
+                        <th style="text-align: right; background: rgba(255, 255, 255, 0.03); font-size: 11px;">Média Mensal</th>
+                    </tr>
+                </thead>
+            `;
+            
+            let bodyHtml = '<tbody>';
+            
+            // Previsões das RVs
+            const rvs = Object.keys(subData.previsoes).sort();
+            rvs.forEach(rv => {
+                const prev = subData.previsoes[rv];
+                bodyHtml += `
+                    <tr>
+                        <td style="text-align: left; font-weight: 500; vertical-align: middle;">Previsto ${rv}</td>
+                `;
+                prev.valores.forEach(val => {
+                    let displayCell = '-';
+                    if (val !== null) {
+                        displayCell = formatNumber(val, 0);
+                        if (subData.mlt) {
+                            const pct = (val / subData.mlt) * 100;
+                            displayCell += `<span style="font-size: 9.5px; color: var(--text-muted); display: block; font-weight: normal; margin-top: 1px;">${formatNumber(pct, 0)}%</span>`;
+                        }
+                    }
+                    bodyHtml += `<td style="text-align: right; vertical-align: middle;">${displayCell}</td>`;
+                });
+                
+                // Média mensal
+                let mediaDisplay = '-';
+                if (prev.media_mensal !== null) {
+                    mediaDisplay = formatNumber(prev.media_mensal, 0);
+                    if (subData.mlt) {
+                        const pct = (prev.media_mensal / subData.mlt) * 100;
+                        mediaDisplay += `<span style="font-size: 9.5px; color: var(--text-muted); display: block; font-weight: normal; margin-top: 1px;">${formatNumber(pct, 0)}%</span>`;
+                    }
+                }
+                bodyHtml += `
+                        <td style="text-align: right; font-weight: bold; background: rgba(255, 255, 255, 0.02); vertical-align: middle;">${mediaDisplay}</td>
+                    </tr>
+                `;
+            });
+            
+            // Realizado
+            const realizadoObj = variavelRealizado === 'armazenavel' ? subData.realizado_armazenavel : subData.realizado_bruta;
+            bodyHtml += `
+                <tr style="border-top: 1.5px solid rgba(255, 255, 255, 0.1); background: rgba(${variavelRealizado === 'armazenavel' ? '16, 185, 129' : '6, 182, 212'}, 0.03);">
+                    <td style="text-align: left; vertical-align: middle;"><strong style="color: ${corRealizado};">${labelRealizado}</strong></td>
+            `;
+            realizadoObj.valores.forEach(val => {
+                let displayCell = '-';
+                if (val !== null) {
+                    displayCell = formatNumber(val, 0);
+                    if (subData.mlt) {
+                        const pct = (val / subData.mlt) * 100;
+                        displayCell += `<span style="font-size: 9.5px; color: var(--text-muted); display: block; font-weight: normal; margin-top: 1px;">${formatNumber(pct, 0)}%</span>`;
+                    }
+                }
+                bodyHtml += `<td style="text-align: right; font-weight: 600; color: ${val !== null ? 'var(--text-primary)' : 'var(--text-muted)'}; vertical-align: middle;">${displayCell}</td>`;
+            });
+            
+            // Média Realizado
+            let mediaDisplayReal = '-';
+            if (realizadoObj.media_mensal !== null) {
+                mediaDisplayReal = formatNumber(realizadoObj.media_mensal, 0);
+                if (subData.mlt) {
+                    const pct = (realizadoObj.media_mensal / subData.mlt) * 100;
+                    mediaDisplayReal += `<span style="font-size: 9.5px; color: var(--text-muted); display: block; font-weight: normal; margin-top: 1px;">${formatNumber(pct, 0)}%</span>`;
+                }
+            }
+            bodyHtml += `
+                    <td style="text-align: right; font-weight: bold; color: ${corRealizado}; background: rgba(255, 255, 255, 0.04); vertical-align: middle;">${mediaDisplayReal}</td>
+                </tr>
+            `;
+            
+            bodyHtml += '</tbody>';
+            tableElement.innerHTML = headHtml + bodyHtml;
+        }
+        
+        // ----------------- RENDERIZAR GRÁFICO -----------------
+        const canvas = document.getElementById(subInfo.chartId);
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        
+        // Destrói gráfico anterior
+        if (charts[subInfo.chartRef]) {
+            charts[subInfo.chartRef].destroy();
+        }
+        
+        const datasets = [];
+        
+        // 1. Adiciona as barras para cada RV disponível no JSON
+        const rvs = Object.keys(subData.previsoes).sort();
+        rvs.forEach(rv => {
+            const coresRV = coresRVs[rv] || 'rgba(255, 255, 255, 0.2)';
+            const bordaRV = coresBordasRVs[rv] || '#ffffff';
+            
+            datasets.push({
+                type: 'bar',
+                label: `Previsto ${rv}`,
+                data: subData.previsoes[rv].valores,
+                backgroundColor: coresRV,
+                borderColor: bordaRV,
+                borderWidth: 1.5,
+                borderRadius: 4,
+                barPercentage: 0.85,
+                categoryPercentage: 0.8
+            });
+        });
+        
+        // 2. Adiciona a linha do Realizado
+        const realizadoData = variavelRealizado === 'armazenavel' ? subData.realizado_armazenavel.valores : subData.realizado_bruta.valores;
+        datasets.push({
+            type: 'line',
+            label: labelRealizado,
+            data: realizadoData,
+            borderColor: corRealizado,
+            backgroundColor: 'transparent',
+            borderWidth: 3.5,
+            pointBackgroundColor: corRealizado,
+            pointBorderColor: '#09090b',
+            pointBorderWidth: 2,
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            tension: 0.15,
+            fill: false,
+            order: -1 // Garante que a linha fique por cima das barras
+        });
+        
+        // Desenha o gráfico
+        charts[subInfo.chartRef] = new Chart(ctx, {
+            data: {
+                labels: labels,
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+                scales: {
+                    x: {
+                        grid: { color: 'rgba(255, 255, 255, 0.03)' },
+                        ticks: {
+                            color: '#a1a1aa',
+                            font: { family: 'Inter', size: 9 }
+                        }
+                    },
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'MWmedio',
+                            color: '#a1a1aa',
+                            font: { family: 'Inter', size: 10 }
+                        },
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        ticks: { color: '#a1a1aa', font: { family: 'Inter', size: 10 } }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#f4f4f5',
+                            font: { family: 'Inter', size: 9 },
+                            boxWidth: 10,
+                            padding: 10
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: '#18181b',
+                        titleColor: '#f4f4f5',
+                        bodyColor: '#a1a1aa',
+                        borderColor: '#27272a',
+                        borderWidth: 1,
+                        titleFont: { family: 'Inter', weight: 'bold' },
+                        bodyFont: { family: 'Inter' },
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.raw !== null) {
+                                    label += formatNumber(context.raw, 0) + ' MWm';
+                                } else {
+                                    label += 'Não realizado ainda';
+                                }
+                                
+                                // Se for o dataset de realizado, exibe a variação frente à RV0
+                                if (context.dataset.type === 'line' && context.raw !== null) {
+                                    const rv0Dataset = context.chart.data.datasets.find(d => d.label === 'Previsto RV0');
+                                    if (rv0Dataset && rv0Dataset.data[context.dataIndex] !== null) {
+                                        const prevVal = rv0Dataset.data[context.dataIndex];
+                                        const diff = context.raw - prevVal;
+                                        const pct = (diff / prevVal) * 100;
+                                        const sinal = diff >= 0 ? '+' : '';
+                                        label += ` (${sinal}${formatNumber(pct, 0)}% vs RV0)`;
+                                    }
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+}
+
+
+// ----------------- COMPARATIVO DE CARGA (PREVISTO VS REALIZADO) -----------------
+async function loadCargaComparativoMeses() {
+    try {
+        const select = document.getElementById('carga-comp-mes-select');
+        if (!select) return;
+        
+        const response = await fetch('/api/data/carga_comparativo/meses');
+        if (!response.ok) throw new Error('Falha ao buscar meses de comparação da carga.');
+        
+        const meses = await response.json();
+        
+        if (meses && meses.length > 0) {
+            let html = '';
+            meses.forEach(m => {
+                html += `<option value="${m.id}">${m.label}</option>`;
+            });
+            select.innerHTML = html;
+            
+            // Dispara carregamento dos dados para o primeiro mês
+            loadCargaComparativoData();
+        } else {
+            select.innerHTML = '<option value="">Nenhum mês disponível</option>';
+        }
+    } catch (error) {
+        console.error("Erro ao buscar meses de comparação da Carga:", error);
+        showToast('Erro', 'Não foi possível carregar os meses de comparação da Carga.', 'error');
+    }
+}
+
+async function loadCargaComparativoData() {
+    try {
+        const select = document.getElementById('carga-comp-mes-select');
+        if (!select || !select.value) return;
+        
+        const mes = select.value;
+        
+        // Exibe spinner temporário nos canvas
+        ['sin', 'se', 's', 'ne', 'n'].forEach(sub => {
+            const canvas = document.getElementById(`chart-carga-comp-${sub}`);
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.font = '14px Inter, sans-serif';
+                ctx.fillStyle = '#a1a1aa';
+                ctx.textAlign = 'center';
+                ctx.fillText('Carregando comparativo...', canvas.width / 2, canvas.height / 2);
+            }
+        });
+        
+        const response = await fetch(`/api/data/carga_comparativo?mes=${mes}`);
+        if (!response.ok) throw new Error('Erro ao buscar dados do comparativo de Carga.');
+        
+        rawCargaComparativoData = await response.json();
+        
+        renderCargaComparativoCharts();
+    } catch (error) {
+        console.error("Erro ao carregar dados comparativos de Carga:", error);
+        showToast('Erro de Carregamento', 'Falha ao buscar dados comparativos de Carga.', 'error');
+    }
+}
+
+function renderCargaComparativoCharts() {
+    if (!rawCargaComparativoData || !rawCargaComparativoData.dados) return;
+    
+    const semanasInfo = rawCargaComparativoData.semanas_info;
+    const dados = rawCargaComparativoData.dados;
+    
+    // Labels do Eixo X: "Semana 1\n(30/05 a 05/06)" etc.
+    const labels = semanasInfo.map(sem => [sem.label, `(${sem.periodo})`]);
+    
+    const subsistemas = [
+        { id: 'SIN', chartId: 'chart-carga-comp-sin', chartRef: 'cargaCompSIN', tableId: 'table-carga-comp-sin' },
+        { id: 'SE', chartId: 'chart-carga-comp-se', chartRef: 'cargaCompSE', tableId: 'table-carga-comp-se' },
+        { id: 'S', chartId: 'chart-carga-comp-s', chartRef: 'cargaCompS', tableId: 'table-carga-comp-s' },
+        { id: 'NE', chartId: 'chart-carga-comp-ne', chartRef: 'cargaCompNE', tableId: 'table-carga-comp-ne' },
+        { id: 'N', chartId: 'chart-carga-comp-n', chartRef: 'cargaCompN', tableId: 'table-carga-comp-n' }
+    ];
+    
+    // Cores neon para o layout escuro
+    const coresRVs = {
+        'RV0': 'rgba(56, 189, 248, 0.45)',  // Ciano translúcido
+        'RV1': 'rgba(249, 115, 22, 0.45)',  // Laranja translúcido
+        'RV2': 'rgba(168, 85, 247, 0.45)',  // Roxo translúcido
+        'RV3': 'rgba(236, 72, 153, 0.45)',  // Rosa translúcido
+        'RV4': 'rgba(234, 179, 8, 0.45)'    // Amarelo translúcido
+    };
+    
+    const coresBordasRVs = {
+        'RV0': '#38bdf8',
+        'RV1': '#f97316',
+        'RV2': '#a855f7',
+        'RV3': '#ec4899',
+        'RV4': '#eab308'
+    };
+    
+    // Cor do Realizado: Amarela
+    const corRealizado = '#eab308';
+    const labelRealizado = 'Realizado Carga';
+    
+    subsistemas.forEach(subInfo => {
+        const subData = dados[subInfo.id];
+        if (!subData) return;
+        
+        // ----------------- RENDERIZAR TABELA COMPARATIVA -----------------
+        const tableElement = document.getElementById(subInfo.tableId);
+        if (tableElement) {
+            let headHtml = `
+                <thead>
+                    <tr>
+                        <th style="text-align: left; font-size: 11px;">Revisão / Real</th>
+            `;
+            semanasInfo.forEach(sem => {
+                headHtml += `<th style="text-align: right; font-size: 11px;">${sem.label.replace('Semana', 'Sem.')} <span style="font-size: 9px; color: var(--text-muted); font-weight: normal; display: block;">(${sem.dias_no_mes} dias)</span></th>`;
+            });
+            headHtml += `
+                        <th style="text-align: right; background: rgba(255, 255, 255, 0.03); font-size: 11px;">Média Mensal</th>
+                    </tr>
+                </thead>
+            `;
+            
+            let bodyHtml = '<tbody>';
+            
+            // Previsões das RVs
+            const rvs = Object.keys(subData.previsoes).sort();
+            rvs.forEach(rv => {
+                const prev = subData.previsoes[rv];
+                bodyHtml += `
+                    <tr>
+                        <td style="text-align: left; font-weight: 500; vertical-align: middle;">Previsto ${rv}</td>
+                `;
+                prev.valores.forEach(val => {
+                    let displayCell = '-';
+                    if (val !== null) {
+                        displayCell = formatNumber(val, 0);
+                    }
+                    bodyHtml += `<td style="text-align: right; vertical-align: middle;">${displayCell}</td>`;
+                });
+                
+                // Média mensal
+                let mediaDisplay = '-';
+                if (prev.media_mensal !== null) {
+                    mediaDisplay = formatNumber(prev.media_mensal, 0);
+                }
+                bodyHtml += `
+                        <td style="text-align: right; font-weight: bold; background: rgba(255, 255, 255, 0.02); vertical-align: middle;">${mediaDisplay}</td>
+                    </tr>
+                `;
+            });
+            
+            // Realizado
+            const realizadoObj = subData.realizado;
+            bodyHtml += `
+                <tr style="border-top: 1.5px solid rgba(255, 255, 255, 0.1); background: rgba(234, 179, 8, 0.03);">
+                    <td style="text-align: left; vertical-align: middle;"><strong style="color: ${corRealizado};">${labelRealizado}</strong></td>
+            `;
+            realizadoObj.valores.forEach(val => {
+                let displayCell = '-';
+                if (val !== null) {
+                    displayCell = formatNumber(val, 0);
+                }
+                bodyHtml += `<td style="text-align: right; font-weight: 600; color: ${val !== null ? 'var(--text-primary)' : 'var(--text-muted)'}; vertical-align: middle;">${displayCell}</td>`;
+            });
+            
+            // Média Realizado
+            let mediaDisplayReal = '-';
+            if (realizadoObj.media_mensal !== null) {
+                mediaDisplayReal = formatNumber(realizadoObj.media_mensal, 0);
+            }
+            bodyHtml += `
+                    <td style="text-align: right; font-weight: bold; color: ${corRealizado}; background: rgba(255, 255, 255, 0.04); vertical-align: middle;">${mediaDisplayReal}</td>
+                </tr>
+            `;
+            
+            bodyHtml += '</tbody>';
+            tableElement.innerHTML = headHtml + bodyHtml;
+        }
+        
+        // ----------------- RENDERIZAR GRÁFICO -----------------
+        const canvas = document.getElementById(subInfo.chartId);
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        
+        // Destrói gráfico anterior
+        if (charts[subInfo.chartRef]) {
+            charts[subInfo.chartRef].destroy();
+        }
+        
+        const datasets = [];
+        
+        // 1. Adiciona as barras para cada RV disponível no JSON
+        const rvs = Object.keys(subData.previsoes).sort();
+        rvs.forEach(rv => {
+            const coresRV = coresRVs[rv] || 'rgba(255, 255, 255, 0.2)';
+            const bordaRV = coresBordasRVs[rv] || '#ffffff';
+            
+            datasets.push({
+                type: 'bar',
+                label: `Previsto ${rv}`,
+                data: subData.previsoes[rv].valores,
+                backgroundColor: coresRV,
+                borderColor: bordaRV,
+                borderWidth: 1.5,
+                borderRadius: 4,
+                barPercentage: 0.85,
+                categoryPercentage: 0.8
+            });
+        });
+        
+        // 2. Adiciona a linha do Realizado
+        const realizadoData = subData.realizado.valores;
+        datasets.push({
+            type: 'line',
+            label: labelRealizado,
+            data: realizadoData,
+            borderColor: corRealizado,
+            backgroundColor: 'transparent',
+            borderWidth: 3.5,
+            pointBackgroundColor: corRealizado,
+            pointBorderColor: '#09090b',
+            pointBorderWidth: 2,
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            tension: 0.15,
+            fill: false,
+            order: -1
+        });
+        
+        // Desenha o gráfico
+        charts[subInfo.chartRef] = new Chart(ctx, {
+            data: {
+                labels: labels,
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+                scales: {
+                    x: {
+                        grid: { color: 'rgba(255, 255, 255, 0.03)' },
+                        ticks: {
+                            color: '#a1a1aa',
+                            font: { family: 'Inter', size: 9 }
+                        }
+                    },
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'MWmedio',
+                            color: '#a1a1aa',
+                            font: { family: 'Inter', size: 10 }
+                        },
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        ticks: { color: '#a1a1aa', font: { family: 'Inter', size: 10 } }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#f4f4f5',
+                            font: { family: 'Inter', size: 9 },
+                            boxWidth: 10,
+                            padding: 10
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: '#18181b',
+                        titleColor: '#f4f4f5',
+                        bodyColor: '#a1a1aa',
+                        borderColor: '#27272a',
+                        borderWidth: 1,
+                        titleFont: { family: 'Inter', weight: 'bold' },
+                        bodyFont: { family: 'Inter' },
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.raw !== null) {
+                                    label += formatNumber(context.raw, 0) + ' MWm';
+                                } else {
+                                    label += 'Não realizado ainda';
+                                }
+                                
+                                // Se for o dataset de realizado, exibe a variação frente à RV0
+                                if (context.dataset.type === 'line' && context.raw !== null) {
+                                    const rv0Dataset = context.chart.data.datasets.find(d => d.label === 'Previsto RV0');
+                                    if (rv0Dataset && rv0Dataset.data[context.dataIndex] !== null) {
+                                        const prevVal = rv0Dataset.data[context.dataIndex];
+                                        const diff = context.raw - prevVal;
+                                        const pct = (diff / prevVal) * 100;
+                                        const sinal = diff >= 0 ? '+' : '';
+                                        label += ` (${sinal}${formatNumber(pct, 0)}% vs RV0)`;
+                                    }
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+}
+
+// ----------------- COMPARATIVO DE RESERVATÓRIO (EAR) (PREVISTO VS REALIZADO) -----------------
+let rawEarComparativoData = null;
+
+async function loadEarComparativoMeses() {
+    try {
+        const select = document.getElementById('ear-comp-mes-select');
+        if (!select) return;
+        
+        const response = await fetch('/api/data/ear_comparativo/meses');
+        if (!response.ok) throw new Error('Falha ao buscar meses de comparação do EAR.');
+        
+        const meses = await response.json();
+        
+        if (meses && meses.length > 0) {
+            let html = '';
+            meses.forEach(m => {
+                html += `<option value="${m.id}">${m.label}</option>`;
+            });
+            select.innerHTML = html;
+            
+            // Dispara carregamento dos dados para o primeiro mês
+            loadEarComparativoData();
+        } else {
+            select.innerHTML = '<option value="">Nenhum mês disponível</option>';
+        }
+    } catch (error) {
+        console.error("Erro ao buscar meses de comparação do EAR:", error);
+        showToast('Erro', 'Não foi possível carregar os meses de comparação do EAR.', 'error');
+    }
+}
+
+async function loadEarComparativoData() {
+    try {
+        const select = document.getElementById('ear-comp-mes-select');
+        if (!select || !select.value) return;
+        
+        const mes = select.value;
+        
+        // Exibe spinner temporário nos canvas
+        ['se', 's', 'ne', 'n'].forEach(sub => {
+            const canvas = document.getElementById(`chart-ear-comp-${sub}`);
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.font = '14px Inter, sans-serif';
+                ctx.fillStyle = '#a1a1aa';
+                ctx.textAlign = 'center';
+                ctx.fillText('Carregando comparativo...', canvas.width / 2, canvas.height / 2);
+            }
+        });
+        
+        const response = await fetch(`/api/data/ear_comparativo?mes=${mes}`);
+        if (!response.ok) throw new Error('Erro ao buscar dados do comparativo de EAR.');
+        
+        rawEarComparativoData = await response.json();
+        
+        renderEarComparativoCharts();
+    } catch (error) {
+        console.error("Erro ao carregar dados comparativos de EAR:", error);
+        showToast('Erro de Carregamento', 'Falha ao buscar dados comparativos de EAR.', 'error');
+    }
+}
+
+function renderEarComparativoCharts() {
+    if (!rawEarComparativoData || !rawEarComparativoData.dados) return;
+    
+    const dias = rawEarComparativoData.dias;
+    const dados = rawEarComparativoData.dados;
+    
+    // ----------------- RENDERIZAR TABELA DE EVOLUÇÃO DIÁRIA RECENTE -----------------
+    const tableEvolucaoEl = document.getElementById('table-ear-evolucao-recente');
+    if (tableEvolucaoEl) {
+        // Encontra o último dia com dados válidos na série
+        let ultimoIdx = -1;
+        const seReal = dados.SE ? dados.SE.realizado_percentual : [];
+        for (let i = seReal.length - 1; i >= 0; i--) {
+            if (seReal[i] !== null && seReal[i] !== undefined) {
+                ultimoIdx = i;
+                break;
+            }
+        }
+        
+        if (ultimoIdx === -1) {
+            tableEvolucaoEl.innerHTML = '<tbody><tr><td style="text-align: center; padding: 20px; color: var(--text-muted);">Sem dados realizados disponíveis para o mês selecionado.</td></tr></tbody>';
+        } else {
+            // Seleciona até os últimos 7 dias com dados realizados
+            const numColunas = 7;
+            const primeiroColIdx = Math.max(0, ultimoIdx - (numColunas - 1));
+            const indicesColunas = [];
+            for (let i = primeiroColIdx; i <= ultimoIdx; i++) {
+                indicesColunas.push(i);
+            }
+            
+            // Cabeçalho
+            let headHtml = `
+                <thead>
+                    <tr>
+                        <th style="text-align: left; width: 220px; font-size: 11px;">Subsistema</th>
+            `;
+            indicesColunas.forEach(idx => {
+                const dataStr = dias[idx];
+                const partes = dataStr.split('-');
+                const diaMes = `${partes[2]}/${partes[1]}`;
+                headHtml += `<th style="text-align: center; font-size: 11px;">${diaMes}</th>`;
+            });
+            headHtml += `
+                        <th style="text-align: center; width: 160px; background: rgba(255,255,255,0.02); font-size: 11px;">Variação no Mês (Acumulado)</th>
+                    </tr>
+                </thead>
+            `;
+            
+            // Linhas dos subsistemas
+            const subsMap = [
+                { id: 'SE', nome: 'Sudeste / Centro-Oeste' },
+                { id: 'S', nome: 'Sul' },
+                { id: 'NE', nome: 'Nordeste' },
+                { id: 'N', nome: 'Norte' }
+            ];
+            
+            let bodyHtml = '<tbody>';
+            subsMap.forEach(sub => {
+                const subData = dados[sub.id];
+                if (!subData) return;
+                const realizado = subData.realizado_percentual;
+                
+                bodyHtml += `<tr><td style="text-align: left; font-weight: 500; font-size: 12px;"><strong>${sub.nome}</strong></td>`;
+                
+                indicesColunas.forEach(idx => {
+                    const val = realizado[idx];
+                    let cellHtml = '-';
+                    
+                    if (val !== null && val !== undefined) {
+                        // Calcula variação do dia anterior
+                        let valAnterior = null;
+                        if (idx > 0) {
+                            valAnterior = realizado[idx - 1];
+                        }
+                        
+                        let diffHtml = '';
+                        if (valAnterior !== null && valAnterior !== undefined) {
+                            const diff = val - valAnterior;
+                            if (diff > 0.005) {
+                                diffHtml = `<span style="color: #10b981; font-size: 9.5px; display: block; margin-top: 2px; font-weight: 500;"><i class="fa-solid fa-caret-up"></i> +${formatNumber(diff, 1)}%</span>`;
+                            } else if (diff < -0.005) {
+                                diffHtml = `<span style="color: #f43f5e; font-size: 9.5px; display: block; margin-top: 2px; font-weight: 500;"><i class="fa-solid fa-caret-down"></i> ${formatNumber(diff, 1)}%</span>`;
+                            } else {
+                                diffHtml = `<span style="color: #71717a; font-size: 9.5px; display: block; margin-top: 2px; font-weight: 500;">= 0.0%</span>`;
+                            }
+                        } else {
+                            diffHtml = `<span style="color: #71717a; font-size: 9.5px; display: block; margin-top: 2px; font-weight: 500;">-</span>`;
+                        }
+                        
+                        cellHtml = `
+                            <div style="text-align: center;">
+                                <span style="font-weight: 600; font-size: 12px; color: var(--text-primary);">${formatNumber(val, 0)}%</span>
+                                ${diffHtml}
+                            </div>
+                        `;
+                    }
+                    
+                    bodyHtml += `<td style="vertical-align: middle; text-align: center;">${cellHtml}</td>`;
+                });
+                
+                // Calcula variação acumulada do mês (Último dia contra o Dia 01)
+                let primeiroVal = realizado[0];
+                if (primeiroVal === null || primeiroVal === undefined) {
+                    for (let i = 0; i < realizado.length; i++) {
+                        if (realizado[i] !== null && realizado[i] !== undefined) {
+                            primeiroVal = realizado[i];
+                            break;
+                        }
+                    }
+                }
+                
+                const ultimoVal = realizado[ultimoIdx];
+                let acumuladoHtml = '-';
+                
+                if (primeiroVal !== null && primeiroVal !== undefined && ultimoVal !== null && ultimoVal !== undefined) {
+                    const diffMes = ultimoVal - primeiroVal;
+                    let style = '';
+                    let icon = '';
+                    let sinal = '';
+                    
+                    if (diffMes > 0.005) {
+                        style = 'color: #10b981; font-weight: bold; background: rgba(16, 185, 129, 0.08); border-radius: 4px; padding: 4px 10px; border: 1px solid rgba(16, 185, 129, 0.2); font-size: 11px;';
+                        icon = '<i class="fa-solid fa-arrow-trend-up" style="margin-right: 4px;"></i>';
+                        sinal = '+';
+                    } else if (diffMes < -0.005) {
+                        style = 'color: #f43f5e; font-weight: bold; background: rgba(244, 63, 94, 0.08); border-radius: 4px; padding: 4px 10px; border: 1px solid rgba(244, 63, 94, 0.2); font-size: 11px;';
+                        icon = '<i class="fa-solid fa-arrow-trend-down" style="margin-right: 4px;"></i>';
+                    } else {
+                        style = 'color: #a1a1aa; font-weight: bold; background: rgba(161, 161, 170, 0.08); border-radius: 4px; padding: 4px 10px; border: 1px solid rgba(161, 161, 170, 0.2); font-size: 11px;';
+                        icon = '= ';
+                    }
+                    
+                    acumuladoHtml = `
+                        <div style="text-align: center; display: inline-block; ${style}">
+                            ${icon}${sinal}${formatNumber(diffMes, 1)}%
+                        </div>
+                    `;
+                }
+                
+                bodyHtml += `<td style="text-align: center; vertical-align: middle; background: rgba(255,255,255,0.01);">${acumuladoHtml}</td></tr>`;
+            });
+            bodyHtml += '</tbody>';
+            tableEvolucaoEl.innerHTML = headHtml + bodyHtml;
+        }
+    }
+    
+    // Labels do Eixo X: formatados para DD/MM
+    const labels = dias.map(d => {
+        const partes = d.split('-');
+        if (partes.length === 3) {
+            return `${partes[2]}/${partes[1]}`;
+        }
+        return d;
+    });
+    
+    const subsistemas = [
+        { id: 'SE', chartId: 'chart-ear-comp-se', chartRef: 'earCompSE', tableId: 'table-ear-comp-se' },
+        { id: 'S', chartId: 'chart-ear-comp-s', chartRef: 'earCompS', tableId: 'table-ear-comp-s' },
+        { id: 'NE', chartId: 'chart-ear-comp-ne', chartRef: 'earCompNE', tableId: 'table-ear-comp-ne' },
+        { id: 'N', chartId: 'chart-ear-comp-n', chartRef: 'earCompN', tableId: 'table-ear-comp-n' }
+    ];
+    
+    const coresRVs = {
+        'RV0': '#38bdf8',  // Ciano
+        'RV1': '#f97316',  // Laranja
+        'RV2': '#a855f7',  // Roxo
+        'RV3': '#ec4899',  // Rosa
+        'RV4': '#eab308'   // Amarelo
+    };
+    
+    const corRealizado = '#2dd4bf'; // Teal/Turquesa
+    
+    subsistemas.forEach(subInfo => {
+        const subData = dados[subInfo.id];
+        if (!subData) return;
+        
+        const capMax = subData.capacidade_maxima; // Em MWmês
+        
+        // ----------------- RENDERIZAR TABELA COMPARATIVA -----------------
+        const tableElement = document.getElementById(subInfo.tableId);
+        if (tableElement) {
+            let headHtml = `
+                <thead>
+                    <tr>
+                        <th style="text-align: left; font-size: 11px;">Revisão / Real</th>
+                        <th style="text-align: right; font-size: 11px;">Nível (%)</th>
+                        <th style="text-align: right; font-size: 11px;">Energia (MWmês)</th>
+                    </tr>
+                </thead>
+            `;
+            
+            let bodyHtml = '<tbody>';
+            
+            // Previsões de Fechamento por RV
+            const rvs = Object.keys(subData.previsoes).sort();
+            rvs.forEach(rv => {
+                const prevVal = subData.previsoes[rv]; // Em %
+                let displayPct = '-';
+                let displayMw = '-';
+                
+                if (prevVal !== null) {
+                    displayPct = formatNumber(prevVal, 0) + '%';
+                    if (capMax !== null) {
+                        const mwmes = (prevVal / 100) * capMax;
+                        displayMw = formatNumber(mwmes, 0) + ' MWmês';
+                    }
+                }
+                
+                bodyHtml += `
+                    <tr>
+                        <td style="text-align: left; font-weight: 500;">Previsto ${rv}</td>
+                        <td style="text-align: right;">${displayPct}</td>
+                        <td style="text-align: right; color: var(--text-secondary);">${displayMw}</td>
+                    </tr>
+                `;
+            });
+            
+            // Realizado Atual
+            const ultimo = subData.ultimo_realizado;
+            let displayRealPct = '-';
+            let displayRealMw = '-';
+            let labelReal = 'Realizado';
+            
+            if (ultimo && ultimo.percentual !== null) {
+                displayRealPct = formatNumber(ultimo.percentual, 0) + '%';
+                displayRealMw = formatNumber(ultimo.mwmes, 0) + ' MWmês';
+                labelReal = `Realizado Atual (${ultimo.data})`;
+            }
+            
+            bodyHtml += `
+                <tr style="border-top: 1.5px solid rgba(255, 255, 255, 0.1); background: rgba(45, 212, 191, 0.03);">
+                    <td style="text-align: left;"><strong style="color: ${corRealizado};">${labelReal}</strong></td>
+                    <td style="text-align: right; font-weight: 600; color: ${corRealizado};">${displayRealPct}</td>
+                    <td style="text-align: right; font-weight: 600; color: ${corRealizado};">${displayRealMw}</td>
+                </tr>
+            `;
+            
+            bodyHtml += '</tbody>';
+            tableElement.innerHTML = headHtml + bodyHtml;
+        }
+        
+        // ----------------- RENDERIZAR GRÁFICO -----------------
+        const canvas = document.getElementById(subInfo.chartId);
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        
+        // Destrói gráfico anterior se houver
+        if (charts[subInfo.chartRef]) {
+            charts[subInfo.chartRef].destroy();
+        }
+        
+        const datasets = [];
+        
+        // 1. Adiciona as linhas horizontais tracejadas para cada RV (Previsões de Fechamento)
+        const rvs = Object.keys(subData.previsoes).sort();
+        rvs.forEach(rv => {
+            const valPrev = subData.previsoes[rv];
+            if (valPrev !== null) {
+                const corRV = coresRVs[rv] || '#ffffff';
+                
+                // Repete o valor para todos os pontos do gráfico para desenhar a linha horizontal
+                const dataVals = labels.map(() => valPrev);
+                
+                datasets.push({
+                    type: 'line',
+                    label: `Previsto Fechamento ${rv}`,
+                    data: dataVals,
+                    borderColor: corRV,
+                    borderDash: [5, 5],
+                    borderWidth: 1.5,
+                    pointRadius: 0,
+                    pointHoverRadius: 0,
+                    fill: false
+                });
+            }
+        });
+        
+        // 2. Adiciona a linha do Realizado Diário
+        const realizadoData = subData.realizado_percentual;
+        datasets.push({
+            type: 'line',
+            label: 'Realizado Diário',
+            data: realizadoData,
+            borderColor: corRealizado,
+            backgroundColor: 'rgba(45, 212, 191, 0.05)',
+            borderWidth: 3,
+            pointBackgroundColor: corRealizado,
+            pointBorderColor: '#09090b',
+            pointBorderWidth: 1.5,
+            pointRadius: realizadoData.map(v => v !== null ? 2 : 0),
+            pointHoverRadius: 5,
+            tension: 0.1,
+            fill: true,
+            order: -1 // Por cima das linhas tracejadas
+        });
+        
+        // Desenha o gráfico
+        charts[subInfo.chartRef] = new Chart(ctx, {
+            data: {
+                labels: labels,
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+                scales: {
+                    x: {
+                        grid: { color: 'rgba(255, 255, 255, 0.03)' },
+                        ticks: {
+                            color: '#a1a1aa',
+                            font: { family: 'Inter', size: 9 },
+                            maxTicksLimit: 12
+                        }
+                    },
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Nível (%)',
+                            color: '#a1a1aa',
+                            font: { family: 'Inter', size: 10 }
+                        },
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        ticks: {
+                            color: '#a1a1aa',
+                            font: { family: 'Inter', size: 10 },
+                            callback: function(value) { return value + '%'; }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#f4f4f5',
+                            font: { family: 'Inter', size: 9 },
+                            boxWidth: 10,
+                            padding: 8
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: '#18181b',
+                        titleColor: '#f4f4f5',
+                        bodyColor: '#a1a1aa',
+                        borderColor: '#27272a',
+                        borderWidth: 1,
+                        titleFont: { family: 'Inter', weight: 'bold' },
+                        bodyFont: { family: 'Inter' },
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.raw !== null) {
+                                    label += formatNumber(context.raw, 1) + '%';
+                                    
+                                    // Se for o realizado diário, também mostra o valor correspondente em MWmês
+                                    if (context.dataset.label === 'Realizado Diário' && capMax !== null) {
+                                        const mwmes = (context.raw / 100) * capMax;
+                                        label += ` (${formatNumber(mwmes, 0)} MWmês)`;
+                                    }
+                                } else {
+                                    label += 'Sem dados';
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
 }

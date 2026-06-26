@@ -29,7 +29,7 @@ def ler_erro_debug():
     return "Nenhum erro registrado desde a inicialização."
 
 # Importa as rotinas de ETL criadas no etl.py
-from etl import atualizar_balanco_energetico, atualizar_pld, extrair_ampere_pdf, atualizar_negocios_bbce, ler_excel_com_copia
+from etl import atualizar_balanco_energetico, atualizar_pld, extrair_ampere_pdf, atualizar_negocios_bbce, ler_excel_com_copia, atualizar_ena, atualizar_carga, atualizar_ear
 from bbce_scraper import executar_automacao_bbce
 from github_storage import github_read_file, github_write_file, github_file_exists, github_get_file_info, usar_github
 
@@ -42,6 +42,12 @@ PATH_BALANCO = os.path.join(PLANILHAS_DIR, 'f_balanco_energetico.xlsx')
 PATH_PLD = os.path.join(PLANILHAS_DIR, 'f_pld.xlsx')
 PATH_AMPERE = os.path.join(PLANILHAS_DIR, 'f_rodadas_ampere.xlsx')
 PATH_BBCE = os.path.join(PLANILHAS_DIR, 'f_todos_os_negocios_bbce.xlsx')
+PATH_ENA = os.path.join(PLANILHAS_DIR, 'ENA_DIARIO_SUBSISTEMA_2026.xlsx')
+PATH_MLT = os.path.join(PLANILHAS_DIR, 'mlt_2026.xlsx')
+PATH_CARGA = os.path.join(PLANILHAS_DIR, 'CARGA_ENERGIA_2026.xlsx')
+PATH_CARGA_PREVS = os.path.join(PLANILHAS_DIR, 'carga_ONS_RVs.xlsx')
+PATH_EAR = os.path.join(PLANILHAS_DIR, 'EAR_DIARIO_SUBSISTEMA_2026.xlsx')
+PATH_EAR_PREVS = os.path.join(PLANILHAS_DIR, 'ear_ONS_RVs.xlsx')
 
 # Caminhos dos arquivos de cache JSON
 CACHE_BALANCO = os.path.join(PLANILHAS_DIR, 'balanco_cache.json')
@@ -55,6 +61,12 @@ CACHE_AMPERE_RECENT = os.path.join(PLANILHAS_DIR, 'ampere_recent_cache.json')
 CACHE_PLD_HORARIO = os.path.join(PLANILHAS_DIR, 'pld_horario_cache.json')
 CACHE_BBCE = os.path.join(PLANILHAS_DIR, 'bbce_diario_cache.json')
 CACHE_BBCE_RECENT = os.path.join(PLANILHAS_DIR, 'bbce_recent_cache.json')
+CACHE_ENA = os.path.join(PLANILHAS_DIR, 'ena_cache.json')
+CACHE_ENA_RECENT = os.path.join(PLANILHAS_DIR, 'ena_recent_cache.json')
+CACHE_CARGA = os.path.join(PLANILHAS_DIR, 'carga_cache.json')
+CACHE_CARGA_RECENT = os.path.join(PLANILHAS_DIR, 'carga_recent_cache.json')
+CACHE_EAR = os.path.join(PLANILHAS_DIR, 'ear_cache.json')
+CACHE_EAR_RECENT = os.path.join(PLANILHAS_DIR, 'ear_recent_cache.json')
 
 PATH_METADADOS = os.path.join(PLANILHAS_DIR, 'metadata.json')
 
@@ -69,6 +81,9 @@ if os.path.exists(BACKUP_DIR):
         'f_pld.xlsx',
         'f_rodadas_ampere.xlsx',
         'f_todos_os_negocios_bbce.xlsx',
+        'ENA_DIARIO_SUBSISTEMA_2026.xlsx',
+        'CARGA_ENERGIA_2026.xlsx',
+        'EAR_DIARIO_SUBSISTEMA_2026.xlsx',
         'metadata.json'
     ]
     import shutil
@@ -443,6 +458,187 @@ def atualizar_cache_e_metadata_bbce(df=None):
         gc.collect()
 
 
+def atualizar_cache_e_metadata_ena(df=None):
+    """Lê a planilha de ENA, atualiza os caches JSON e reconstrói seu metadado."""
+    print("Atualizando caches e metadados de ENA...")
+    if df is None:
+        if not github_file_exists(PATH_ENA):
+            print("Planilha de ENA não encontrada. Ignorando atualização de cache.")
+            return
+        df = ler_excel_com_copia(PATH_ENA)
+    
+    df = df.copy()
+    
+    if len(df) > 0:
+        # Converter coluna de data para datetime
+        df['ena_data'] = pd.to_datetime(df['ena_data'])
+        df_sorted = df.sort_values(by='ena_data').copy()
+        
+        # Gera o cache estruturado para os 4 gráficos (Norte, Nordeste, Sul, Sudeste/Centro-Oeste)
+        cache_data = {}
+        for sub in ['N', 'NE', 'S', 'SE']:
+            df_sub = df_sorted[df_sorted['id_subsistema'] == sub]
+            cache_data[sub] = {
+                'labels': df_sub['ena_data'].dt.strftime('%Y-%m-%d').tolist(),
+                'ena_bruta_mwmed': df_sub['ena_bruta_regiao_mwmed'].round(2).tolist(),
+                'ena_bruta_percentualmlt': df_sub['ena_bruta_regiao_percentualmlt'].round(2).tolist(),
+                'ena_armazenavel_mwmed': df_sub['ena_armazenavel_regiao_mwmed'].round(2).tolist(),
+                'ena_armazenavel_percentualmlt': df_sub['ena_armazenavel_regiao_percentualmlt'].round(2).tolist(),
+                'nom_subsistema': df_sub['nom_subsistema'].iloc[0] if len(df_sub) > 0 else sub
+            }
+            
+        github_write_file(CACHE_ENA, json.dumps(cache_data, ensure_ascii=False, indent=2).encode('utf-8'))
+        
+        # Cache Recente (100 linhas brutas para a tabela de Auditoria)
+        df_recent = df.sort_values(by='ena_data', ascending=False).head(100).copy()
+        df_recent['ena_data'] = df_recent['ena_data'].dt.strftime('%d/%m/%Y')
+        df_recent = df_recent.fillna("")
+        data_recent = df_recent.to_dict(orient='records')
+        github_write_file(CACHE_ENA_RECENT, json.dumps(data_recent, ensure_ascii=False, indent=2).encode('utf-8'))
+        
+        # Metadados
+        max_date = df['ena_data'].max().strftime('%d/%m/%Y')
+        
+        if github_file_exists(PATH_METADADOS):
+            conteudo_meta = github_read_file(PATH_METADADOS)
+            meta = json.loads(conteudo_meta.decode('utf-8'))
+        else:
+            meta = {}
+            
+        info_ena = github_get_file_info(PATH_ENA)
+        meta['ena'] = {
+            'linhas': len(df),
+            'max_data': max_date,
+            'tamanho': info_ena['tamanho'],
+            'modificado': info_ena['modificado']
+        }
+        
+        github_write_file(PATH_METADADOS, json.dumps(meta, ensure_ascii=False, indent=2).encode('utf-8'))
+        print("Caches e metadados de ENA atualizados.")
+        
+        import gc
+        gc.collect()
+
+
+def atualizar_cache_e_metadata_carga(df=None):
+    """Lê a planilha de Carga, atualiza os caches JSON e reconstrói seu metadado."""
+    print("Atualizando caches e metadados de Carga...")
+    if df is None:
+        if not github_file_exists(PATH_CARGA):
+            print("Planilha de Carga não encontrada. Ignorando atualização de cache.")
+            return
+        df = ler_excel_com_copia(PATH_CARGA)
+    
+    df = df.copy()
+    
+    if len(df) > 0:
+        # Converter coluna de data para datetime
+        df['din_instante'] = pd.to_datetime(df['din_instante'])
+        df_sorted = df.sort_values(by='din_instante').copy()
+        
+        # Gera o cache estruturado para os 4 gráficos (Norte, Nordeste, Sul, Sudeste/Centro-Oeste)
+        cache_data = {}
+        for sub in ['N', 'NE', 'S', 'SE']:
+            df_sub = df_sorted[df_sorted['id_subsistema'] == sub]
+            cache_data[sub] = {
+                'labels': df_sub['din_instante'].dt.strftime('%Y-%m-%d').tolist(),
+                'carga_mwmed': df_sub['val_cargaenergiamwmed'].round(2).tolist(),
+                'nom_subsistema': df_sub['nom_subsistema'].iloc[0] if len(df_sub) > 0 else sub
+            }
+            
+        github_write_file(CACHE_CARGA, json.dumps(cache_data, ensure_ascii=False, indent=2).encode('utf-8'))
+        
+        # Cache Recente (100 linhas brutas para a tabela de Auditoria)
+        df_recent = df.sort_values(by='din_instante', ascending=False).head(100).copy()
+        df_recent['din_instante'] = df_recent['din_instante'].dt.strftime('%d/%m/%Y')
+        df_recent = df_recent.fillna("")
+        data_recent = df_recent.to_dict(orient='records')
+        github_write_file(CACHE_CARGA_RECENT, json.dumps(data_recent, ensure_ascii=False, indent=2).encode('utf-8'))
+        
+        # Metadados
+        max_date = df['din_instante'].max().strftime('%d/%m/%Y')
+        
+        if github_file_exists(PATH_METADADOS):
+            conteudo_meta = github_read_file(PATH_METADADOS)
+            meta = json.loads(conteudo_meta.decode('utf-8'))
+        else:
+            meta = {}
+            
+        info_carga = github_get_file_info(PATH_CARGA)
+        meta['carga'] = {
+            'linhas': len(df),
+            'max_data': max_date,
+            'tamanho': info_carga['tamanho'],
+            'modificado': info_carga['modificado']
+        }
+        
+        github_write_file(PATH_METADADOS, json.dumps(meta, ensure_ascii=False, indent=2).encode('utf-8'))
+        print("Caches e metadados de Carga atualizados.")
+        
+        import gc
+        gc.collect()
+
+
+def atualizar_cache_e_metadata_ear(df=None):
+    """Lê a planilha de EAR, atualiza os caches JSON e reconstrói seu metadado."""
+    print("Atualizando caches e metadados de EAR...")
+    if df is None:
+        if not github_file_exists(PATH_EAR):
+            print("Planilha de EAR não encontrada. Ignorando atualização de cache.")
+            return
+        df = ler_excel_com_copia(PATH_EAR)
+    
+    df = df.copy()
+    
+    if len(df) > 0:
+        # Converter coluna de data para datetime
+        df['ear_data'] = pd.to_datetime(df['ear_data'])
+        df_sorted = df.sort_values(by='ear_data').copy()
+        
+        # Gera o cache estruturado para os 4 gráficos (Norte, Nordeste, Sul, Sudeste/Centro-Oeste)
+        cache_data = {}
+        for sub in ['N', 'NE', 'S', 'SE']:
+            df_sub = df_sorted[df_sorted['id_subsistema'] == sub]
+            cache_data[sub] = {
+                'labels': df_sub['ear_data'].dt.strftime('%Y-%m-%d').tolist(),
+                'ear_verif_percentual': df_sub['ear_verif_subsistema_percentual'].round(2).tolist(),
+                'ear_verif_mwmes': df_sub['ear_verif_subsistema_mwmes'].round(2).tolist(),
+                'nom_subsistema': df_sub['nom_subsistema'].iloc[0] if len(df_sub) > 0 else sub
+            }
+            
+        github_write_file(CACHE_EAR, json.dumps(cache_data, ensure_ascii=False, indent=2).encode('utf-8'))
+        
+        # Cache Recente (100 linhas brutas para a tabela de Auditoria)
+        df_recent = df.sort_values(by='ear_data', ascending=False).head(100).copy()
+        df_recent['ear_data'] = df_recent['ear_data'].dt.strftime('%d/%m/%Y')
+        df_recent = df_recent.fillna("")
+        data_recent = df_recent.to_dict(orient='records')
+        github_write_file(CACHE_EAR_RECENT, json.dumps(data_recent, ensure_ascii=False, indent=2).encode('utf-8'))
+        
+        # Metadados
+        max_date = df['ear_data'].max().strftime('%d/%m/%Y')
+        
+        if github_file_exists(PATH_METADADOS):
+            conteudo_meta = github_read_file(PATH_METADADOS)
+            meta = json.loads(conteudo_meta.decode('utf-8'))
+        else:
+            meta = {}
+            
+        info_ear = github_get_file_info(PATH_EAR)
+        meta['ear'] = {
+            'linhas': len(df),
+            'max_data': max_date,
+            'tamanho': info_ear['tamanho'],
+            'modificado': info_ear['modificado']
+        }
+        
+        github_write_file(PATH_METADADOS, json.dumps(meta, ensure_ascii=False, indent=2).encode('utf-8'))
+        print("Caches e metadados de EAR atualizados.")
+        
+        import gc
+        gc.collect()
+
+
 # ----------------- ROTAS FRONTEND -----------------
 
 @app.route('/')
@@ -480,6 +676,66 @@ def update_balanco():
         tb = traceback.format_exc()
         salvar_erro_debug(tb)
         print(f"[DEBUG ERROR] Ocorreu uma exceção no balanço:\n{tb}")
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+
+@app.route('/api/update/ena', methods=['POST'])
+def update_ena_ons():
+    if usar_github():
+        return jsonify({'success': False, 'message': 'Atualizações automáticas suspensas na nuvem. Execute a atualização local para sincronizar os dados.'}), 403
+    try:
+        total_linhas, df_final = atualizar_ena(PATH_ENA)
+        atualizar_cache_e_metadata_ena(df_final)
+        return jsonify({
+            'success': True,
+            'message': f'ENA Diária atualizada com sucesso!',
+            'novos_registros': total_linhas,
+            'total_registros': total_linhas
+        })
+    except Exception as e:
+        tb = traceback.format_exc()
+        salvar_erro_debug(tb)
+        print(f"[DEBUG ERROR] Ocorreu uma exceção na ENA:\n{tb}")
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+
+@app.route('/api/update/carga', methods=['POST'])
+def update_carga_ons():
+    if usar_github():
+        return jsonify({'success': False, 'message': 'Atualizações automáticas suspensas na nuvem. Execute a atualização local para sincronizar os dados.'}), 403
+    try:
+        total_linhas, df_final = atualizar_carga(PATH_CARGA)
+        atualizar_cache_e_metadata_carga(df_final)
+        return jsonify({
+            'success': True,
+            'message': f'Carga Diária atualizada com sucesso!',
+            'novos_registros': total_linhas,
+            'total_registros': total_linhas
+        })
+    except Exception as e:
+        tb = traceback.format_exc()
+        salvar_erro_debug(tb)
+        print(f"[DEBUG ERROR] Ocorreu uma exceção na Carga:\n{tb}")
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+
+@app.route('/api/update/ear', methods=['POST'])
+def update_ear_ons():
+    if usar_github():
+        return jsonify({'success': False, 'message': 'Atualizações automáticas suspensas na nuvem. Execute a atualização local para sincronizar os dados.'}), 403
+    try:
+        total_linhas, df_final = atualizar_ear(PATH_EAR)
+        atualizar_cache_e_metadata_ear(df_final)
+        return jsonify({
+            'success': True,
+            'message': f'EAR Diária atualizada com sucesso!',
+            'novos_registros': total_linhas,
+            'total_registros': total_linhas
+        })
+    except Exception as e:
+        tb = traceback.format_exc()
+        salvar_erro_debug(tb)
+        print(f"[DEBUG ERROR] Ocorreu uma exceção na EAR:\n{tb}")
         return jsonify({'success': False, 'message': str(e)}), 500
 
 
@@ -691,6 +947,662 @@ def get_data_balanco():
         return jsonify({'error': str(e)}), 500
 
 
+@app.route('/api/data/ena', methods=['GET'])
+def get_data_ena():
+    try:
+        if not github_file_exists(CACHE_ENA):
+            atualizar_cache_e_metadata_ena()
+        conteudo_json = github_read_file(CACHE_ENA)
+        data = json.loads(conteudo_json.decode('utf-8'))
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+def obter_nome_mes(mes_num):
+    nomes = {
+        1: 'Janeiro', 2: 'Fevereiro', 3: 'Março', 4: 'Abril',
+        5: 'Maio', 6: 'Junho', 7: 'Julho', 8: 'Agosto',
+        9: 'Setembro', 10: 'Outubro', 11: 'Novembro', 12: 'Dezembro'
+    }
+    return nomes.get(mes_num, 'Mês Desconhecido')
+
+
+def calcular_semanas_operacionais(ano, mes):
+    # Dia 1 do mês indicado
+    dia_1 = datetime.date(ano, mes, 1)
+    wd = dia_1.weekday() # 0=Segunda, ..., 5=Sábado, 6=Domingo
+    
+    # Sábado anterior ou igual ao dia 1
+    if wd >= 5:
+        offset = 5 - wd
+    else:
+        offset = - (wd + 2)
+        
+    inicio_sem1 = dia_1 + datetime.timedelta(days=offset)
+    
+    semanas = []
+    for i in range(5):
+        inicio_sem = inicio_sem1 + datetime.timedelta(days=i*7)
+        fim_sem = inicio_sem + datetime.timedelta(days=6)
+        semanas.append((inicio_sem, fim_sem))
+        
+    return semanas
+
+
+def calcular_dias_intersecao_mes(ini_sem, fim_sem, ano, mes):
+    import calendar
+    inicio_mes = datetime.date(ano, mes, 1)
+    _, ultimo_dia = calendar.monthrange(ano, mes)
+    fim_mes = datetime.date(ano, mes, ultimo_dia)
+    
+    start_inter = max(ini_sem, inicio_mes)
+    end_inter = min(fim_sem, fim_mes)
+    
+    if start_inter <= end_inter:
+        return (end_inter - start_inter).days + 1
+    return 0
+
+
+@app.route('/api/data/ena_comparativo/meses', methods=['GET'])
+def get_meses_comparativo():
+    try:
+        if not os.path.exists(PLANILHAS_DIR):
+            return jsonify([])
+        arquivos = os.listdir(PLANILHAS_DIR)
+        meses = []
+        for arq in arquivos:
+            if arq.startswith('prevs_') and arq.endswith('.xlsx'):
+                partes = arq.replace('prevs_', '').replace('.xlsx', '')
+                if len(partes) == 6:
+                    mes_str = partes[:2]
+                    ano_str = partes[2:]
+                    meses.append({
+                        'id': partes,
+                        'label': f"{obter_nome_mes(int(mes_str))} de {ano_str}"
+                    })
+        # Ordena de forma cronológica decrescente
+        def sort_key(m):
+            return int(m['id'][2:]) * 100 + int(m['id'][:2])
+        meses = sorted(meses, key=sort_key, reverse=True)
+        return jsonify(meses)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/data/ena_comparativo', methods=['GET'])
+def get_ena_comparativo():
+    try:
+        mes_ref = request.args.get('mes') # Ex: '062026'
+        
+        if not mes_ref:
+            # Pega o primeiro disponível de forma inteligente
+            if not os.path.exists(PLANILHAS_DIR):
+                return jsonify({'error': 'Nenhum arquivo de previsões encontrado.'}), 404
+            arquivos = [a for a in os.listdir(PLANILHAS_DIR) if a.startswith('prevs_') and a.endswith('.xlsx')]
+            if not arquivos:
+                return jsonify({'error': 'Nenhum arquivo de previsões encontrado.'}), 404
+            # Ordena e pega o mais recente
+            def sort_key(arq):
+                partes = arq.replace('prevs_', '').replace('.xlsx', '')
+                return int(partes[2:]) * 100 + int(partes[:2])
+            arquivos_sorted = sorted(arquivos, key=sort_key, reverse=True)
+            mes_ref = arquivos_sorted[0].replace('prevs_', '').replace('.xlsx', '')
+            
+        caminho_prevs = os.path.join(PLANILHAS_DIR, f"prevs_{mes_ref}.xlsx")
+        
+        if not github_file_exists(caminho_prevs):
+            return jsonify({'error': f"Arquivo de previsões para o mês {mes_ref} não encontrado."}), 404
+            
+        # Lê a planilha de previsões
+        df_prevs = ler_excel_com_copia(caminho_prevs)
+        
+        # Extrai ano e mês do id '062026'
+        mes_num = int(mes_ref[:2])
+        ano_num = int(mes_ref[2:])
+        
+        # Calcula as 5 semanas operacionais e os pesos
+        semanas = calcular_semanas_operacionais(ano_num, mes_num)
+        pesos = []
+        for ini, fim in semanas:
+            dias_inter = calcular_dias_intersecao_mes(ini, fim, ano_num, mes_num)
+            pesos.append(dias_inter)
+        
+        # Formata informações das semanas para o frontend
+        semanas_info = []
+        for i, (ini, fim) in enumerate(semanas):
+            semanas_info.append({
+                'semana': i + 1,
+                'label': f"Semana {i + 1}",
+                'periodo': f"{ini.strftime('%d/%m')} a {fim.strftime('%d/%m')}",
+                'inicio': ini.strftime('%Y-%m-%d'),
+                'fim': fim.strftime('%Y-%m-%d'),
+                'dias_no_mes': pesos[i]
+            })
+            
+        # Lê a planilha de MLT para obter a MLT correspondente
+        mlt_valores = {}
+        if github_file_exists(PATH_MLT):
+            df_mlt = ler_excel_com_copia(PATH_MLT)
+            if len(df_mlt) > 0:
+                df_mlt['MÊS_dt'] = pd.to_datetime(df_mlt.iloc[:, 0])
+                linha = df_mlt[(df_mlt['MÊS_dt'].dt.year == ano_num) & (df_mlt['MÊS_dt'].dt.month == mes_num)]
+                if len(linha) > 0:
+                    mlt_valores = {
+                        'SE': float(linha['SUDESTE'].iloc[0]),
+                        'S': float(linha['SUL'].iloc[0]),
+                        'NE': float(linha['NORDESTE'].iloc[0]),
+                        'N': float(linha['NORTE'].iloc[0])
+                    }
+
+        # Carrega a base diária de ENA realizada para calcular as médias reais
+        df_ena = pd.DataFrame()
+        if github_file_exists(PATH_ENA):
+            df_ena = ler_excel_com_copia(PATH_ENA)
+            if len(df_ena) > 0:
+                df_ena['ena_data'] = pd.to_datetime(df_ena['ena_data']).dt.date
+                
+        # Mapeamento do submercado
+        sub_map = {
+            'SUDESTE': 'SE',
+            'SUL': 'S',
+            'NORDESTE': 'NE',
+            'NORTE': 'N'
+        }
+        
+        dados = {}
+        for sub_nome, sub_id in sub_map.items():
+            # Filtra previsões daquele subsistema
+            df_sub_prevs = df_prevs[df_prevs['SUBMERCADO'].str.upper() == sub_nome].copy()
+            
+            previsoes = {}
+            for _, r in df_sub_prevs.iterrows():
+                rv_nome = str(r['rvx']).strip()
+                valores_prev = [
+                    float(r['sem1']),
+                    float(r['sem2']),
+                    float(r['sem3']),
+                    float(r['sem4']),
+                    float(r['sem5'])
+                ]
+                
+                # Calcula média mensal ponderada
+                soma_ponderada = sum(v * p for v, p in zip(valores_prev, pesos))
+                total_dias_pesos = sum(pesos)
+                media_mensal_ponderada = round(soma_ponderada / total_dias_pesos, 2) if total_dias_pesos > 0 else 0
+                
+                previsoes[rv_nome] = {
+                    'valores': valores_prev,
+                    'media_mensal': media_mensal_ponderada
+                }
+                
+            # Calcula realizados para esse subsistema nas 5 semanas
+            realizado_bruta_valores = []
+            realizado_armazenavel_valores = []
+            
+            df_sub_ena = pd.DataFrame()
+            if len(df_ena) > 0:
+                df_sub_ena = df_ena[df_ena['id_subsistema'] == sub_id].copy()
+                
+            for ini, fim in semanas:
+                if len(df_sub_ena) > 0:
+                    df_sem = df_sub_ena[(df_sub_ena['ena_data'] >= ini) & (df_sub_ena['ena_data'] <= fim)]
+                    if len(df_sem) > 0:
+                        realizado_bruta_valores.append(round(float(df_sem['ena_bruta_regiao_mwmed'].mean()), 2))
+                        realizado_armazenavel_valores.append(round(float(df_sem['ena_armazenavel_regiao_mwmed'].mean()), 2))
+                    else:
+                        realizado_bruta_valores.append(None)
+                        realizado_armazenavel_valores.append(None)
+                else:
+                    realizado_bruta_valores.append(None)
+                    realizado_armazenavel_valores.append(None)
+            
+            # Calcula médias mensais ponderadas acumuladas para os realizados
+            # Bruta
+            soma_bruta = sum(v * p for v, p in zip(realizado_bruta_valores, pesos) if v is not None)
+            peso_bruta = sum(p for v, p in zip(realizado_bruta_valores, pesos) if v is not None)
+            media_bruta = round(soma_bruta / peso_bruta, 2) if peso_bruta > 0 else None
+            
+            # Armazenável
+            soma_armazenavel = sum(v * p for v, p in zip(realizado_armazenavel_valores, pesos) if v is not None)
+            peso_armazenavel = sum(p for v, p in zip(realizado_armazenavel_valores, pesos) if v is not None)
+            media_armazenavel = round(soma_armazenavel / peso_armazenavel, 2) if peso_armazenavel > 0 else None
+            
+            dados[sub_id] = {
+                'mlt': mlt_valores.get(sub_id, None),
+                'previsoes': previsoes,
+                'realizado_bruta': {
+                    'valores': realizado_bruta_valores,
+                    'media_mensal': media_bruta
+                },
+                'realizado_armazenavel': {
+                    'valores': realizado_armazenavel_valores,
+                    'media_mensal': media_armazenavel
+                }
+            }
+            
+        retorno = {
+            'mes_referencia': mes_ref,
+            'semanas_info': semanas_info,
+            'dados': dados
+        }
+        
+        return jsonify(retorno)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+def converter_mes_carga(mes_str):
+    # mes_str ex: 'JUN_2026' ou 'JUN/2026' ou 'JUN2026'
+    mes_str = str(mes_str).upper().replace('/', '_').replace('-', '_')
+    partes = mes_str.split('_')
+    if len(partes) != 2:
+        import re
+        m = re.match(r'([A-Z]{3})(\d{4})', mes_str)
+        if m:
+            mes_nome, ano_str = m.groups()
+        else:
+            raise ValueError(f"Formato de mês inválido: {mes_str}")
+    else:
+        mes_nome, ano_str = partes[0], partes[1]
+        
+    meses_map = {
+        'JAN': '01', 'FEV': '02', 'MAR': '03', 'ABR': '04', 'MAI': '05', 'JUN': '06',
+        'JUL': '07', 'AGO': '08', 'SET': '09', 'OUT': '10', 'NOV': '11', 'DEZ': '12'
+    }
+    
+    mes_num = meses_map.get(mes_nome)
+    if not mes_num:
+        raise ValueError(f"Mês não reconhecido: {mes_nome}")
+        
+    return f"{mes_num}{ano_str}"
+
+
+def converter_id_para_mes_carga(mes_id):
+    # mes_id ex: '062026'
+    mes_num = mes_id[:2]
+    ano_str = mes_id[2:]
+    
+    meses_rev_map = {
+        '01': 'JAN', '02': 'FEV', '03': 'MAR', '04': 'ABR', '05': 'MAI', '06': 'JUN',
+        '07': 'JUL', '08': 'AGO', '09': 'SET', '10': 'OUT', '11': 'NOV', '12': 'DEZ'
+    }
+    
+    mes_nome = meses_rev_map.get(mes_num)
+    if not mes_nome:
+        raise ValueError(f"ID de mês inválido: {mes_id}")
+        
+    return f"{mes_nome}_{ano_str}"
+
+
+@app.route('/api/data/carga_comparativo/meses', methods=['GET'])
+def get_carga_meses_comparativo():
+    try:
+        if not github_file_exists(PATH_CARGA_PREVS):
+            return jsonify([])
+        
+        df_prevs = ler_excel_com_copia(PATH_CARGA_PREVS)
+        if len(df_prevs) == 0:
+            return jsonify([])
+            
+        col_mes_nome = df_prevs.columns[9]
+        meses_unicos = df_prevs[col_mes_nome].dropna().unique().tolist()
+        
+        meses = []
+        for mes_str in meses_unicos:
+            try:
+                mes_id = converter_mes_carga(mes_str)
+                mes_num = int(mes_id[:2])
+                ano_str = mes_id[2:]
+                meses.append({
+                    'id': mes_id,
+                    'label': f"{obter_nome_mes(mes_num)} de {ano_str}"
+                })
+            except Exception as ex:
+                print(f"Erro ao converter mes '{mes_str}': {str(ex)}")
+                
+        # Ordena de forma cronológica decrescente
+        def sort_key(m):
+            return int(m['id'][2:]) * 100 + int(m['id'][:2])
+        meses = sorted(meses, key=sort_key, reverse=True)
+        return jsonify(meses)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/data/carga_comparativo', methods=['GET'])
+def get_carga_comparativo():
+    try:
+        mes_ref = request.args.get('mes') # Ex: '062026'
+        
+        if not mes_ref:
+            if not github_file_exists(PATH_CARGA_PREVS):
+                return jsonify({'error': 'Arquivo de previsões de carga não encontrado.'}), 404
+            df_prevs = ler_excel_com_copia(PATH_CARGA_PREVS)
+            if len(df_prevs) == 0:
+                return jsonify({'error': 'Arquivo de previsões de carga vazio.'}), 404
+            col_mes_nome = df_prevs.columns[9]
+            meses_unicos = df_prevs[col_mes_nome].dropna().unique().tolist()
+            if not meses_unicos:
+                return jsonify({'error': 'Nenhum mês de previsões de carga encontrado.'}), 404
+            
+            def sort_key_str(m_str):
+                try:
+                    m_id = converter_mes_carga(m_str)
+                    return int(m_id[2:]) * 100 + int(m_id[:2])
+                except:
+                    return 0
+            meses_unicos_sorted = sorted(meses_unicos, key=sort_key_str, reverse=True)
+            mes_ref = converter_mes_carga(meses_unicos_sorted[0])
+            
+        if not github_file_exists(PATH_CARGA_PREVS):
+            return jsonify({'error': f"Arquivo de previsões de carga não encontrado."}), 404
+            
+        df_prevs = ler_excel_com_copia(PATH_CARGA_PREVS)
+        
+        # Extrai ano e mês do id '062026'
+        mes_num = int(mes_ref[:2])
+        ano_num = int(mes_ref[2:])
+        
+        # Converte o mes_ref de volta para o formato de string do excel (ex: 'JUN_2026')
+        mes_excel_str = converter_id_para_mes_carga(mes_ref)
+        
+        # Filtra a planilha de previsões para o mês de referência
+        col_mes_nome = df_prevs.columns[9]
+        df_mes_prevs = df_prevs[df_prevs[col_mes_nome].str.upper() == mes_excel_str.upper()].copy()
+        
+        if len(df_mes_prevs) == 0:
+            return jsonify({'error': f"Nenhuma previsão encontrada para o mês {mes_ref} ({mes_excel_str})."}), 404
+            
+        # Calcula as 5 semanas operacionais e os pesos
+        semanas = calcular_semanas_operacionais(ano_num, mes_num)
+        pesos = []
+        for ini, fim in semanas:
+            dias_inter = calcular_dias_intersecao_mes(ini, fim, ano_num, mes_num)
+            pesos.append(dias_inter)
+            
+        # Formata informações das semanas para o frontend
+        semanas_info = []
+        for i, (ini, fim) in enumerate(semanas):
+            semanas_info.append({
+                'semana': i + 1,
+                'label': f"Semana {i + 1}",
+                'periodo': f"{ini.strftime('%d/%m')} a {fim.strftime('%d/%m')}",
+                'inicio': ini.strftime('%Y-%m-%d'),
+                'fim': fim.strftime('%Y-%m-%d'),
+                'dias_no_mes': pesos[i]
+            })
+            
+        # Carrega a base diária de Carga realizada para calcular as médias reais
+        df_carga = pd.DataFrame()
+        if github_file_exists(PATH_CARGA):
+            df_carga = ler_excel_com_copia(PATH_CARGA)
+            if len(df_carga) > 0:
+                df_carga['din_instante'] = pd.to_datetime(df_carga['din_instante']).dt.date
+                
+        # Mapeamento do submercado
+        sub_map = {
+            'SIN': 'SIN',
+            'SUDESTE': 'SE',
+            'SUL': 'S',
+            'NORDESTE': 'NE',
+            'NORTE': 'N'
+        }
+        
+        dados = {}
+        for sub_nome, sub_id in sub_map.items():
+            df_sub_prevs = df_mes_prevs[df_mes_prevs['SUBMERCADO'].str.upper() == sub_nome].copy()
+            
+            previsoes = {}
+            for _, r in df_sub_prevs.iterrows():
+                rv_nome = str(r['rvx']).strip()
+                valores_prev = [
+                    float(r['sem1']) if pd.notna(r['sem1']) else 0.0,
+                    float(r['sem2']) if pd.notna(r['sem2']) else 0.0,
+                    float(r['sem3']) if pd.notna(r['sem3']) else 0.0,
+                    float(r['sem4']) if pd.notna(r['sem4']) else 0.0,
+                    float(r['sem5']) if pd.notna(r['sem5']) else 0.0
+                ]
+                
+                # Calcula média mensal ponderada
+                soma_ponderada = sum(v * p for v, p in zip(valores_prev, pesos))
+                total_dias_pesos = sum(pesos)
+                media_mensal_ponderada = round(soma_ponderada / total_dias_pesos, 2) if total_dias_pesos > 0 else 0
+                
+                previsoes[rv_nome] = {
+                    'valores': [round(v) for v in valores_prev],
+                    'media_mensal': round(media_mensal_ponderada)
+                }
+                
+            # Calcula realizados para esse subsistema nas 5 semanas
+            realizado_valores = []
+            
+            df_sub_carga = pd.DataFrame()
+            if len(df_carga) > 0:
+                if sub_id == 'SIN':
+                    df_sub_carga = df_carga.groupby('din_instante')['val_cargaenergiamwmed'].sum().reset_index()
+                else:
+                    df_sub_carga = df_carga[df_carga['id_subsistema'] == sub_id].copy()
+                
+            for ini, fim in semanas:
+                if len(df_sub_carga) > 0:
+                    df_sem = df_sub_carga[(df_sub_carga['din_instante'] >= ini) & (df_sub_carga['din_instante'] <= fim)]
+                    if len(df_sem) > 0:
+                        # Desconsidera valores nulos, NaN ou zero no cálculo da média diária semanal
+                        df_sem_valido = df_sem[(df_sem['val_cargaenergiamwmed'] > 0) & (df_sem['val_cargaenergiamwmed'].notna())]
+                        if len(df_sem_valido) > 0:
+                            realizado_valores.append(round(float(df_sem_valido['val_cargaenergiamwmed'].mean()), 2))
+                        else:
+                            realizado_valores.append(None)
+                    else:
+                        realizado_valores.append(None)
+                else:
+                    realizado_valores.append(None)
+                    
+            # Média mensal ponderada acumulada para o realizado
+            soma_realizado = sum(v * p for v, p in zip(realizado_valores, pesos) if v is not None)
+            peso_realizado = sum(p for v, p in zip(realizado_valores, pesos) if v is not None)
+            media_realizado = round(soma_realizado / peso_realizado, 2) if peso_realizado > 0 else None
+            
+            realizado_valores_arred = [round(v) if v is not None else None for v in realizado_valores]
+            media_realizado_arred = round(media_realizado) if media_realizado is not None else None
+            
+            dados[sub_id] = {
+                'previsoes': previsoes,
+                'realizado': {
+                    'valores': realizado_valores_arred,
+                    'media_mensal': media_realizado_arred
+                }
+            }
+            
+        retorno = {
+            'mes_referencia': mes_ref,
+            'semanas_info': semanas_info,
+            'dados': dados
+        }
+        
+        return jsonify(retorno)
+    except Exception as e:
+        tb = traceback.format_exc()
+        print(f"Erro em get_carga_comparativo:\n{tb}")
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/data/ear_comparativo/meses', methods=['GET'])
+def get_ear_meses_comparativo():
+    try:
+        if not github_file_exists(PATH_EAR_PREVS):
+            return jsonify([])
+        
+        df_prevs = ler_excel_com_copia(PATH_EAR_PREVS)
+        if len(df_prevs) == 0:
+            return jsonify([])
+            
+        col_mes_nome = df_prevs.columns[4]
+        meses_unicos = df_prevs[col_mes_nome].dropna().unique().tolist()
+        
+        meses = []
+        for mes_str in meses_unicos:
+            try:
+                mes_id = converter_mes_carga(mes_str)
+                mes_num = int(mes_id[:2])
+                ano_str = mes_id[2:]
+                meses.append({
+                    'id': mes_id,
+                    'label': f"{obter_nome_mes(mes_num)} de {ano_str}"
+                })
+            except Exception as ex:
+                print(f"Erro ao converter mes '{mes_str}' em EAR: {str(ex)}")
+                
+        # Ordena de forma cronológica decrescente
+        def sort_key(m):
+            return int(m['id'][2:]) * 100 + int(m['id'][:2])
+        meses = sorted(meses, key=sort_key, reverse=True)
+        return jsonify(meses)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/data/ear_comparativo', methods=['GET'])
+def get_ear_comparativo():
+    try:
+        mes_ref = request.args.get('mes') # Ex: '062026'
+        
+        if not mes_ref:
+            if not github_file_exists(PATH_EAR_PREVS):
+                return jsonify({'error': 'Arquivo de previsões de EAR não encontrado.'}), 404
+            df_prevs = ler_excel_com_copia(PATH_EAR_PREVS)
+            if len(df_prevs) == 0:
+                return jsonify({'error': 'Arquivo de previsões de EAR vazio.'}), 404
+            col_mes_nome = df_prevs.columns[4]
+            meses_unicos = df_prevs[col_mes_nome].dropna().unique().tolist()
+            if not meses_unicos:
+                return jsonify({'error': 'Nenhum mês de previsões de EAR encontrado.'}), 404
+            
+            def sort_key_str(m_str):
+                try:
+                    m_id = converter_mes_carga(m_str)
+                    return int(m_id[2:]) * 100 + int(m_id[:2])
+                except:
+                    return 0
+            meses_unicos_sorted = sorted(meses_unicos, key=sort_key_str, reverse=True)
+            mes_ref = converter_mes_carga(meses_unicos_sorted[0])
+            
+        if not github_file_exists(PATH_EAR_PREVS):
+            return jsonify({'error': f"Arquivo de previsões de EAR não encontrado."}), 404
+            
+        df_prevs = ler_excel_com_copia(PATH_EAR_PREVS)
+        
+        # Extrai ano e mês do id '062026'
+        mes_num = int(mes_ref[:2])
+        ano_num = int(mes_ref[2:])
+        
+        # Converte o mes_ref de volta para o formato de string do excel (ex: 'JUN_2026')
+        mes_excel_str = converter_id_para_mes_carga(mes_ref)
+        
+        # Filtra a planilha de previsões para o mês de referência
+        col_mes_nome = df_prevs.columns[4]
+        df_mes_prevs = df_prevs[df_prevs[col_mes_nome].str.upper() == mes_excel_str.upper()].copy()
+        
+        if len(df_mes_prevs) == 0:
+            return jsonify({'error': f"Nenhuma previsão encontrada para o mês {mes_ref} ({mes_excel_str})."}), 404
+            
+        # Calcula todos os dias do mês calendário
+        import calendar
+        _, num_dias = calendar.monthrange(ano_num, mes_num)
+        dias_mes = [datetime.date(ano_num, mes_num, d) for d in range(1, num_dias + 1)]
+        dias_labels = [d.strftime('%Y-%m-%d') for d in dias_mes]
+        
+        # Carrega a base diária de EAR realizada
+        df_ear = pd.DataFrame()
+        if github_file_exists(PATH_EAR):
+            df_ear = ler_excel_com_copia(PATH_EAR)
+            if len(df_ear) > 0:
+                df_ear['ear_data'] = pd.to_datetime(df_ear['ear_data']).dt.date
+                
+        # Mapeamento do submercado
+        sub_map = {
+            'SUDESTE': 'SE',
+            'SUL': 'S',
+            'NORDESTE': 'NE',
+            'NORTE': 'N'
+        }
+        
+        dados = {}
+        for sub_nome, sub_id in sub_map.items():
+            df_sub_prevs = df_mes_prevs[df_mes_prevs['SUBMERCADO'].str.upper() == sub_nome].copy()
+            
+            # Previsões de fechamento de mês por RV
+            previsoes = {}
+            col_ear_max_nome = df_prevs.columns[1] # 'EAR Mêx' ou 'EAR Máx'
+            for _, r in df_sub_prevs.iterrows():
+                rv_nome = str(r['rvx']).strip()
+                val_prev = float(r[col_ear_max_nome]) if pd.notna(r[col_ear_max_nome]) else None
+                previsoes[rv_nome] = round(val_prev, 2) if val_prev is not None else None
+                
+            # Filtra realizado do subsistema para o mês
+            df_sub_ear = pd.DataFrame()
+            if len(df_ear) > 0:
+                df_sub_ear = df_ear[df_ear['id_subsistema'] == sub_id].copy()
+                
+            realizado_pct = []
+            realizado_mwmes = []
+            capacidades = []
+            
+            ultimo_val_pct = None
+            ultimo_val_mwmes = None
+            ultimo_dia_str = "-"
+            
+            for d in dias_mes:
+                df_dia = pd.DataFrame()
+                if len(df_sub_ear) > 0:
+                    df_dia = df_sub_ear[df_sub_ear['ear_data'] == d]
+                    
+                if len(df_dia) > 0:
+                    pct = float(df_dia['ear_verif_subsistema_percentual'].iloc[0])
+                    mwmes = float(df_dia['ear_verif_subsistema_mwmes'].iloc[0])
+                    cap = float(df_dia['ear_max_subsistema'].iloc[0])
+                    
+                    realizado_pct.append(round(pct, 2) if pd.notna(pct) else None)
+                    realizado_mwmes.append(round(mwmes, 2) if pd.notna(mwmes) else None)
+                    if pd.notna(cap):
+                        capacidades.append(cap)
+                        
+                    if pd.notna(pct):
+                        ultimo_val_pct = round(pct, 2)
+                        ultimo_val_mwmes = round(mwmes, 2)
+                        ultimo_dia_str = d.strftime('%d/%m')
+                else:
+                    realizado_pct.append(None)
+                    realizado_mwmes.append(None)
+                    
+            capacidade_maxima = round(sum(capacidades) / len(capacidades), 2) if capacidades else None
+            
+            dados[sub_id] = {
+                'previsoes': previsoes,
+                'realizado_percentual': realizado_pct,
+                'realizado_mwmes': realizado_mwmes,
+                'capacidade_maxima': capacidade_maxima,
+                'ultimo_realizado': {
+                    'data': ultimo_dia_str,
+                    'percentual': ultimo_val_pct,
+                    'mwmes': ultimo_val_mwmes
+                }
+            }
+            
+        retorno = {
+            'mes_referencia': mes_ref,
+            'dias': dias_labels,
+            'dados': dados
+        }
+        
+        return jsonify(retorno)
+    except Exception as e:
+        tb = traceback.format_exc()
+        print(f"Erro em get_ear_comparativo:\n{tb}")
+        return jsonify({'error': str(e)}), 500
+
+
 @app.route('/api/data/pld', methods=['GET'])
 def get_data_pld():
     try:
@@ -762,6 +1674,18 @@ def get_data_view(base):
             cache_path = CACHE_BBCE_RECENT
             if not github_file_exists(cache_path):
                 atualizar_cache_e_metadata_bbce()
+        elif base == 'ena':
+            cache_path = CACHE_ENA_RECENT
+            if not github_file_exists(cache_path):
+                atualizar_cache_e_metadata_ena()
+        elif base == 'carga':
+            cache_path = CACHE_CARGA_RECENT
+            if not github_file_exists(cache_path):
+                atualizar_cache_e_metadata_carga()
+        elif base == 'ear':
+            cache_path = CACHE_EAR_RECENT
+            if not github_file_exists(cache_path):
+                atualizar_cache_e_metadata_ear()
         else:
             return jsonify({'error': 'Base inválida.'}), 400
             

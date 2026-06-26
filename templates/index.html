@@ -39,6 +39,15 @@
                 <button class="nav-btn" data-tab="pld">
                     <i class="fa-solid fa-circle-dollar-to-slot"></i> PLD Diário
                 </button>
+                <button class="nav-btn" data-tab="ena">
+                    <i class="fa-solid fa-droplet"></i> ENA
+                </button>
+                <button class="nav-btn" data-tab="carga">
+                    <i class="fa-solid fa-bolt"></i> Carga
+                </button>
+                <button class="nav-btn" data-tab="ear">
+                    <i class="fa-solid fa-water"></i> Reservatório (EAR)
+                </button>
                 <button class="nav-btn" data-tab="ampere">
                     <i class="fa-solid fa-magnifying-glass-chart"></i> Projeções Ampere
                 </button>
@@ -125,6 +134,63 @@
                             </div>
                         </div>
                         
+                        <!-- Card ENA -->
+                        <div class="glass-card info-card">
+                            <div class="card-header">
+                                <div class="card-icon-wrapper bg-blue">
+                                    <i class="fa-solid fa-droplet"></i>
+                                </div>
+                                <span class="card-badge badge-blue">ONS</span>
+                            </div>
+                            <h3>ENA</h3>
+                            <div class="card-metric">
+                                <span class="metric-label">Último Dado:</span>
+                                <span class="metric-value" id="status-ena-data">-</span>
+                            </div>
+                            <div class="card-footer">
+                                <div><i class="fa-regular fa-folder"></i> <span id="status-ena-tamanho">-</span></div>
+                                <div><i class="fa-solid fa-database"></i> <span id="status-ena-linhas">-</span> lin</div>
+                            </div>
+                        </div>
+
+                        <!-- Card Carga -->
+                        <div class="glass-card info-card">
+                            <div class="card-header">
+                                <div class="card-icon-wrapper bg-yellow">
+                                    <i class="fa-solid fa-bolt"></i>
+                                </div>
+                                <span class="card-badge badge-yellow">ONS</span>
+                            </div>
+                            <h3>Carga</h3>
+                            <div class="card-metric">
+                                <span class="metric-label">Último Dado:</span>
+                                <span class="metric-value" id="status-carga-data">-</span>
+                            </div>
+                            <div class="card-footer">
+                                <div><i class="fa-regular fa-folder"></i> <span id="status-carga-tamanho">-</span></div>
+                                <div><i class="fa-solid fa-database"></i> <span id="status-carga-linhas">-</span> lin</div>
+                            </div>
+                        </div>
+
+                        <!-- Card Reservatório (EAR) -->
+                        <div class="glass-card info-card">
+                            <div class="card-header">
+                                <div class="card-icon-wrapper bg-teal">
+                                    <i class="fa-solid fa-water"></i>
+                                </div>
+                                <span class="card-badge badge-teal">ONS</span>
+                            </div>
+                            <h3>Reservatório (EAR)</h3>
+                            <div class="card-metric">
+                                <span class="metric-label">Último Dado:</span>
+                                <span class="metric-value" id="status-ear-data">-</span>
+                            </div>
+                            <div class="card-footer">
+                                <div><i class="fa-regular fa-folder"></i> <span id="status-ear-tamanho">-</span></div>
+                                <div><i class="fa-solid fa-database"></i> <span id="status-ear-linhas">-</span> lin</div>
+                            </div>
+                        </div>
+
                         <!-- Card Ampere -->
                         <div class="glass-card info-card">
                             <div class="card-header">
@@ -603,6 +669,371 @@
                     </div>
                 </div>
                 
+                <!-- TAB: ENA DIÁRIA -->
+                <div class="tab-pane" id="tab-ena">
+                    <!-- Sub-abas da ENA -->
+                    <div class="subtab-bar">
+                        <button class="subtab-btn active" id="subtab-ena-historico" onclick="switchEnaModo('historico')">
+                            <i class="fa-solid fa-chart-line"></i> Histórico Diário
+                        </button>
+                        <button class="subtab-btn" id="subtab-ena-comparativo" onclick="switchEnaModo('comparativo')">
+                            <i class="fa-solid fa-code-compare"></i> Previsto vs Realizado (Semanal ONS)
+                        </button>
+                    </div>
+
+                    <!-- PAINEL 1: HISTÓRICO DIÁRIO -->
+                    <div id="ena-painel-historico">
+                        <div class="controls-card glass-card">
+                            <div class="control-group">
+                                <label for="ena-variavel-select">Variável Selecionada:</label>
+                                <select id="ena-variavel-select" onchange="renderEnaCharts()">
+                                    <option value="armazenavel" selected>ENA Armazenável</option>
+                                    <option value="bruta">ENA Bruta</option>
+                                </select>
+                            </div>
+                            <div class="control-group">
+                                <span class="unit-indicator"><i class="fa-solid fa-circle-info" style="color: var(--color-cyan);"></i> MWm no eixo esquerdo (linha contínua) e % MLT no eixo direito (linha tracejada).</span>
+                            </div>
+                        </div>
+
+                        <!-- Grid de 4 Gráficos -->
+                        <div class="ena-charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 20px; margin-bottom: 24px;">
+                            
+                            <!-- Gráfico Sudeste/Centro-Oeste -->
+                            <div class="chart-container-large glass-card">
+                                <div class="chart-title-wrapper">
+                                    <h3>Sudeste / Centro-Oeste</h3>
+                                    <span class="unit-indicator">MWmedio & % MLT (Eixo Duplo)</span>
+                                </div>
+                                <div class="chart-wrapper">
+                                    <canvas id="chart-ena-se"></canvas>
+                                </div>
+                            </div>
+
+                            <!-- Gráfico Sul -->
+                            <div class="chart-container-large glass-card">
+                                <div class="chart-title-wrapper">
+                                    <h3>Sul</h3>
+                                    <span class="unit-indicator">MWmedio & % MLT (Eixo Duplo)</span>
+                                </div>
+                                <div class="chart-wrapper">
+                                    <canvas id="chart-ena-s"></canvas>
+                                </div>
+                            </div>
+
+                            <!-- Gráfico Nordeste -->
+                            <div class="chart-container-large glass-card">
+                                <div class="chart-title-wrapper">
+                                    <h3>Nordeste</h3>
+                                    <span class="unit-indicator">MWmedio & % MLT (Eixo Duplo)</span>
+                                </div>
+                                <div class="chart-wrapper">
+                                    <canvas id="chart-ena-ne"></canvas>
+                                </div>
+                            </div>
+
+                            <!-- Gráfico Norte -->
+                            <div class="chart-container-large glass-card">
+                                <div class="chart-title-wrapper">
+                                    <h3>Norte</h3>
+                                    <span class="unit-indicator">MWmedio & % MLT (Eixo Duplo)</span>
+                                </div>
+                                <div class="chart-wrapper">
+                                    <canvas id="chart-ena-n"></canvas>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- PAINEL 2: PREVISTO VS REALIZADO (SEMANAL ONS) -->
+                    <div id="ena-painel-comparativo" style="display: none;">
+                        <div class="controls-card glass-card">
+                            <div class="control-group">
+                                <label for="ena-comp-mes-select">Mês de Referência:</label>
+                                <select id="ena-comp-mes-select" onchange="loadEnaComparativoData()">
+                                    <!-- Alimentado via JS -->
+                                </select>
+                            </div>
+                            <div class="control-group">
+                                <label for="ena-comp-variavel-select">Variável Realizada:</label>
+                                <select id="ena-comp-variavel-select" onchange="renderEnaComparativoCharts()">
+                                    <option value="armazenavel" selected>ENA Armazenável</option>
+                                    <option value="bruta">ENA Bruta</option>
+                                </select>
+                            </div>
+                            <div class="control-group">
+                                <span class="unit-indicator"><i class="fa-solid fa-circle-info" style="color: var(--color-green);"></i> Barras coloridas indicam as previsões das RVs. Linha contínua verde/ciano indica a média do realizado semanal.</span>
+                            </div>
+                        </div>
+
+                        <!-- Grid de 4 Gráficos de Comparação -->
+                        <div class="ena-charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 20px; margin-bottom: 24px;">
+                            
+                            <!-- Gráfico Comparativo Sudeste/Centro-Oeste -->
+                            <div class="chart-container-large glass-card" style="height: auto; min-height: 520px;">
+                                <div class="chart-title-wrapper">
+                                    <h3>Sudeste / Centro-Oeste - Comparativo Semanal</h3>
+                                    <span class="unit-indicator">Unidade: MWmedio</span>
+                                </div>
+                                <div class="table-container" style="margin-top: 12px; margin-bottom: 18px; overflow-x: auto; border: none; background: transparent;">
+                                    <table class="data-table" id="table-ena-comp-se" style="font-size: 11.5px; width: 100%;">
+                                        <!-- Preenchido dinamicamente por Javascript -->
+                                    </table>
+                                </div>
+                                <div class="chart-wrapper" style="height: 280px;">
+                                    <canvas id="chart-ena-comp-se"></canvas>
+                                </div>
+                            </div>
+
+                            <!-- Gráfico Comparativo Sul -->
+                            <div class="chart-container-large glass-card" style="height: auto; min-height: 520px;">
+                                <div class="chart-title-wrapper">
+                                    <h3>Sul - Comparativo Semanal</h3>
+                                    <span class="unit-indicator">Unidade: MWmedio</span>
+                                </div>
+                                <div class="table-container" style="margin-top: 12px; margin-bottom: 18px; overflow-x: auto; border: none; background: transparent;">
+                                    <table class="data-table" id="table-ena-comp-s" style="font-size: 11.5px; width: 100%;">
+                                        <!-- Preenchido dinamicamente por Javascript -->
+                                    </table>
+                                </div>
+                                <div class="chart-wrapper" style="height: 280px;">
+                                    <canvas id="chart-ena-comp-s"></canvas>
+                                </div>
+                            </div>
+
+                            <!-- Gráfico Comparativo Nordeste -->
+                            <div class="chart-container-large glass-card" style="height: auto; min-height: 520px;">
+                                <div class="chart-title-wrapper">
+                                    <h3>Nordeste - Comparativo Semanal</h3>
+                                    <span class="unit-indicator">Unidade: MWmedio</span>
+                                </div>
+                                <div class="table-container" style="margin-top: 12px; margin-bottom: 18px; overflow-x: auto; border: none; background: transparent;">
+                                    <table class="data-table" id="table-ena-comp-ne" style="font-size: 11.5px; width: 100%;">
+                                        <!-- Preenchido dinamicamente por Javascript -->
+                                    </table>
+                                </div>
+                                <div class="chart-wrapper" style="height: 280px;">
+                                    <canvas id="chart-ena-comp-ne"></canvas>
+                                </div>
+                            </div>
+
+                            <!-- Gráfico Comparativo Norte -->
+                            <div class="chart-container-large glass-card" style="height: auto; min-height: 520px;">
+                                <div class="chart-title-wrapper">
+                                    <h3>Norte - Comparativo Semanal</h3>
+                                    <span class="unit-indicator">Unidade: MWmedio</span>
+                                </div>
+                                <div class="table-container" style="margin-top: 12px; margin-bottom: 18px; overflow-x: auto; border: none; background: transparent;">
+                                    <table class="data-table" id="table-ena-comp-n" style="font-size: 11.5px; width: 100%;">
+                                        <!-- Preenchido dinamicamente por Javascript -->
+                                    </table>
+                                </div>
+                                <div class="chart-wrapper" style="height: 280px;">
+                                    <canvas id="chart-ena-comp-n"></canvas>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB: CARGA -->
+                <div class="tab-pane" id="tab-carga">
+                    <div class="controls-card glass-card">
+                        <div class="control-group">
+                            <label for="carga-comp-mes-select">Mês de Referência:</label>
+                            <select id="carga-comp-mes-select" onchange="loadCargaComparativoData()">
+                                <!-- Alimentado via JS -->
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <span class="unit-indicator"><i class="fa-solid fa-circle-info" style="color: var(--color-green);"></i> Barras coloridas indicam as previsões das RVs. Linha contínua amarela/laranja indica a média do realizado semanal.</span>
+                        </div>
+                    </div>
+
+                    <!-- Grid de 5 Gráficos de Comparação (SIN + 4 Regiões) -->
+                    <div class="ena-charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 20px; margin-bottom: 24px;">
+                        
+                        <!-- Gráfico Comparativo SIN (Sistema Interligado Nacional) -->
+                        <div class="chart-container-large glass-card" style="height: auto; min-height: 520px; grid-column: 1 / -1;">
+                            <div class="chart-title-wrapper">
+                                <h3>Sistema Interligado Nacional (SIN) - Comparativo Semanal</h3>
+                                <span class="unit-indicator">Unidade: MWmedio</span>
+                            </div>
+                            <div class="table-container" style="margin-top: 12px; margin-bottom: 18px; overflow-x: auto; border: none; background: transparent;">
+                                <table class="data-table" id="table-carga-comp-sin" style="font-size: 11.5px; width: 100%;">
+                                    <!-- Preenchido dinamicamente por Javascript -->
+                                </table>
+                            </div>
+                            <div class="chart-wrapper" style="height: 280px;">
+                                <canvas id="chart-carga-comp-sin"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Gráfico Comparativo Sudeste/Centro-Oeste -->
+                        <div class="chart-container-large glass-card" style="height: auto; min-height: 520px;">
+                            <div class="chart-title-wrapper">
+                                <h3>Sudeste / Centro-Oeste - Comparativo Semanal</h3>
+                                <span class="unit-indicator">Unidade: MWmedio</span>
+                            </div>
+                            <div class="table-container" style="margin-top: 12px; margin-bottom: 18px; overflow-x: auto; border: none; background: transparent;">
+                                <table class="data-table" id="table-carga-comp-se" style="font-size: 11.5px; width: 100%;">
+                                    <!-- Preenchido dinamicamente por Javascript -->
+                                </table>
+                            </div>
+                            <div class="chart-wrapper" style="height: 280px;">
+                                <canvas id="chart-carga-comp-se"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Gráfico Comparativo Sul -->
+                        <div class="chart-container-large glass-card" style="height: auto; min-height: 520px;">
+                            <div class="chart-title-wrapper">
+                                <h3>Sul - Comparativo Semanal</h3>
+                                <span class="unit-indicator">Unidade: MWmedio</span>
+                            </div>
+                            <div class="table-container" style="margin-top: 12px; margin-bottom: 18px; overflow-x: auto; border: none; background: transparent;">
+                                <table class="data-table" id="table-carga-comp-s" style="font-size: 11.5px; width: 100%;">
+                                    <!-- Preenchido dinamicamente por Javascript -->
+                                </table>
+                            </div>
+                            <div class="chart-wrapper" style="height: 280px;">
+                                <canvas id="chart-carga-comp-s"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Gráfico Comparativo Nordeste -->
+                        <div class="chart-container-large glass-card" style="height: auto; min-height: 520px;">
+                            <div class="chart-title-wrapper">
+                                <h3>Nordeste - Comparativo Semanal</h3>
+                                <span class="unit-indicator">Unidade: MWmedio</span>
+                            </div>
+                            <div class="table-container" style="margin-top: 12px; margin-bottom: 18px; overflow-x: auto; border: none; background: transparent;">
+                                <table class="data-table" id="table-carga-comp-ne" style="font-size: 11.5px; width: 100%;">
+                                    <!-- Preenchido dinamicamente por Javascript -->
+                                </table>
+                            </div>
+                            <div class="chart-wrapper" style="height: 280px;">
+                                <canvas id="chart-carga-comp-ne"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Gráfico Comparativo Norte -->
+                        <div class="chart-container-large glass-card" style="height: auto; min-height: 520px;">
+                            <div class="chart-title-wrapper">
+                                <h3>Norte - Comparativo Semanal</h3>
+                                <span class="unit-indicator">Unidade: MWmedio</span>
+                            </div>
+                            <div class="table-container" style="margin-top: 12px; margin-bottom: 18px; overflow-x: auto; border: none; background: transparent;">
+                                <table class="data-table" id="table-carga-comp-n" style="font-size: 11.5px; width: 100%;">
+                                    <!-- Preenchido dinamicamente por Javascript -->
+                                </table>
+                            </div>
+                            <div class="chart-wrapper" style="height: 280px;">
+                                <canvas id="chart-carga-comp-n"></canvas>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- TAB: RESERVATÓRIO (EAR) -->
+                <div class="tab-pane" id="tab-ear">
+                    <div class="controls-card glass-card">
+                        <div class="control-group">
+                            <label for="ear-comp-mes-select">Mês de Referência:</label>
+                            <select id="ear-comp-mes-select" onchange="loadEarComparativoData()">
+                                <!-- Alimentado via JS -->
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <span class="unit-indicator"><i class="fa-solid fa-circle-info" style="color: var(--color-teal);"></i> Linhas tracejadas horizontais indicam os níveis previstos para fechamento do mês nas RVs. Linha contínua turquesa indica o realizado diário.</span>
+                        </div>
+                    </div>
+
+                    <!-- Tabela de Evolução Recente (Últimos 7 dias) -->
+                    <div class="glass-card" style="margin-bottom: 20px; padding: 20px;">
+                        <h3 style="font-family: 'Outfit', sans-serif; font-size: 16px; margin-top: 0; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-timeline" style="color: var(--color-teal);"></i> Evolução Diária Recente e Comportamento no Mês
+                        </h3>
+                        <div class="table-container" style="overflow-x: auto; border: none; background: transparent; margin: 0;">
+                            <table class="data-table" id="table-ear-evolucao-recente" style="font-size: 11.5px; width: 100%;">
+                                <!-- Preenchido dinamicamente via JS -->
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Grid de 4 Gráficos de Comparação de Reservatório -->
+                    <div class="ena-charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 20px; margin-bottom: 24px;">
+                        
+                        <!-- Gráfico Comparativo Sudeste/Centro-Oeste -->
+                        <div class="chart-container-large glass-card" style="height: auto; min-height: 520px;">
+                            <div class="chart-title-wrapper">
+                                <h3>Sudeste / Centro-Oeste - Nível do Reservatório</h3>
+                                <span class="unit-indicator">Unidade: % de Energia Armazenada (EAR)</span>
+                            </div>
+                            <div class="table-container" style="margin-top: 12px; margin-bottom: 18px; overflow-x: auto; border: none; background: transparent;">
+                                <table class="data-table" id="table-ear-comp-se" style="font-size: 11.5px; width: 100%;">
+                                    <!-- Preenchido dinamicamente por Javascript -->
+                                </table>
+                            </div>
+                            <div class="chart-wrapper" style="height: 280px;">
+                                <canvas id="chart-ear-comp-se"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Gráfico Comparativo Sul -->
+                        <div class="chart-container-large glass-card" style="height: auto; min-height: 520px;">
+                            <div class="chart-title-wrapper">
+                                <h3>Sul - Nível do Reservatório</h3>
+                                <span class="unit-indicator">Unidade: % de Energia Armazenada (EAR)</span>
+                            </div>
+                            <div class="table-container" style="margin-top: 12px; margin-bottom: 18px; overflow-x: auto; border: none; background: transparent;">
+                                <table class="data-table" id="table-ear-comp-s" style="font-size: 11.5px; width: 100%;">
+                                    <!-- Preenchido dinamicamente por Javascript -->
+                                </table>
+                            </div>
+                            <div class="chart-wrapper" style="height: 280px;">
+                                <canvas id="chart-ear-comp-s"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Gráfico Comparativo Nordeste -->
+                        <div class="chart-container-large glass-card" style="height: auto; min-height: 520px;">
+                            <div class="chart-title-wrapper">
+                                <h3>Nordeste - Nível do Reservatório</h3>
+                                <span class="unit-indicator">Unidade: % de Energia Armazenada (EAR)</span>
+                            </div>
+                            <div class="table-container" style="margin-top: 12px; margin-bottom: 18px; overflow-x: auto; border: none; background: transparent;">
+                                <table class="data-table" id="table-ear-comp-ne" style="font-size: 11.5px; width: 100%;">
+                                    <!-- Preenchido dinamicamente por Javascript -->
+                                </table>
+                            </div>
+                            <div class="chart-wrapper" style="height: 280px;">
+                                <canvas id="chart-ear-comp-ne"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Gráfico Comparativo Norte -->
+                        <div class="chart-container-large glass-card" style="height: auto; min-height: 520px;">
+                            <div class="chart-title-wrapper">
+                                <h3>Norte - Nível do Reservatório</h3>
+                                <span class="unit-indicator">Unidade: % de Energia Armazenada (EAR)</span>
+                            </div>
+                            <div class="table-container" style="margin-top: 12px; margin-bottom: 18px; overflow-x: auto; border: none; background: transparent;">
+                                <table class="data-table" id="table-ear-comp-n" style="font-size: 11.5px; width: 100%;">
+                                    <!-- Preenchido dinamicamente por Javascript -->
+                                </table>
+                            </div>
+                            <div class="chart-wrapper" style="height: 280px;">
+                                <canvas id="chart-ear-comp-n"></canvas>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
                 <!-- TAB: PLD DIÁRIO -->
                 <div class="tab-pane" id="tab-pld">
                     <div class="controls-card glass-card">
@@ -863,6 +1294,9 @@
                             <select id="auditoria-base-select" onchange="loadAuditoriaData()">
                                 <option value="balanco">Balanço Energético (ONS)</option>
                                 <option value="pld">PLD Horário (CCEE)</option>
+                                <option value="ena">ENA (ONS)</option>
+                                <option value="carga">Carga (ONS)</option>
+                                <option value="ear">Reservatório (EAR) (ONS)</option>
                                 <option value="ampere">Projeções Ampere</option>
                                 <option value="bbce">Negócios BBCE</option>
                             </select>
@@ -937,6 +1371,51 @@
                             </div>
                             <button class="btn btn-orange btn-block" id="btn-sync-pld" onclick="runETL('pld')">
                                 <i class="fa-solid fa-sync"></i> Sincronizar com CCEE
+                            </button>
+                        </div>
+                        
+                        <!-- Automação de ENA ONS -->
+                        <div class="glass-card etl-control-card">
+                            <div class="etl-card-header bg-blue">
+                                <i class="fa-solid fa-cloud-arrow-down"></i>
+                                <h3>ENA (ONS)</h3>
+                            </div>
+                            <p class="etl-card-desc">Baixa os dados diários da ENA diretamente da API do ONS de 2026 e substitui a planilha local de forma 100% automatizada.</p>
+                            <div class="etl-status-info">
+                                <span>Último registro na base: <strong id="etl-ena-last">-</strong></span>
+                            </div>
+                            <button class="btn btn-blue btn-block" id="btn-sync-ena" onclick="runETL('ena')">
+                                <i class="fa-solid fa-sync"></i> Sincronizar com ONS
+                            </button>
+                        </div>
+                        
+                        <!-- Automação de Carga ONS -->
+                        <div class="glass-card etl-control-card">
+                            <div class="etl-card-header bg-yellow">
+                                <i class="fa-solid fa-cloud-arrow-down"></i>
+                                <h3>Carga (ONS)</h3>
+                            </div>
+                            <p class="etl-card-desc">Baixa os dados diários de Carga diretamente da API do ONS de 2026 e substitui a planilha local de forma 100% automatizada.</p>
+                            <div class="etl-status-info">
+                                <span>Último registro na base: <strong id="etl-carga-last">-</strong></span>
+                            </div>
+                            <button class="btn btn-yellow btn-block" id="btn-sync-carga" onclick="runETL('carga')">
+                                <i class="fa-solid fa-sync"></i> Sincronizar com ONS
+                            </button>
+                        </div>
+                        
+                        <!-- Automação de EAR ONS -->
+                        <div class="glass-card etl-control-card">
+                            <div class="etl-card-header bg-teal">
+                                <i class="fa-solid fa-water"></i>
+                                <h3>Reservatório (EAR) (ONS)</h3>
+                            </div>
+                            <p class="etl-card-desc">Baixa os dados diários de Energia Armazenada (EAR) diretamente da API do ONS de 2026 e substitui a planilha local de forma 100% automatizada.</p>
+                            <div class="etl-status-info">
+                                <span>Último registro na base: <strong id="etl-ear-last">-</strong></span>
+                            </div>
+                            <button class="btn btn-teal btn-block" id="btn-sync-ear" onclick="runETL('ear')">
+                                <i class="fa-solid fa-sync"></i> Sincronizar com ONS
                             </button>
                         </div>
                         

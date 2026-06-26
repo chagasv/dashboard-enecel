@@ -22,6 +22,18 @@ CACHE_PLD_RECENT = os.path.join(PLANILHAS_DIR, 'pld_recent_cache.json')
 CACHE_AMPERE_RECENT = os.path.join(PLANILHAS_DIR, 'ampere_recent_cache.json')
 CACHE_PLD_HORARIO = os.path.join(PLANILHAS_DIR, 'pld_horario_cache.json')
 
+PATH_ENA = os.path.join(PLANILHAS_DIR, 'ENA_DIARIO_SUBSISTEMA_2026.xlsx')
+CACHE_ENA = os.path.join(PLANILHAS_DIR, 'ena_cache.json')
+CACHE_ENA_RECENT = os.path.join(PLANILHAS_DIR, 'ena_recent_cache.json')
+
+PATH_CARGA = os.path.join(PLANILHAS_DIR, 'CARGA_ENERGIA_2026.xlsx')
+CACHE_CARGA = os.path.join(PLANILHAS_DIR, 'carga_cache.json')
+CACHE_CARGA_RECENT = os.path.join(PLANILHAS_DIR, 'carga_recent_cache.json')
+
+PATH_EAR = os.path.join(PLANILHAS_DIR, 'EAR_DIARIO_SUBSISTEMA_2026.xlsx')
+CACHE_EAR = os.path.join(PLANILHAS_DIR, 'ear_cache.json')
+CACHE_EAR_RECENT = os.path.join(PLANILHAS_DIR, 'ear_recent_cache.json')
+
 PATH_METADADOS = os.path.join(PLANILHAS_DIR, 'metadata.json')
 
 def format_date_str(timestamp):
@@ -31,6 +43,12 @@ def gerar_todos_os_caches():
     print("Iniciando geracao de caches JSON e metadados...")
     
     metadata = {}
+    if github_file_exists(PATH_METADADOS):
+        try:
+            conteudo_meta = github_read_file(PATH_METADADOS)
+            metadata = json.loads(conteudo_meta.decode('utf-8'))
+        except Exception as e:
+            print(f"Aviso: Erro ao carregar metadados existentes: {str(e)}")
     
     # 1. Balanço Energético
     if github_file_exists(PATH_BALANCO):
@@ -230,6 +248,148 @@ def gerar_todos_os_caches():
     else:
         print("Planilha da Ampere nao encontrada.")
         metadata['ampere'] = {'status': 'Não Encontrado'}
+
+    # 4. ENA
+    if github_file_exists(PATH_ENA):
+        print("Processando ENA...")
+        try:
+            from etl import ler_excel_com_copia
+            df = ler_excel_com_copia(PATH_ENA)
+        except Exception as e:
+            print(f"Aviso: erro ao ler ENA com cópia ({str(e)}). Tentando leitura direta...")
+            conteudo = github_read_file(PATH_ENA)
+            df = pd.read_excel(io.BytesIO(conteudo))
+        
+        if len(df) > 0:
+            df['ena_data'] = pd.to_datetime(df['ena_data'])
+            df_sorted = df.sort_values(by='ena_data').copy()
+            
+            cache_ena_data = {}
+            for sub in ['N', 'NE', 'S', 'SE']:
+                df_sub = df_sorted[df_sorted['id_subsistema'] == sub]
+                cache_ena_data[sub] = {
+                    'labels': df_sub['ena_data'].dt.strftime('%Y-%m-%d').tolist(),
+                    'ena_bruta_mwmed': df_sub['ena_bruta_regiao_mwmed'].round(2).tolist(),
+                    'ena_bruta_percentualmlt': df_sub['ena_bruta_regiao_percentualmlt'].round(2).tolist(),
+                    'ena_armazenavel_mwmed': df_sub['ena_armazenavel_regiao_mwmed'].round(2).tolist(),
+                    'ena_armazenavel_percentualmlt': df_sub['ena_armazenavel_regiao_percentualmlt'].round(2).tolist(),
+                    'nom_subsistema': df_sub['nom_subsistema'].iloc[0] if len(df_sub) > 0 else sub
+                }
+                
+            github_write_file(CACHE_ENA, json.dumps(cache_ena_data, ensure_ascii=False, indent=2).encode('utf-8'))
+            
+            # Cache Recente (100 linhas)
+            df_recent = df.sort_values(by='ena_data', ascending=False).head(100).copy()
+            df_recent['ena_data'] = df_recent['ena_data'].dt.strftime('%d/%m/%Y')
+            df_recent = df_recent.fillna("")
+            data_recent = df_recent.to_dict(orient='records')
+            github_write_file(CACHE_ENA_RECENT, json.dumps(data_recent, ensure_ascii=False, indent=2).encode('utf-8'))
+            
+            max_date = df['ena_data'].max().strftime('%d/%m/%Y')
+            info_ena = github_get_file_info(PATH_ENA)
+            metadata['ena'] = {
+                'linhas': len(df),
+                'max_data': max_date,
+                'tamanho': info_ena['tamanho'],
+                'modificado': info_ena['modificado']
+            }
+            print("Cache da ENA salvo.")
+    else:
+        print("Planilha da ENA nao encontrada.")
+        metadata['ena'] = {'status': 'Não Encontrado'}
+        
+    # 5. Carga
+    if github_file_exists(PATH_CARGA):
+        print("Processando Carga...")
+        try:
+            from etl import ler_excel_com_copia
+            df = ler_excel_com_copia(PATH_CARGA)
+        except Exception as e:
+            print(f"Aviso: erro ao ler Carga com cópia ({str(e)}). Tentando leitura direta...")
+            conteudo = github_read_file(PATH_CARGA)
+            df = pd.read_excel(io.BytesIO(conteudo))
+        
+        if len(df) > 0:
+            df['din_instante'] = pd.to_datetime(df['din_instante'])
+            df_sorted = df.sort_values(by='din_instante').copy()
+            
+            cache_carga_data = {}
+            for sub in ['N', 'NE', 'S', 'SE']:
+                df_sub = df_sorted[df_sorted['id_subsistema'] == sub]
+                cache_carga_data[sub] = {
+                    'labels': df_sub['din_instante'].dt.strftime('%Y-%m-%d').tolist(),
+                    'carga_mwmed': df_sub['val_cargaenergiamwmed'].round(2).tolist(),
+                    'nom_subsistema': df_sub['nom_subsistema'].iloc[0] if len(df_sub) > 0 else sub
+                }
+                
+            github_write_file(CACHE_CARGA, json.dumps(cache_carga_data, ensure_ascii=False, indent=2).encode('utf-8'))
+            
+            # Cache Recente (100 linhas)
+            df_recent = df.sort_values(by='din_instante', ascending=False).head(100).copy()
+            df_recent['din_instante'] = df_recent['din_instante'].dt.strftime('%d/%m/%Y')
+            df_recent = df_recent.fillna("")
+            data_recent = df_recent.to_dict(orient='records')
+            github_write_file(CACHE_CARGA_RECENT, json.dumps(data_recent, ensure_ascii=False, indent=2).encode('utf-8'))
+            
+            max_date = df['din_instante'].max().strftime('%d/%m/%Y')
+            info_carga = github_get_file_info(PATH_CARGA)
+            metadata['carga'] = {
+                'linhas': len(df),
+                'max_data': max_date,
+                'tamanho': info_carga['tamanho'],
+                'modificado': info_carga['modificado']
+            }
+            print("Cache da Carga salvo.")
+    else:
+        print("Planilha da Carga nao encontrada.")
+        metadata['carga'] = {'status': 'Não Encontrado'}
+        
+    # 6. Reservatório (EAR)
+    if github_file_exists(PATH_EAR):
+        print("Processando EAR...")
+        try:
+            from etl import ler_excel_com_copia
+            df = ler_excel_com_copia(PATH_EAR)
+        except Exception as e:
+            print(f"Aviso: erro ao ler EAR com cópia ({str(e)}). Tentando leitura direta...")
+            conteudo = github_read_file(PATH_EAR)
+            df = pd.read_excel(io.BytesIO(conteudo))
+        
+        if len(df) > 0:
+            df['ear_data'] = pd.to_datetime(df['ear_data'])
+            df_sorted = df.sort_values(by='ear_data').copy()
+            
+            cache_ear_data = {}
+            for sub in ['N', 'NE', 'S', 'SE']:
+                df_sub = df_sorted[df_sorted['id_subsistema'] == sub]
+                cache_ear_data[sub] = {
+                    'labels': df_sub['ear_data'].dt.strftime('%Y-%m-%d').tolist(),
+                    'ear_verif_percentual': df_sub['ear_verif_subsistema_percentual'].round(2).tolist(),
+                    'ear_verif_mwmes': df_sub['ear_verif_subsistema_mwmes'].round(2).tolist(),
+                    'nom_subsistema': df_sub['nom_subsistema'].iloc[0] if len(df_sub) > 0 else sub
+                }
+                
+            github_write_file(CACHE_EAR, json.dumps(cache_ear_data, ensure_ascii=False, indent=2).encode('utf-8'))
+            
+            # Cache Recente (100 linhas)
+            df_recent = df.sort_values(by='ear_data', ascending=False).head(100).copy()
+            df_recent['ear_data'] = df_recent['ear_data'].dt.strftime('%d/%m/%Y')
+            df_recent = df_recent.fillna("")
+            data_recent = df_recent.to_dict(orient='records')
+            github_write_file(CACHE_EAR_RECENT, json.dumps(data_recent, ensure_ascii=False, indent=2).encode('utf-8'))
+            
+            max_date = df['ear_data'].max().strftime('%d/%m/%Y')
+            info_ear = github_get_file_info(PATH_EAR)
+            metadata['ear'] = {
+                'linhas': len(df),
+                'max_data': max_date,
+                'tamanho': info_ear['tamanho'],
+                'modificado': info_ear['modificado']
+            }
+            print("Cache do Reservatório (EAR) salvo.")
+    else:
+        print("Planilha do Reservatório (EAR) nao encontrada.")
+        metadata['ear'] = {'status': 'Não Encontrado'}
         
     github_write_file(PATH_METADADOS, json.dumps(metadata, ensure_ascii=False, indent=2).encode('utf-8'))
     print("Arquivo de metadados metadata.json gerado com sucesso!")

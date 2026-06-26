@@ -11,14 +11,20 @@ os.environ['GITHUB_TOKEN'] = ''
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 try:
-    from etl import atualizar_balanco_energetico, atualizar_pld, atualizar_negocios_bbce
+    from etl import atualizar_balanco_energetico, atualizar_pld, atualizar_negocios_bbce, atualizar_ena, atualizar_carga, atualizar_ear
     from app import (
         atualizar_cache_e_metadata_balanco, 
         atualizar_cache_e_metadata_pld, 
         atualizar_cache_e_metadata_bbce,
+        atualizar_cache_e_metadata_ena,
+        atualizar_cache_e_metadata_carga,
+        atualizar_cache_e_metadata_ear,
         PATH_BALANCO, 
         PATH_PLD, 
-        PATH_BBCE
+        PATH_BBCE,
+        PATH_ENA,
+        PATH_CARGA,
+        PATH_EAR
     )
     from bbce_scraper import executar_automacao_bbce
 except ImportError as e:
@@ -71,11 +77,11 @@ def sincronizar_github():
 
 def executar_ons_ccee():
     print("\n" + "="*60)
-    print(" ATUALIZAÇÃO: BALANÇO ONS & PLD CCEE ")
+    print(" ATUALIZAÇÃO: BALANÇO ONS, PLD CCEE, ENA ONS, CARGA ONS & RESERVATÓRIO (EAR) ONS ")
     print("="*60)
     
     # 1. Balanço Energético (ONS)
-    print("\n[1/2] Acessando API do ONS para Balanço Energético...")
+    print("\n[1/5] Acessando API do ONS para Balanço Energético...")
     try:
         novas_balanco, total_balanco, df_balanco = atualizar_balanco_energetico(PATH_BALANCO)
         print(f"Geração ONS atualizada! Novos registros: {novas_balanco} | Total na base: {total_balanco}")
@@ -86,7 +92,7 @@ def executar_ons_ccee():
         print(f"[ERRO - ONS] Falha ao atualizar Balanço Energético: {str(e)}")
         
     # 2. PLD CCEE
-    print("\n[2/2] Acessando API da CCEE para PLD Horário...")
+    print("\n[2/5] Acessando API da CCEE para PLD Horário...")
     try:
         novas_pld, total_pld, df_pld = atualizar_pld(PATH_PLD)
         print(f"PLD CCEE atualizado! Novos registros: {novas_pld} | Total na base: {total_pld}")
@@ -95,8 +101,41 @@ def executar_ons_ccee():
         atualizar_cache_e_metadata_pld(df_pld)
     except Exception as e:
         print(f"[ERRO - CCEE] Falha ao atualizar PLD Horário: {str(e)}")
+        
+    # 3. ENA ONS
+    print("\n[3/5] Acessando base de ENA Diária do ONS...")
+    try:
+        total_ena, df_ena = atualizar_ena(PATH_ENA)
+        print(f"ENA Diária atualizada! Total de registros: {total_ena}")
+        
+        print("-> Reconstruindo caches e metadados locais de ENA...")
+        atualizar_cache_e_metadata_ena(df_ena)
+    except Exception as e:
+        print(f"[ERRO - ENA] Falha ao atualizar ENA Diária: {str(e)}")
+        
+    # 4. CARGA ONS
+    print("\n[4/5] Acessando base de Carga Diária do ONS...")
+    try:
+        total_carga, df_carga = atualizar_carga(PATH_CARGA)
+        print(f"Carga Diária atualizada! Total de registros: {total_carga}")
+        
+        print("-> Reconstruindo caches e metadados locais de Carga...")
+        atualizar_cache_e_metadata_carga(df_carga)
+    except Exception as e:
+        print(f"[ERRO - CARGA] Falha ao atualizar Carga Diária: {str(e)}")
+        
+    # 5. RESERVATÓRIO (EAR) ONS
+    print("\n[5/5] Acessando base de EAR Diária do ONS...")
+    try:
+        total_ear, df_ear = atualizar_ear(PATH_EAR)
+        print(f"EAR Diária atualizada! Total de registros: {total_ear}")
+        
+        print("-> Reconstruindo caches e metadados locais de EAR...")
+        atualizar_cache_e_metadata_ear(df_ear)
+    except Exception as e:
+        print(f"[ERRO - EAR] Falha ao atualizar EAR Diária: {str(e)}")
     
-    print("\nAtualização de Balanço ONS e PLD CCEE concluída localmente.")
+    print("\nAtualização de Balanço, PLD CCEE, ENA, Carga e EAR concluída localmente.")
 
 def executar_bbce():
     print("\n" + "="*60)
@@ -167,7 +206,7 @@ def main():
         print("="*60)
         print("      SISTEMA DE ATUALIZAÇÃO E ETL LOCAL - ENECEL")
         print("="*60)
-        print("  [1] Atualizar Balanço Energético (ONS) + PLD Horário (CCEE)")
+        print("  [1] Atualizar ONS (Balanço, ENA, Carga, EAR) + CCEE (PLD)")
         print("  [2] Atualizar Histórico de Negócios BBCE (Automação Chrome)")
         print("  [3] Atualizar Tudo (ONS + CCEE + BBCE)")
         print("  [4] Apenas Sincronizar Arquivos Locais com o GitHub (Git Push)")

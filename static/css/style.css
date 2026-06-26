@@ -21,6 +21,8 @@
     --color-green: #10b981;
     --color-green-glow: transparent;
     --color-yellow: #eab308;
+    --color-blue: #3b82f6;
+    --color-teal: #2dd4bf;
     
     --sidebar-width: 260px;
     --transition-smooth: all 0.15s ease-in-out;
@@ -298,6 +300,18 @@ h1, h2, h3, .logo-text {
     border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
+.card-icon-wrapper.bg-blue {
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--color-blue);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.card-icon-wrapper.bg-yellow {
+    background: rgba(234, 179, 8, 0.1);
+    color: var(--color-yellow);
+    border: 1px solid rgba(234, 179, 8, 0.2);
+}
+
 .card-badge {
     font-size: 10px;
     font-weight: 600;
@@ -310,6 +324,15 @@ h1, h2, h3, .logo-text {
 .badge-orange { background: rgba(249, 115, 22, 0.1); color: var(--color-orange); }
 .badge-purple { background: rgba(168, 85, 247, 0.1); color: var(--color-purple); }
 .badge-green { background: rgba(16, 185, 129, 0.1); color: var(--color-green); }
+.badge-blue { background: rgba(59, 130, 246, 0.1); color: var(--color-blue); }
+.badge-yellow { background: rgba(234, 179, 8, 0.1); color: var(--color-yellow); }
+.badge-teal { background: rgba(45, 212, 191, 0.1); color: var(--color-teal); }
+
+.card-icon-wrapper.bg-teal {
+    background: rgba(45, 212, 191, 0.1);
+    color: var(--color-teal);
+    border: 1px solid rgba(45, 212, 191, 0.2);
+}
 
 .info-card h3 {
     font-size: 16px;
@@ -425,6 +448,16 @@ h1, h2, h3, .logo-text {
     border-color: var(--color-cyan);
 }
 
+.btn-blue {
+    background: #18181b;
+    color: var(--color-blue);
+    border: 1px solid var(--glass-border);
+}
+.btn-blue:hover:not(:disabled) {
+    background: #27272a;
+    border-color: var(--color-blue);
+}
+
 .btn-orange {
     background: #18181b;
     color: var(--color-orange);
@@ -453,6 +486,26 @@ h1, h2, h3, .logo-text {
 .btn-green:hover:not(:disabled) {
     background: #27272a;
     border-color: var(--color-green);
+}
+
+.btn-yellow {
+    background: #18181b;
+    color: var(--color-yellow);
+    border: 1px solid var(--glass-border);
+}
+.btn-yellow:hover:not(:disabled) {
+    background: #27272a;
+    border-color: var(--color-yellow);
+}
+
+.btn-teal {
+    background: #18181b;
+    color: var(--color-teal);
+    border: 1px solid var(--glass-border);
+}
+.btn-teal:hover:not(:disabled) {
+    background: #27272a;
+    border-color: var(--color-teal);
 }
 
 .btn-block {
@@ -648,6 +701,9 @@ h1, h2, h3, .logo-text {
 .etl-card-header.bg-cyan i { color: var(--color-cyan); }
 .etl-card-header.bg-orange i { color: var(--color-orange); }
 .etl-card-header.bg-purple i { color: var(--color-purple); }
+.etl-card-header.bg-blue i { color: var(--color-blue); }
+.etl-card-header.bg-yellow i { color: var(--color-yellow); }
+.etl-card-header.bg-teal i { color: var(--color-teal); }
 
 .etl-card-header h3 {
     font-size: 16px;
@@ -983,6 +1039,7 @@ h1, h2, h3, .logo-text {
 .compact-metric-card.border-green { border-left: 2px solid var(--color-green); }
 .compact-metric-card.border-yellow { border-left: 2px solid var(--color-yellow); }
 .compact-metric-card.border-blue { border-left: 2px solid #3b82f6; }
+.compact-metric-card.border-teal { border-left: 2px solid var(--color-teal); }
 
 /* Sub-abas internas do Balanço ONS */
 .subtab-bar {

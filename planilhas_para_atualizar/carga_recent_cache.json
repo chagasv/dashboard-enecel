@@ -1,0 +1,602 @@
+[
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "Sudeste/Centro-Oeste",
+    "din_instante": "25/06/2026",
+    "val_cargaenergiamwmed": ""
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "Sul",
+    "din_instante": "25/06/2026",
+    "val_cargaenergiamwmed": ""
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "Nordeste",
+    "din_instante": "25/06/2026",
+    "val_cargaenergiamwmed": ""
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "Norte",
+    "din_instante": "25/06/2026",
+    "val_cargaenergiamwmed": ""
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "Sudeste/Centro-Oeste",
+    "din_instante": "24/06/2026",
+    "val_cargaenergiamwmed": 43937.14941667
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "Sul",
+    "din_instante": "24/06/2026",
+    "val_cargaenergiamwmed": 14394.45629167
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "Nordeste",
+    "din_instante": "24/06/2026",
+    "val_cargaenergiamwmed": 12293.92425
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "Norte",
+    "din_instante": "24/06/2026",
+    "val_cargaenergiamwmed": 8627.890625
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "Sul",
+    "din_instante": "23/06/2026",
+    "val_cargaenergiamwmed": 14452.34545833
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "Norte",
+    "din_instante": "23/06/2026",
+    "val_cargaenergiamwmed": 8756.4405
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "Nordeste",
+    "din_instante": "23/06/2026",
+    "val_cargaenergiamwmed": 13033.46120833
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "Sudeste/Centro-Oeste",
+    "din_instante": "23/06/2026",
+    "val_cargaenergiamwmed": 43724.1175
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "Sudeste/Centro-Oeste",
+    "din_instante": "22/06/2026",
+    "val_cargaenergiamwmed": 41037.944
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "Sul",
+    "din_instante": "22/06/2026",
+    "val_cargaenergiamwmed": 14363.54466667
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "Nordeste",
+    "din_instante": "22/06/2026",
+    "val_cargaenergiamwmed": 13191.06816667
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "Norte",
+    "din_instante": "22/06/2026",
+    "val_cargaenergiamwmed": 8599.89129167
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "Sudeste/Centro-Oeste",
+    "din_instante": "21/06/2026",
+    "val_cargaenergiamwmed": 35119.250375
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "Sul",
+    "din_instante": "21/06/2026",
+    "val_cargaenergiamwmed": 10650.739
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "Nordeste",
+    "din_instante": "21/06/2026",
+    "val_cargaenergiamwmed": 11805.74729167
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "Norte",
+    "din_instante": "21/06/2026",
+    "val_cargaenergiamwmed": 8155.40708333
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "Nordeste",
+    "din_instante": "20/06/2026",
+    "val_cargaenergiamwmed": 12770.02170833
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "Norte",
+    "din_instante": "20/06/2026",
+    "val_cargaenergiamwmed": 8524.31066667
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "Sudeste/Centro-Oeste",
+    "din_instante": "20/06/2026",
+    "val_cargaenergiamwmed": 39099.583
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "Sul",
+    "din_instante": "20/06/2026",
+    "val_cargaenergiamwmed": 12603.12683333
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "Sudeste/Centro-Oeste",
+    "din_instante": "19/06/2026",
+    "val_cargaenergiamwmed": 40768.23375
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "Sul",
+    "din_instante": "19/06/2026",
+    "val_cargaenergiamwmed": 14543.48175
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "Nordeste",
+    "din_instante": "19/06/2026",
+    "val_cargaenergiamwmed": 13382.89983333
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "Norte",
+    "din_instante": "19/06/2026",
+    "val_cargaenergiamwmed": 8670.29508333
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "Sul",
+    "din_instante": "18/06/2026",
+    "val_cargaenergiamwmed": 14220.09875
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "Nordeste",
+    "din_instante": "18/06/2026",
+    "val_cargaenergiamwmed": 13730.85291667
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "Norte",
+    "din_instante": "18/06/2026",
+    "val_cargaenergiamwmed": 8633.46854167
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "Sudeste/Centro-Oeste",
+    "din_instante": "18/06/2026",
+    "val_cargaenergiamwmed": 40922.06204167
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "Sudeste/Centro-Oeste",
+    "din_instante": "17/06/2026",
+    "val_cargaenergiamwmed": 42435.73091667
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "Sul",
+    "din_instante": "17/06/2026",
+    "val_cargaenergiamwmed": 14091.91416667
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "Nordeste",
+    "din_instante": "17/06/2026",
+    "val_cargaenergiamwmed": 13771.50454167
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "Norte",
+    "din_instante": "17/06/2026",
+    "val_cargaenergiamwmed": 8663.53533333
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "Sudeste/Centro-Oeste",
+    "din_instante": "16/06/2026",
+    "val_cargaenergiamwmed": 43833.27775
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "Sul",
+    "din_instante": "16/06/2026",
+    "val_cargaenergiamwmed": 14137.63795833
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "Nordeste",
+    "din_instante": "16/06/2026",
+    "val_cargaenergiamwmed": 13661.74695833
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "Norte",
+    "din_instante": "16/06/2026",
+    "val_cargaenergiamwmed": 8127.47845833
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "Sul",
+    "din_instante": "15/06/2026",
+    "val_cargaenergiamwmed": 14305.4195
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "Norte",
+    "din_instante": "15/06/2026",
+    "val_cargaenergiamwmed": 8771.27616667
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "Nordeste",
+    "din_instante": "15/06/2026",
+    "val_cargaenergiamwmed": 13387.41179167
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "Sudeste/Centro-Oeste",
+    "din_instante": "15/06/2026",
+    "val_cargaenergiamwmed": 43741.538125
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "Sudeste/Centro-Oeste",
+    "din_instante": "14/06/2026",
+    "val_cargaenergiamwmed": 38387.525875
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "Sul",
+    "din_instante": "14/06/2026",
+    "val_cargaenergiamwmed": 10805.57079167
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "Nordeste",
+    "din_instante": "14/06/2026",
+    "val_cargaenergiamwmed": 12035.67554167
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "Norte",
+    "din_instante": "14/06/2026",
+    "val_cargaenergiamwmed": 8322.036125
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "Sul",
+    "din_instante": "13/06/2026",
+    "val_cargaenergiamwmed": 11827.63533333
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "Nordeste",
+    "din_instante": "13/06/2026",
+    "val_cargaenergiamwmed": 12635.41616667
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "Norte",
+    "din_instante": "13/06/2026",
+    "val_cargaenergiamwmed": 8538.71754167
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "Sudeste/Centro-Oeste",
+    "din_instante": "13/06/2026",
+    "val_cargaenergiamwmed": 41327.383875
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "Sudeste/Centro-Oeste",
+    "din_instante": "12/06/2026",
+    "val_cargaenergiamwmed": 43811.22
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "Sul",
+    "din_instante": "12/06/2026",
+    "val_cargaenergiamwmed": 14337.76525
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "Nordeste",
+    "din_instante": "12/06/2026",
+    "val_cargaenergiamwmed": 13240.81925
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "Norte",
+    "din_instante": "12/06/2026",
+    "val_cargaenergiamwmed": 8957.16416667
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "Sudeste/Centro-Oeste",
+    "din_instante": "11/06/2026",
+    "val_cargaenergiamwmed": 43146.46279167
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "Sul",
+    "din_instante": "11/06/2026",
+    "val_cargaenergiamwmed": 14705.218625
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "Nordeste",
+    "din_instante": "11/06/2026",
+    "val_cargaenergiamwmed": 13081.63325
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "Norte",
+    "din_instante": "11/06/2026",
+    "val_cargaenergiamwmed": 8769.22966667
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "Sul",
+    "din_instante": "10/06/2026",
+    "val_cargaenergiamwmed": 15051.935125
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "Norte",
+    "din_instante": "10/06/2026",
+    "val_cargaenergiamwmed": 8688.426625
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "Nordeste",
+    "din_instante": "10/06/2026",
+    "val_cargaenergiamwmed": 13044.752
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "Sudeste/Centro-Oeste",
+    "din_instante": "10/06/2026",
+    "val_cargaenergiamwmed": 42040.66704167
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "Sudeste/Centro-Oeste",
+    "din_instante": "09/06/2026",
+    "val_cargaenergiamwmed": 41323.16108333
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "Sul",
+    "din_instante": "09/06/2026",
+    "val_cargaenergiamwmed": 14353.82333333
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "Nordeste",
+    "din_instante": "09/06/2026",
+    "val_cargaenergiamwmed": 13117.77108333
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "Norte",
+    "din_instante": "09/06/2026",
+    "val_cargaenergiamwmed": 8266.591875
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "Norte",
+    "din_instante": "08/06/2026",
+    "val_cargaenergiamwmed": 8399.33729167
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "Sudeste/Centro-Oeste",
+    "din_instante": "08/06/2026",
+    "val_cargaenergiamwmed": 39493.37870833
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "Sul",
+    "din_instante": "08/06/2026",
+    "val_cargaenergiamwmed": 13880.48620833
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "Nordeste",
+    "din_instante": "08/06/2026",
+    "val_cargaenergiamwmed": 12804.44183333
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "Nordeste",
+    "din_instante": "07/06/2026",
+    "val_cargaenergiamwmed": 11363.3885
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "Norte",
+    "din_instante": "07/06/2026",
+    "val_cargaenergiamwmed": 7921.367875
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "Sudeste/Centro-Oeste",
+    "din_instante": "07/06/2026",
+    "val_cargaenergiamwmed": 33860.59579167
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "Sul",
+    "din_instante": "07/06/2026",
+    "val_cargaenergiamwmed": 10592.69545833
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "Sudeste/Centro-Oeste",
+    "din_instante": "06/06/2026",
+    "val_cargaenergiamwmed": 36276.98345833
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "Sul",
+    "din_instante": "06/06/2026",
+    "val_cargaenergiamwmed": 11315.6975
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "Nordeste",
+    "din_instante": "06/06/2026",
+    "val_cargaenergiamwmed": 12271.31466667
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "Norte",
+    "din_instante": "06/06/2026",
+    "val_cargaenergiamwmed": 7767.66908333
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "Sul",
+    "din_instante": "05/06/2026",
+    "val_cargaenergiamwmed": 12694.803375
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "Norte",
+    "din_instante": "05/06/2026",
+    "val_cargaenergiamwmed": 8476.76879167
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "Sudeste/Centro-Oeste",
+    "din_instante": "05/06/2026",
+    "val_cargaenergiamwmed": 38778.86408333
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "Nordeste",
+    "din_instante": "05/06/2026",
+    "val_cargaenergiamwmed": 12941.46541667
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "Sul",
+    "din_instante": "04/06/2026",
+    "val_cargaenergiamwmed": 12295.20395833
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "Norte",
+    "din_instante": "04/06/2026",
+    "val_cargaenergiamwmed": 7924.88291667
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "Nordeste",
+    "din_instante": "04/06/2026",
+    "val_cargaenergiamwmed": 12863.44441667
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "Sudeste/Centro-Oeste",
+    "din_instante": "04/06/2026",
+    "val_cargaenergiamwmed": 38230.37079167
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "Sudeste/Centro-Oeste",
+    "din_instante": "03/06/2026",
+    "val_cargaenergiamwmed": 41144.0205
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "Sul",
+    "din_instante": "03/06/2026",
+    "val_cargaenergiamwmed": 13425.90620833
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "Nordeste",
+    "din_instante": "03/06/2026",
+    "val_cargaenergiamwmed": 13689.65975
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "Norte",
+    "din_instante": "03/06/2026",
+    "val_cargaenergiamwmed": 8063.93545833
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "Sudeste/Centro-Oeste",
+    "din_instante": "02/06/2026",
+    "val_cargaenergiamwmed": 41164.65079167
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "Sul",
+    "din_instante": "02/06/2026",
+    "val_cargaenergiamwmed": 13520.975
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "Nordeste",
+    "din_instante": "02/06/2026",
+    "val_cargaenergiamwmed": 13539.47204167
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "Norte",
+    "din_instante": "02/06/2026",
+    "val_cargaenergiamwmed": 7759.63270833
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "Nordeste",
+    "din_instante": "01/06/2026",
+    "val_cargaenergiamwmed": 13220.58154167
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "Norte",
+    "din_instante": "01/06/2026",
+    "val_cargaenergiamwmed": 8217.895
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "Sul",
+    "din_instante": "01/06/2026",
+    "val_cargaenergiamwmed": 13016.41816667
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "Sudeste/Centro-Oeste",
+    "din_instante": "01/06/2026",
+    "val_cargaenergiamwmed": 40839.57191667
+  }
+]

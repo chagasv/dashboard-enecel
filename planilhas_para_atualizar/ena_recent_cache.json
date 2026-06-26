@@ -1,0 +1,902 @@
+[
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ena_data": "24/06/2026",
+    "ena_bruta_regiao_mwmed": 32915.068,
+    "ena_bruta_regiao_percentualmlt": 100.9952,
+    "ena_armazenavel_regiao_mwmed": 32233.488,
+    "ena_armazenavel_regiao_percentualmlt": 98.9038
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ena_data": "24/06/2026",
+    "ena_bruta_regiao_mwmed": 9768.204,
+    "ena_bruta_regiao_percentualmlt": 92.391,
+    "ena_armazenavel_regiao_mwmed": 9035.946,
+    "ena_armazenavel_regiao_percentualmlt": 85.4651
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ena_data": "24/06/2026",
+    "ena_bruta_regiao_mwmed": 2437.462,
+    "ena_bruta_regiao_percentualmlt": 53.7413,
+    "ena_armazenavel_regiao_mwmed": 2411.007,
+    "ena_armazenavel_regiao_percentualmlt": 53.158
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ena_data": "24/06/2026",
+    "ena_bruta_regiao_mwmed": 4906.887,
+    "ena_bruta_regiao_percentualmlt": 45.9924,
+    "ena_armazenavel_regiao_mwmed": 4379.142,
+    "ena_armazenavel_regiao_percentualmlt": 41.0458
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ena_data": "23/06/2026",
+    "ena_bruta_regiao_mwmed": 32603.758,
+    "ena_bruta_regiao_percentualmlt": 100.04,
+    "ena_armazenavel_regiao_mwmed": 31245.02,
+    "ena_armazenavel_regiao_percentualmlt": 95.8709
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ena_data": "23/06/2026",
+    "ena_bruta_regiao_mwmed": 9054.619,
+    "ena_bruta_regiao_percentualmlt": 85.6417,
+    "ena_armazenavel_regiao_mwmed": 8494.897,
+    "ena_armazenavel_regiao_percentualmlt": 80.3476
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ena_data": "23/06/2026",
+    "ena_bruta_regiao_mwmed": 2418.662,
+    "ena_bruta_regiao_percentualmlt": 53.3268,
+    "ena_armazenavel_regiao_mwmed": 2392.922,
+    "ena_armazenavel_regiao_percentualmlt": 52.7593
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ena_data": "23/06/2026",
+    "ena_bruta_regiao_mwmed": 5043.856,
+    "ena_bruta_regiao_percentualmlt": 47.2762,
+    "ena_armazenavel_regiao_mwmed": 4636.525,
+    "ena_armazenavel_regiao_percentualmlt": 43.4583
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ena_data": "22/06/2026",
+    "ena_bruta_regiao_mwmed": 7625.603,
+    "ena_bruta_regiao_percentualmlt": 72.1256,
+    "ena_armazenavel_regiao_mwmed": 7112.035,
+    "ena_armazenavel_regiao_percentualmlt": 67.2681
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ena_data": "22/06/2026",
+    "ena_bruta_regiao_mwmed": 5208.519,
+    "ena_bruta_regiao_percentualmlt": 48.8196,
+    "ena_armazenavel_regiao_mwmed": 4718.132,
+    "ena_armazenavel_regiao_percentualmlt": 44.2232
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ena_data": "22/06/2026",
+    "ena_bruta_regiao_mwmed": 2414.388,
+    "ena_bruta_regiao_percentualmlt": 53.2325,
+    "ena_armazenavel_regiao_mwmed": 2384.358,
+    "ena_armazenavel_regiao_percentualmlt": 52.5704
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ena_data": "22/06/2026",
+    "ena_bruta_regiao_mwmed": 32222.746,
+    "ena_bruta_regiao_percentualmlt": 98.8709,
+    "ena_armazenavel_regiao_mwmed": 31133.034,
+    "ena_armazenavel_regiao_percentualmlt": 95.5273
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ena_data": "21/06/2026",
+    "ena_bruta_regiao_mwmed": 32475.134,
+    "ena_bruta_regiao_percentualmlt": 99.6453,
+    "ena_armazenavel_regiao_mwmed": 30439.149,
+    "ena_armazenavel_regiao_percentualmlt": 93.3982
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ena_data": "21/06/2026",
+    "ena_bruta_regiao_mwmed": 6497.221,
+    "ena_bruta_regiao_percentualmlt": 61.4529,
+    "ena_armazenavel_regiao_mwmed": 5891.883,
+    "ena_armazenavel_regiao_percentualmlt": 55.7274
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ena_data": "21/06/2026",
+    "ena_bruta_regiao_mwmed": 2442.007,
+    "ena_bruta_regiao_percentualmlt": 53.8415,
+    "ena_armazenavel_regiao_mwmed": 2413.407,
+    "ena_armazenavel_regiao_percentualmlt": 53.2109
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ena_data": "21/06/2026",
+    "ena_bruta_regiao_mwmed": 5303.896,
+    "ena_bruta_regiao_percentualmlt": 49.7136,
+    "ena_armazenavel_regiao_mwmed": 4823.59,
+    "ena_armazenavel_regiao_percentualmlt": 45.2117
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ena_data": "20/06/2026",
+    "ena_bruta_regiao_mwmed": 32723.075,
+    "ena_bruta_regiao_percentualmlt": 100.4061,
+    "ena_armazenavel_regiao_mwmed": 31269.566,
+    "ena_armazenavel_regiao_percentualmlt": 95.9462
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ena_data": "20/06/2026",
+    "ena_bruta_regiao_mwmed": 5929.232,
+    "ena_bruta_regiao_percentualmlt": 56.0807,
+    "ena_armazenavel_regiao_mwmed": 5552.186,
+    "ena_armazenavel_regiao_percentualmlt": 52.5145
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ena_data": "20/06/2026",
+    "ena_bruta_regiao_mwmed": 2507.071,
+    "ena_bruta_regiao_percentualmlt": 55.276,
+    "ena_armazenavel_regiao_mwmed": 2479.186,
+    "ena_armazenavel_regiao_percentualmlt": 54.6612
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ena_data": "20/06/2026",
+    "ena_bruta_regiao_mwmed": 5435.682,
+    "ena_bruta_regiao_percentualmlt": 50.9488,
+    "ena_armazenavel_regiao_mwmed": 4898.465,
+    "ena_armazenavel_regiao_percentualmlt": 45.9135
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ena_data": "19/06/2026",
+    "ena_bruta_regiao_mwmed": 2580.271,
+    "ena_bruta_regiao_percentualmlt": 56.8899,
+    "ena_armazenavel_regiao_mwmed": 2549.526,
+    "ena_armazenavel_regiao_percentualmlt": 56.2121
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ena_data": "19/06/2026",
+    "ena_bruta_regiao_mwmed": 5573.4,
+    "ena_bruta_regiao_percentualmlt": 52.2397,
+    "ena_armazenavel_regiao_mwmed": 5035.588,
+    "ena_armazenavel_regiao_percentualmlt": 47.1987
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ena_data": "19/06/2026",
+    "ena_bruta_regiao_mwmed": 32911.209,
+    "ena_bruta_regiao_percentualmlt": 100.9833,
+    "ena_armazenavel_regiao_mwmed": 31675.46,
+    "ena_armazenavel_regiao_percentualmlt": 97.1916
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ena_data": "19/06/2026",
+    "ena_bruta_regiao_mwmed": 5611.624,
+    "ena_bruta_regiao_percentualmlt": 53.0767,
+    "ena_armazenavel_regiao_mwmed": 5291.921,
+    "ena_armazenavel_regiao_percentualmlt": 50.0528
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ena_data": "18/06/2026",
+    "ena_bruta_regiao_mwmed": 32964.662,
+    "ena_bruta_regiao_percentualmlt": 101.1474,
+    "ena_armazenavel_regiao_mwmed": 31334.028,
+    "ena_armazenavel_regiao_percentualmlt": 96.144
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ena_data": "18/06/2026",
+    "ena_bruta_regiao_mwmed": 5593.914,
+    "ena_bruta_regiao_percentualmlt": 52.9092,
+    "ena_armazenavel_regiao_mwmed": 5274.481,
+    "ena_armazenavel_regiao_percentualmlt": 49.8878
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ena_data": "18/06/2026",
+    "ena_bruta_regiao_mwmed": 2628.108,
+    "ena_bruta_regiao_percentualmlt": 57.9447,
+    "ena_armazenavel_regiao_mwmed": 2600.223,
+    "ena_armazenavel_regiao_percentualmlt": 57.3298
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ena_data": "18/06/2026",
+    "ena_bruta_regiao_mwmed": 5654.357,
+    "ena_bruta_regiao_percentualmlt": 52.9985,
+    "ena_armazenavel_regiao_mwmed": 5135.321,
+    "ena_armazenavel_regiao_percentualmlt": 48.1335
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ena_data": "17/06/2026",
+    "ena_bruta_regiao_mwmed": 5903.034,
+    "ena_bruta_regiao_percentualmlt": 55.8329,
+    "ena_armazenavel_regiao_mwmed": 5449.403,
+    "ena_armazenavel_regiao_percentualmlt": 51.5423
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ena_data": "17/06/2026",
+    "ena_bruta_regiao_mwmed": 2622.867,
+    "ena_bruta_regiao_percentualmlt": 57.8291,
+    "ena_armazenavel_regiao_mwmed": 2600.702,
+    "ena_armazenavel_regiao_percentualmlt": 57.3404
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ena_data": "17/06/2026",
+    "ena_bruta_regiao_mwmed": 5839.721,
+    "ena_bruta_regiao_percentualmlt": 54.7359,
+    "ena_armazenavel_regiao_mwmed": 5288.125,
+    "ena_armazenavel_regiao_percentualmlt": 49.5658
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ena_data": "17/06/2026",
+    "ena_bruta_regiao_mwmed": 32862.84,
+    "ena_bruta_regiao_percentualmlt": 100.8349,
+    "ena_armazenavel_regiao_mwmed": 31600.216,
+    "ena_armazenavel_regiao_percentualmlt": 96.9607
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ena_data": "16/06/2026",
+    "ena_bruta_regiao_mwmed": 32561.127,
+    "ena_bruta_regiao_percentualmlt": 99.9092,
+    "ena_armazenavel_regiao_mwmed": 31863.791,
+    "ena_armazenavel_regiao_percentualmlt": 97.7695
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ena_data": "16/06/2026",
+    "ena_bruta_regiao_mwmed": 6298.005,
+    "ena_bruta_regiao_percentualmlt": 59.5687,
+    "ena_armazenavel_regiao_mwmed": 5820.194,
+    "ena_armazenavel_regiao_percentualmlt": 55.0494
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ena_data": "16/06/2026",
+    "ena_bruta_regiao_mwmed": 2597.7,
+    "ena_bruta_regiao_percentualmlt": 57.2742,
+    "ena_armazenavel_regiao_mwmed": 2573.39,
+    "ena_armazenavel_regiao_percentualmlt": 56.7382
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ena_data": "16/06/2026",
+    "ena_bruta_regiao_mwmed": 5999.495,
+    "ena_bruta_regiao_percentualmlt": 56.2335,
+    "ena_armazenavel_regiao_mwmed": 5452.61,
+    "ena_armazenavel_regiao_percentualmlt": 51.1075
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ena_data": "15/06/2026",
+    "ena_bruta_regiao_mwmed": 31934.832,
+    "ena_bruta_regiao_percentualmlt": 97.9875,
+    "ena_armazenavel_regiao_mwmed": 31499.784,
+    "ena_armazenavel_regiao_percentualmlt": 96.6526
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ena_data": "15/06/2026",
+    "ena_bruta_regiao_mwmed": 6699.088,
+    "ena_bruta_regiao_percentualmlt": 63.3623,
+    "ena_armazenavel_regiao_mwmed": 6263.545,
+    "ena_armazenavel_regiao_percentualmlt": 59.2427
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ena_data": "15/06/2026",
+    "ena_bruta_regiao_mwmed": 2593.559,
+    "ena_bruta_regiao_percentualmlt": 57.1829,
+    "ena_armazenavel_regiao_mwmed": 2570.679,
+    "ena_armazenavel_regiao_percentualmlt": 56.6785
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ena_data": "15/06/2026",
+    "ena_bruta_regiao_mwmed": 6145.779,
+    "ena_bruta_regiao_percentualmlt": 57.6046,
+    "ena_armazenavel_regiao_mwmed": 5584.957,
+    "ena_armazenavel_regiao_percentualmlt": 52.348
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ena_data": "14/06/2026",
+    "ena_bruta_regiao_mwmed": 6862.115,
+    "ena_bruta_regiao_percentualmlt": 64.9042,
+    "ena_armazenavel_regiao_mwmed": 6066.596,
+    "ena_armazenavel_regiao_percentualmlt": 57.3799
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ena_data": "14/06/2026",
+    "ena_bruta_regiao_mwmed": 6302.168,
+    "ena_bruta_regiao_percentualmlt": 59.0704,
+    "ena_armazenavel_regiao_mwmed": 5672.007,
+    "ena_armazenavel_regiao_percentualmlt": 53.1639
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ena_data": "14/06/2026",
+    "ena_bruta_regiao_mwmed": 2618.009,
+    "ena_bruta_regiao_percentualmlt": 57.722,
+    "ena_armazenavel_regiao_mwmed": 2595.129,
+    "ena_armazenavel_regiao_percentualmlt": 57.2175
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ena_data": "14/06/2026",
+    "ena_bruta_regiao_mwmed": 30273.264,
+    "ena_bruta_regiao_percentualmlt": 92.8892,
+    "ena_armazenavel_regiao_mwmed": 28165.246,
+    "ena_armazenavel_regiao_percentualmlt": 86.421
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ena_data": "13/06/2026",
+    "ena_bruta_regiao_mwmed": 28355.487,
+    "ena_bruta_regiao_percentualmlt": 87.0048,
+    "ena_armazenavel_regiao_mwmed": 27259.238,
+    "ena_armazenavel_regiao_percentualmlt": 83.6411
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ena_data": "13/06/2026",
+    "ena_bruta_regiao_mwmed": 6905.482,
+    "ena_bruta_regiao_percentualmlt": 65.3144,
+    "ena_armazenavel_regiao_mwmed": 6409.496,
+    "ena_armazenavel_regiao_percentualmlt": 60.6232
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ena_data": "13/06/2026",
+    "ena_bruta_regiao_mwmed": 2654.272,
+    "ena_bruta_regiao_percentualmlt": 58.5215,
+    "ena_armazenavel_regiao_mwmed": 2634.967,
+    "ena_armazenavel_regiao_percentualmlt": 58.0959
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ena_data": "13/06/2026",
+    "ena_bruta_regiao_mwmed": 6505.638,
+    "ena_bruta_regiao_percentualmlt": 60.9776,
+    "ena_armazenavel_regiao_mwmed": 5880.756,
+    "ena_armazenavel_regiao_percentualmlt": 55.1205
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ena_data": "12/06/2026",
+    "ena_bruta_regiao_mwmed": 6116.1,
+    "ena_bruta_regiao_percentualmlt": 57.8482,
+    "ena_armazenavel_regiao_mwmed": 5797.971,
+    "ena_armazenavel_regiao_percentualmlt": 54.8392
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ena_data": "12/06/2026",
+    "ena_bruta_regiao_mwmed": 2682.98,
+    "ena_bruta_regiao_percentualmlt": 59.1545,
+    "ena_armazenavel_regiao_mwmed": 2656.525,
+    "ena_armazenavel_regiao_percentualmlt": 58.5712
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ena_data": "12/06/2026",
+    "ena_bruta_regiao_mwmed": 6682.029,
+    "ena_bruta_regiao_percentualmlt": 62.6309,
+    "ena_armazenavel_regiao_mwmed": 6069.515,
+    "ena_armazenavel_regiao_percentualmlt": 56.8898
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ena_data": "12/06/2026",
+    "ena_bruta_regiao_mwmed": 27233.629,
+    "ena_bruta_regiao_percentualmlt": 83.5625,
+    "ena_armazenavel_regiao_mwmed": 26879.041,
+    "ena_armazenavel_regiao_percentualmlt": 82.4745
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ena_data": "11/06/2026",
+    "ena_bruta_regiao_mwmed": 26687.889,
+    "ena_bruta_regiao_percentualmlt": 81.888,
+    "ena_armazenavel_regiao_mwmed": 26190.725,
+    "ena_armazenavel_regiao_percentualmlt": 80.3625
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ena_data": "11/06/2026",
+    "ena_bruta_regiao_mwmed": 5334.713,
+    "ena_bruta_regiao_percentualmlt": 50.4575,
+    "ena_armazenavel_regiao_mwmed": 5106.066,
+    "ena_armazenavel_regiao_percentualmlt": 48.2949
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ena_data": "11/06/2026",
+    "ena_bruta_regiao_mwmed": 2705.779,
+    "ena_bruta_regiao_percentualmlt": 59.6572,
+    "ena_armazenavel_regiao_mwmed": 2680.039,
+    "ena_armazenavel_regiao_percentualmlt": 59.0896
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ena_data": "11/06/2026",
+    "ena_bruta_regiao_mwmed": 6857.244,
+    "ena_bruta_regiao_percentualmlt": 64.2732,
+    "ena_armazenavel_regiao_mwmed": 6170.187,
+    "ena_armazenavel_regiao_percentualmlt": 57.8334
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ena_data": "10/06/2026",
+    "ena_bruta_regiao_mwmed": 26683.597,
+    "ena_bruta_regiao_percentualmlt": 81.8748,
+    "ena_armazenavel_regiao_mwmed": 25633.559,
+    "ena_armazenavel_regiao_percentualmlt": 78.6529
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ena_data": "10/06/2026",
+    "ena_bruta_regiao_mwmed": 5189.028,
+    "ena_bruta_regiao_percentualmlt": 49.0796,
+    "ena_armazenavel_regiao_mwmed": 4995.248,
+    "ena_armazenavel_regiao_percentualmlt": 47.2468
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ena_data": "10/06/2026",
+    "ena_bruta_regiao_mwmed": 2732.451,
+    "ena_bruta_regiao_percentualmlt": 60.2452,
+    "ena_armazenavel_regiao_mwmed": 2705.996,
+    "ena_armazenavel_regiao_percentualmlt": 59.6619
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ena_data": "10/06/2026",
+    "ena_bruta_regiao_mwmed": 6931.354,
+    "ena_bruta_regiao_percentualmlt": 64.9678,
+    "ena_armazenavel_regiao_mwmed": 6197.503,
+    "ena_armazenavel_regiao_percentualmlt": 58.0894
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ena_data": "09/06/2026",
+    "ena_bruta_regiao_mwmed": 5145.802,
+    "ena_bruta_regiao_percentualmlt": 48.6708,
+    "ena_armazenavel_regiao_mwmed": 4870.011,
+    "ena_armazenavel_regiao_percentualmlt": 46.0622
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ena_data": "09/06/2026",
+    "ena_bruta_regiao_mwmed": 7110.864,
+    "ena_bruta_regiao_percentualmlt": 66.6504,
+    "ena_armazenavel_regiao_mwmed": 6383.464,
+    "ena_armazenavel_regiao_percentualmlt": 59.8324
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ena_data": "09/06/2026",
+    "ena_bruta_regiao_mwmed": 2751.127,
+    "ena_bruta_regiao_percentualmlt": 60.657,
+    "ena_armazenavel_regiao_mwmed": 2726.817,
+    "ena_armazenavel_regiao_percentualmlt": 60.121
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ena_data": "09/06/2026",
+    "ena_bruta_regiao_mwmed": 26829.93,
+    "ena_bruta_regiao_percentualmlt": 82.3238,
+    "ena_armazenavel_regiao_mwmed": 25454.13,
+    "ena_armazenavel_regiao_percentualmlt": 78.1024
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ena_data": "08/06/2026",
+    "ena_bruta_regiao_mwmed": 27086.943,
+    "ena_bruta_regiao_percentualmlt": 83.1124,
+    "ena_armazenavel_regiao_mwmed": 25776.038,
+    "ena_armazenavel_regiao_percentualmlt": 79.0901
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ena_data": "08/06/2026",
+    "ena_bruta_regiao_mwmed": 5210.103,
+    "ena_bruta_regiao_percentualmlt": 49.2789,
+    "ena_armazenavel_regiao_mwmed": 4929.022,
+    "ena_armazenavel_regiao_percentualmlt": 46.6204
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ena_data": "08/06/2026",
+    "ena_bruta_regiao_mwmed": 2773.904,
+    "ena_bruta_regiao_percentualmlt": 61.1592,
+    "ena_armazenavel_regiao_mwmed": 2750.309,
+    "ena_armazenavel_regiao_percentualmlt": 60.639
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ena_data": "08/06/2026",
+    "ena_bruta_regiao_mwmed": 7316.391,
+    "ena_bruta_regiao_percentualmlt": 68.5768,
+    "ena_armazenavel_regiao_mwmed": 6572.513,
+    "ena_armazenavel_regiao_percentualmlt": 61.6044
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ena_data": "07/06/2026",
+    "ena_bruta_regiao_mwmed": 7411.808,
+    "ena_bruta_regiao_percentualmlt": 69.4711,
+    "ena_armazenavel_regiao_mwmed": 6411.03,
+    "ena_armazenavel_regiao_percentualmlt": 60.0908
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ena_data": "07/06/2026",
+    "ena_bruta_regiao_mwmed": 27458.418,
+    "ena_bruta_regiao_percentualmlt": 84.2522,
+    "ena_armazenavel_regiao_mwmed": 25193.592,
+    "ena_armazenavel_regiao_percentualmlt": 77.3029
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ena_data": "07/06/2026",
+    "ena_bruta_regiao_mwmed": 5299.453,
+    "ena_bruta_regiao_percentualmlt": 50.124,
+    "ena_armazenavel_regiao_mwmed": 4987.941,
+    "ena_armazenavel_regiao_percentualmlt": 47.1777
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ena_data": "07/06/2026",
+    "ena_bruta_regiao_mwmed": 2807.413,
+    "ena_bruta_regiao_percentualmlt": 61.898,
+    "ena_armazenavel_regiao_mwmed": 2781.673,
+    "ena_armazenavel_regiao_percentualmlt": 61.3305
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ena_data": "06/06/2026",
+    "ena_bruta_regiao_mwmed": 2823.201,
+    "ena_bruta_regiao_percentualmlt": 62.2461,
+    "ena_armazenavel_regiao_mwmed": 2795.316,
+    "ena_armazenavel_regiao_percentualmlt": 61.6313
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ena_data": "06/06/2026",
+    "ena_bruta_regiao_mwmed": 7617.149,
+    "ena_bruta_regiao_percentualmlt": 71.3958,
+    "ena_armazenavel_regiao_mwmed": 6699.386,
+    "ena_armazenavel_regiao_percentualmlt": 62.7936
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ena_data": "06/06/2026",
+    "ena_bruta_regiao_mwmed": 27950.674,
+    "ena_bruta_regiao_percentualmlt": 85.7626,
+    "ena_armazenavel_regiao_mwmed": 26348.185,
+    "ena_armazenavel_regiao_percentualmlt": 80.8456
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ena_data": "06/06/2026",
+    "ena_bruta_regiao_mwmed": 5557.701,
+    "ena_bruta_regiao_percentualmlt": 52.5666,
+    "ena_armazenavel_regiao_mwmed": 5247.555,
+    "ena_armazenavel_regiao_percentualmlt": 49.6332
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ena_data": "05/06/2026",
+    "ena_bruta_regiao_mwmed": 28449.938,
+    "ena_bruta_regiao_percentualmlt": 87.2946,
+    "ena_armazenavel_regiao_mwmed": 26835.141,
+    "ena_armazenavel_regiao_percentualmlt": 82.3398
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ena_data": "05/06/2026",
+    "ena_bruta_regiao_mwmed": 5979.388,
+    "ena_bruta_regiao_percentualmlt": 56.5551,
+    "ena_armazenavel_regiao_mwmed": 5779.584,
+    "ena_armazenavel_regiao_percentualmlt": 54.6653
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ena_data": "05/06/2026",
+    "ena_bruta_regiao_mwmed": 2791.148,
+    "ena_bruta_regiao_percentualmlt": 61.5394,
+    "ena_armazenavel_regiao_mwmed": 2761.833,
+    "ena_armazenavel_regiao_percentualmlt": 60.893
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ena_data": "05/06/2026",
+    "ena_bruta_regiao_mwmed": 7870.409,
+    "ena_bruta_regiao_percentualmlt": 73.7696,
+    "ena_armazenavel_regiao_mwmed": 7091.799,
+    "ena_armazenavel_regiao_percentualmlt": 66.4717
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ena_data": "04/06/2026",
+    "ena_bruta_regiao_mwmed": 6611.806,
+    "ena_bruta_regiao_percentualmlt": 62.5367,
+    "ena_armazenavel_regiao_mwmed": 6310.467,
+    "ena_armazenavel_regiao_percentualmlt": 59.6866
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ena_data": "04/06/2026",
+    "ena_bruta_regiao_mwmed": 8093.946,
+    "ena_bruta_regiao_percentualmlt": 75.8648,
+    "ena_armazenavel_regiao_mwmed": 7185.06,
+    "ena_armazenavel_regiao_percentualmlt": 67.3458
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ena_data": "04/06/2026",
+    "ena_bruta_regiao_mwmed": 28986.354,
+    "ena_bruta_regiao_percentualmlt": 88.9405,
+    "ena_armazenavel_regiao_mwmed": 27298.117,
+    "ena_armazenavel_regiao_percentualmlt": 83.7604
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ena_data": "04/06/2026",
+    "ena_bruta_regiao_mwmed": 2767.226,
+    "ena_bruta_regiao_percentualmlt": 61.0119,
+    "ena_armazenavel_regiao_mwmed": 2741.486,
+    "ena_armazenavel_regiao_percentualmlt": 60.4444
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ena_data": "03/06/2026",
+    "ena_bruta_regiao_mwmed": 7322.172,
+    "ena_bruta_regiao_percentualmlt": 69.2556,
+    "ena_armazenavel_regiao_mwmed": 7117.903,
+    "ena_armazenavel_regiao_percentualmlt": 67.3236
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ena_data": "03/06/2026",
+    "ena_bruta_regiao_mwmed": 8399.166,
+    "ena_bruta_regiao_percentualmlt": 78.7257,
+    "ena_armazenavel_regiao_mwmed": 7536.561,
+    "ena_armazenavel_regiao_percentualmlt": 70.6404
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ena_data": "03/06/2026",
+    "ena_bruta_regiao_mwmed": 2785.992,
+    "ena_bruta_regiao_percentualmlt": 61.4257,
+    "ena_armazenavel_regiao_mwmed": 2761.682,
+    "ena_armazenavel_regiao_percentualmlt": 60.8897
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ena_data": "03/06/2026",
+    "ena_bruta_regiao_mwmed": 29484.894,
+    "ena_bruta_regiao_percentualmlt": 90.4702,
+    "ena_armazenavel_regiao_mwmed": 28209.135,
+    "ena_armazenavel_regiao_percentualmlt": 86.5557
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ena_data": "02/06/2026",
+    "ena_bruta_regiao_mwmed": 29975.463,
+    "ena_bruta_regiao_percentualmlt": 91.9754,
+    "ena_armazenavel_regiao_mwmed": 28672.727,
+    "ena_armazenavel_regiao_percentualmlt": 87.9782
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ena_data": "02/06/2026",
+    "ena_bruta_regiao_mwmed": 8085.389,
+    "ena_bruta_regiao_percentualmlt": 76.4744,
+    "ena_armazenavel_regiao_mwmed": 7865.133,
+    "ena_armazenavel_regiao_percentualmlt": 74.3911
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ena_data": "02/06/2026",
+    "ena_bruta_regiao_mwmed": 2803.667,
+    "ena_bruta_regiao_percentualmlt": 61.8154,
+    "ena_armazenavel_regiao_mwmed": 2780.072,
+    "ena_armazenavel_regiao_percentualmlt": 61.2952
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ena_data": "02/06/2026",
+    "ena_bruta_regiao_mwmed": 8673.724,
+    "ena_bruta_regiao_percentualmlt": 81.2991,
+    "ena_armazenavel_regiao_mwmed": 7725.866,
+    "ena_armazenavel_regiao_percentualmlt": 72.4148
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ena_data": "01/06/2026",
+    "ena_bruta_regiao_mwmed": 30458.369,
+    "ena_bruta_regiao_percentualmlt": 93.4571,
+    "ena_armazenavel_regiao_mwmed": 28888.391,
+    "ena_armazenavel_regiao_percentualmlt": 88.6399
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ena_data": "01/06/2026",
+    "ena_bruta_regiao_mwmed": 8797.055,
+    "ena_bruta_regiao_percentualmlt": 83.2056,
+    "ena_armazenavel_regiao_mwmed": 8465.217,
+    "ena_armazenavel_regiao_percentualmlt": 80.0669
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ena_data": "01/06/2026",
+    "ena_bruta_regiao_mwmed": 2824.498,
+    "ena_bruta_regiao_percentualmlt": 62.2747,
+    "ena_armazenavel_regiao_mwmed": 2800.903,
+    "ena_armazenavel_regiao_percentualmlt": 61.7545
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ena_data": "01/06/2026",
+    "ena_bruta_regiao_mwmed": 8925.846,
+    "ena_bruta_regiao_percentualmlt": 83.6623,
+    "ena_armazenavel_regiao_mwmed": 7978.649,
+    "ena_armazenavel_regiao_percentualmlt": 74.7842
+  },
+  {
+    "id_subsistema": "NE",
+    "nom_subsistema": "NORDESTE",
+    "ena_data": "31/05/2026",
+    "ena_bruta_regiao_mwmed": 2819.225,
+    "ena_bruta_regiao_percentualmlt": 41.0289,
+    "ena_armazenavel_regiao_mwmed": 2794.2,
+    "ena_armazenavel_regiao_percentualmlt": 40.6647
+  },
+  {
+    "id_subsistema": "N",
+    "nom_subsistema": "NORTE",
+    "ena_data": "31/05/2026",
+    "ena_bruta_regiao_mwmed": 9229.975,
+    "ena_bruta_regiao_percentualmlt": 45.0773,
+    "ena_armazenavel_regiao_mwmed": 8150.954,
+    "ena_armazenavel_regiao_percentualmlt": 39.8076
+  },
+  {
+    "id_subsistema": "S",
+    "nom_subsistema": "SUL",
+    "ena_data": "31/05/2026",
+    "ena_bruta_regiao_mwmed": 9401.496,
+    "ena_bruta_regiao_percentualmlt": 109.4133,
+    "ena_armazenavel_regiao_mwmed": 8921.33,
+    "ena_armazenavel_regiao_percentualmlt": 103.8252
+  },
+  {
+    "id_subsistema": "SE",
+    "nom_subsistema": "SUDESTE",
+    "ena_data": "31/05/2026",
+    "ena_bruta_regiao_mwmed": 30998.892,
+    "ena_bruta_regiao_percentualmlt": 77.6584,
+    "ena_armazenavel_regiao_mwmed": 28292.895,
+    "ena_armazenavel_regiao_percentualmlt": 70.8793
+  }
+]

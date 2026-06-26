@@ -706,3 +706,95 @@ def atualizar_negocios_bbce(planilha_base_path, planilha_novos_negocios_path=Non
         
         return 0, len(df_base), df_base
 
+
+def atualizar_ena(planilha_base_path, ons_url=None):
+    """
+    Baixa os dados diários da ENA por subsistema de 2026 da ONS e
+    substitui o arquivo na base local / GitHub.
+    """
+    if ons_url is None:
+        ons_url = "https://ons-aws-prod-opendata.s3.amazonaws.com/dataset/ena_subsistema_di/ENA_DIARIO_SUBSISTEMA_2026.xlsx"
+    
+    print(f"[{datetime.datetime.now()}] Iniciando atualização da ENA Diária...")
+    print(f"Baixando dados de ENA da ONS: {ons_url}")
+    
+    response = requests.get(ons_url, timeout=60)
+    if response.status_code != 200:
+        raise Exception(f"Erro ao baixar arquivo de ENA da ONS. Status Code: {response.status_code}")
+    
+    print("Download concluído com sucesso. Gravando arquivo de ENA...")
+    github_write_file(planilha_base_path, response.content)
+    
+    # Lê os dados baixados usando pandas para validação e retorno
+    df = pd.read_excel(io.BytesIO(response.content))
+    total_linhas = len(df)
+    print(f"Sucesso! Planilha de ENA atualizada. Total de linhas agora: {total_linhas}")
+    
+    # Força liberação de memória RAM
+    import gc
+    gc.collect()
+    
+    return total_linhas, df
+
+
+def atualizar_carga(planilha_base_path, ons_url=None):
+    """
+    Baixa os dados diários de carga por subsistema de 2026 da ONS e
+    substitui o arquivo na base local / GitHub.
+    """
+    if ons_url is None:
+        ons_url = "https://ons-aws-prod-opendata.s3.amazonaws.com/dataset/carga_energia_di/CARGA_ENERGIA_2026.xlsx"
+    
+    print(f"[{datetime.datetime.now()}] Iniciando atualização da Carga Diária...")
+    print(f"Baixando dados de carga da ONS: {ons_url}")
+    
+    response = requests.get(ons_url, timeout=60)
+    if response.status_code != 200:
+        raise Exception(f"Erro ao baixar arquivo de Carga da ONS. Status Code: {response.status_code}")
+    
+    print("Download concluído com sucesso. Gravando arquivo de Carga...")
+    github_write_file(planilha_base_path, response.content)
+    
+    # Lê os dados baixados usando pandas para validação e retorno
+    df = pd.read_excel(io.BytesIO(response.content))
+    total_linhas = len(df)
+    print(f"Sucesso! Planilha de Carga atualizada. Total de linhas agora: {total_linhas}")
+    
+    # Força liberação de memória RAM
+    import gc
+    gc.collect()
+    
+    return total_linhas, df
+
+
+def atualizar_ear(planilha_base_path, ons_url=None):
+    """
+    Baixa os dados diários de EAR por subsistema de 2026 da ONS e
+    substitui o arquivo na base local / GitHub.
+    """
+    if ons_url is None:
+        ons_url = "https://ons-aws-prod-opendata.s3.amazonaws.com/dataset/ear_subsistema_di/EAR_DIARIO_SUBSISTEMA_2026.xlsx"
+    
+    print(f"[{datetime.datetime.now()}] Iniciando atualização da EAR Diária...")
+    print(f"Baixando dados de EAR da ONS: {ons_url}")
+    
+    response = requests.get(ons_url, timeout=60)
+    if response.status_code != 200:
+        raise Exception(f"Erro ao baixar arquivo de EAR da ONS. Status Code: {response.status_code}")
+    
+    print("Download concluído com sucesso. Gravando arquivo de EAR...")
+    github_write_file(planilha_base_path, response.content)
+    
+    # Lê os dados baixados usando pandas para validação e retorno
+    df = pd.read_excel(io.BytesIO(response.content))
+    total_linhas = len(df)
+    print(f"Sucesso! Planilha de EAR atualizada. Total de linhas agora: {total_linhas}")
+    
+    # Força liberação de memória RAM
+    import gc
+    gc.collect()
+    
+    return total_linhas, df
+
+
+
