@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initTabNavigation();
     initDragAndDrop();
     initDragAndDropBbce();
+    initSidebarToggle();
     fetchStatus();
     loadDashboardData();
 });
@@ -57,6 +58,32 @@ function initTabNavigation() {
             const tabName = btn.getAttribute('data-tab');
             switchTab(tabName);
         });
+    });
+}
+
+function initSidebarToggle() {
+    const toggleBtn = document.getElementById('sidebar-toggle');
+    if (!toggleBtn) return;
+    
+    // Restaura o estado salvo no localStorage
+    const isCollapsed = localStorage.getItem('sidebar-collapsed') === 'true';
+    if (isCollapsed) {
+        document.body.classList.add('sidebar-collapsed');
+    }
+    
+    toggleBtn.addEventListener('click', () => {
+        document.body.classList.toggle('sidebar-collapsed');
+        const collapsed = document.body.classList.contains('sidebar-collapsed');
+        localStorage.setItem('sidebar-collapsed', collapsed);
+        
+        // Redimensiona todos os gráficos ativos do Chart.js após o término da animação do CSS (200ms)
+        setTimeout(() => {
+            Object.values(charts).forEach(chart => {
+                if (chart && typeof chart.resize === 'function') {
+                    chart.resize();
+                }
+            });
+        }, 200);
     });
 }
 

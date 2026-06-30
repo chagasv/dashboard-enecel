@@ -27,39 +27,42 @@
             <div class="logo-area">
                 <i class="fa-solid fa-bolt logo-icon"></i>
                 <span class="logo-text">ENECEL</span>
+                <button id="sidebar-toggle" class="sidebar-toggle-btn" title="Recolher Menu">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
             </div>
             
             <nav class="sidebar-nav">
                 <button class="nav-btn active" data-tab="resumo">
-                    <i class="fa-solid fa-chart-pie"></i> Visão Geral
+                    <i class="fa-solid fa-chart-pie"></i> <span>Visão Geral</span>
                 </button>
                 <button class="nav-btn" data-tab="balanco">
-                    <i class="fa-solid fa-industry"></i> Balanço ONS
+                    <i class="fa-solid fa-industry"></i> <span>Balanço ONS</span>
                 </button>
                 <button class="nav-btn" data-tab="pld">
-                    <i class="fa-solid fa-circle-dollar-to-slot"></i> PLD Diário
+                    <i class="fa-solid fa-circle-dollar-to-slot"></i> <span>PLD Diário</span>
                 </button>
                 <button class="nav-btn" data-tab="ena">
-                    <i class="fa-solid fa-droplet"></i> ENA
+                    <i class="fa-solid fa-droplet"></i> <span>ENA</span>
                 </button>
                 <button class="nav-btn" data-tab="carga">
-                    <i class="fa-solid fa-bolt"></i> Carga
+                    <i class="fa-solid fa-bolt"></i> <span>Carga</span>
                 </button>
                 <button class="nav-btn" data-tab="ear">
-                    <i class="fa-solid fa-water"></i> Reservatório (EAR)
+                    <i class="fa-solid fa-water"></i> <span>Reservatório (EAR)</span>
                 </button>
                 <button class="nav-btn" data-tab="ampere">
-                    <i class="fa-solid fa-magnifying-glass-chart"></i> Projeções Ampere
+                    <i class="fa-solid fa-magnifying-glass-chart"></i> <span>Projeções Ampere</span>
                 </button>
                 <button class="nav-btn" data-tab="bbce">
-                    <i class="fa-solid fa-arrow-trend-up"></i> Histórico BBCE
+                    <i class="fa-solid fa-arrow-trend-up"></i> <span>Histórico BBCE</span>
                 </button>
                 <button class="nav-btn" data-tab="auditoria">
-                    <i class="fa-solid fa-table"></i> Conferir Dados
+                    <i class="fa-solid fa-table"></i> <span>Conferir Dados</span>
                 </button>
                 {% if not is_cloud %}
                 <button class="nav-btn update-nav-btn" data-tab="etl">
-                    <i class="fa-solid fa-rotate"></i> Painel de ETL
+                    <i class="fa-solid fa-rotate"></i> <span>Painel de ETL</span>
                 </button>
                 {% endif %}
             </nav>

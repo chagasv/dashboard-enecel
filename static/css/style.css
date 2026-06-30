@@ -81,6 +81,7 @@ h1, h2, h3, .logo-text {
     position: fixed;
     height: 100vh;
     z-index: 100;
+    transition: width 0.2s ease-in-out, padding 0.2s ease-in-out;
 }
 
 .logo-area {
@@ -199,6 +200,80 @@ h1, h2, h3, .logo-text {
     100% { transform: scale(2.5); opacity: 0; }
 }
 
+/* Botão de Toggle do Menu Lateral */
+.sidebar-toggle-btn {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    transition: var(--transition-smooth);
+    margin-left: auto;
+}
+
+.sidebar-toggle-btn:hover {
+    background: var(--glass-bg-hover);
+    color: var(--text-primary);
+}
+
+/* Estado Recolhido da Sidebar (Controlado no body) */
+body.sidebar-collapsed {
+    --sidebar-width: 70px;
+}
+
+body.sidebar-collapsed .sidebar {
+    padding: 24px 10px;
+}
+
+body.sidebar-collapsed .logo-area {
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    padding: 8px 0 20px 0;
+}
+
+body.sidebar-collapsed .logo-text {
+    display: none;
+}
+
+body.sidebar-collapsed .sidebar-toggle-btn {
+    margin-left: 0;
+}
+
+body.sidebar-collapsed .sidebar-toggle-btn i {
+    transform: rotate(180deg);
+}
+
+body.sidebar-collapsed .nav-btn {
+    justify-content: center;
+    padding: 12px 0;
+}
+
+body.sidebar-collapsed .nav-btn i {
+    margin: 0;
+    font-size: 15px;
+}
+
+body.sidebar-collapsed .nav-btn span {
+    display: none;
+}
+
+body.sidebar-collapsed .sidebar-footer {
+    justify-content: center;
+    padding-top: 16px;
+}
+
+body.sidebar-collapsed .version-text {
+    display: none;
+}
+
 /* Main Content Area */
 .main-content {
     flex-grow: 1;
@@ -207,6 +282,7 @@ h1, h2, h3, .logo-text {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    transition: margin-left 0.2s ease-in-out;
 }
 
 /* Top Bar Styling */
